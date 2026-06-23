@@ -16,11 +16,11 @@ class CreateTenantsTable extends Migration
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->string('id')->primary();
-
-            // your custom columns may go here
-
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->timestamps();
+            $table->softDeletes();
             $table->json('data')->nullable();
         });
     }
