@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Nexus HR | Payroll Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-background": "#0d1c2e",
+                    "on-primary-container": "#eeefff",
+                    "surface-dim": "#ccdbf3",
+                    "surface": "#f8f9ff",
+                    "secondary": "#505f76",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed": "#ffdbcd",
+                    "primary-container": "#2563eb",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#233144",
+                    "on-surface-variant": "#434655",
+                    "surface-container-highest": "#d5e3fc",
+                    "on-surface": "#0d1c2e",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-tint": "#0053db",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#bc4800",
+                    "surface-container": "#e6eeff",
+                    "outline-variant": "#c3c6d7",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "primary": "#004ac6",
+                    "surface-container-low": "#eff4ff",
+                    "on-primary-fixed": "#00174b",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#ffede6",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-variant": "#d5e3fc",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#943700",
+                    "error": "#ba1a1a",
+                    "background": "#f8f9ff",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-secondary-container": "#54647a",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#d0e1fb",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1440px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "gutter": "24px",
+                    "base": "4px",
+                    "3xl": "64px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-low rounded-full transition-colors duration-150 active:scale-95">apps</button>
+<span class="text-headline-sm font-headline-sm font-bold text-primary">Nexus HR</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant p-2">notifications</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-label-md">
+                    JD
+                </div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="pt-20 px-4 max-w-container-max mx-auto">
+<!-- Page Header & Action -->
+<div class="flex flex-col gap-4 mb-6">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Payroll Management</h1>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform duration-150">
+<span class="material-symbols-outlined">play_circle</span>
+                Run Payroll
+            </button>
+</div>
+<!-- KPI Grid -->
+<section class="grid grid-cols-2 gap-3 mb-8">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Total Disbursements</p>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">$1.2M</h3>
+<div class="flex items-center gap-1 mt-2 text-[10px] font-medium text-tertiary">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                    +4.2% vs last mth
+                </div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Pending Approvals</p>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">12</h3>
+<div class="flex items-center gap-1 mt-2 text-[10px] font-medium text-error">
+<span class="material-symbols-outlined text-xs">schedule</span>
+                    Due in 48h
+                </div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Active Employees</p>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">1,248</h3>
+<div class="flex items-center gap-1 mt-2 text-[10px] font-medium text-on-surface-variant opacity-70">
+<span class="material-symbols-outlined text-xs">person_add</span>
+                    +12 this week
+                </div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Tax Liabilities</p>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">$245k</h3>
+<div class="flex items-center gap-1 mt-2 text-[10px] font-medium text-primary">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+                    Fully Provisioned
+                </div>
+</div>
+</section>
+<!-- Department Distribution Chart (Visual Representation) -->
+<section class="mb-8 bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-label-md font-label-md text-on-surface">Distribution by Dept</h2>
+<button class="text-primary text-label-sm font-label-sm">Details</button>
+</div>
+<div class="flex items-end justify-between h-32 gap-3 px-2">
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary-container rounded-t-lg transition-all duration-700" style="height: 85%"></div>
+<span class="text-[10px] font-medium text-on-surface-variant">ENG</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-secondary-container rounded-t-lg transition-all duration-700" style="height: 60%"></div>
+<span class="text-[10px] font-medium text-on-surface-variant">OPS</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-tertiary-container rounded-t-lg transition-all duration-700" style="height: 45%"></div>
+<span class="text-[10px] font-medium text-on-surface-variant">SALES</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-outline-variant rounded-t-lg transition-all duration-700" style="height: 30%"></div>
+<span class="text-[10px] font-medium text-on-surface-variant">HR</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary-fixed-dim rounded-t-lg transition-all duration-700" style="height: 20%"></div>
+<span class="text-[10px] font-medium text-on-surface-variant">ADM</span>
+</div>
+</div>
+</section>
+<!-- Recent Payroll Cycles -->
+<section class="mb-8">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Recent Payroll Cycles</h2>
+<button class="text-primary text-label-sm font-label-sm flex items-center gap-1">
+                    View All
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Cycle Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex justify-between items-center hover:bg-surface-container-low transition-colors duration-150">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Cycle #2024-05-A</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">May 1 - May 15</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface">$428,500.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-tertiary/10 text-tertiary">
+                            COMPLETED
+                        </span>
+</div>
+</div>
+<!-- Cycle Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex justify-between items-center hover:bg-surface-container-low transition-colors duration-150">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">sync</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Cycle #2024-05-B</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">May 16 - May 31</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface">$431,220.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
+                            PROCESSING
+                        </span>
+</div>
+</div>
+<!-- Cycle Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex justify-between items-center hover:bg-surface-container-low transition-colors duration-150">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-error-container/20 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Cycle #2024-04-B</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Apr 16 - Apr 30</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface">$412,000.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-on-error-container">
+                            FAILED (2)
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Informational Banner -->
+<div class="bg-secondary-container/30 p-4 rounded-xl border border-secondary-container flex gap-3 mb-8">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="text-body-sm font-body-sm text-on-secondary-container">
+                Federal tax filings for Q1 2024 are due in 4 days. Please ensure all variable adjustments are finalized.
+            </p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 pb-safe bg-surface-container-lowest border-t border-outline-variant z-50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-sm font-label-sm">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-sm font-label-sm">Employees</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-3 py-1 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-label-sm font-label-sm">Payroll</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95">
+<div class="relative">
+<span class="material-symbols-outlined">mail</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></div>
+</div>
+<span class="text-label-sm font-label-sm">Inbox</span>
+</button>
+</nav>
+<!-- Optional Detail Drawer (Hidden by default) -->
+<div class="fixed inset-y-0 right-0 w-full md:w-[480px] bg-surface-container-lowest shadow-2xl z-[100] translate-x-full transition-transform duration-300" id="payrollDrawer">
+<div class="h-16 flex items-center justify-between px-6 border-b border-outline-variant">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Cycle Details</h3>
+<button class="material-symbols-outlined p-2 hover:bg-surface-container-low rounded-full" onclick="toggleDrawer()">close</button>
+</div>
+<div class="p-6">
+<div class="mb-8">
+<div class="w-full h-40 bg-surface-container-low rounded-xl mb-4 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, professional 3D abstract visualization of data growth and financial stability, featuring soft blue and grey crystalline structures against a pure white studio background. The lighting is bright and airy, reflecting a modern light-mode corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPMrmQ2Do4Tim9UcyCyekYMbkO7OAqh7a-7LeTnF4e2tKoyDbPgKeVwTSaHVmB9800C4z8x_9icUjoV_QFq8l9e27UGr_3LhcG-DnF59t20PV9KywG32en6Eau_Yv6-PXg9EkQK_pZgVUZ5k3JwELuHNKQzMVBDT54DpItTBtM45xRhoFlb_odHe4yRESKi1fxxA6MZ1rnpDidyDgvKriNc_6u2PRsKHsrpoY8h7X3Xso8b2OTxOudVelyiNUNBYk27njSOdvZ0Q"/>
+</div>
+<h4 class="text-label-md font-label-md text-on-surface-variant mb-2">Cycle Summary</h4>
+<div class="space-y-3">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-body-sm font-body-sm">Gross Payroll</span>
+<span class="font-label-md">$512,000.00</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-body-sm font-body-sm">Employer Taxes</span>
+<span class="font-label-md">$42,500.00</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-body-sm font-body-sm">Benefits</span>
+<span class="font-label-md">$28,000.00</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md">Download Report</button>
+</div>
+</div>
+<script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('payrollDrawer');
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        // Add click events to cycle cards to show drawer
+        document.querySelectorAll('.bg-surface-container-lowest.p-4.rounded-xl.border').forEach(card => {
+            card.addEventListener('click', toggleDrawer);
+        });
+    </script>
+</body></html>

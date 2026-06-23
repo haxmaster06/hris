@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Nexus HR</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-surface": "#0d1c2e",
+                    "surface-bright": "#f8f9ff",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-tertiary-container": "#ffede6",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "surface": "#f8f9ff",
+                    "on-primary-fixed": "#00174b",
+                    "surface-container-high": "#dce9ff",
+                    "primary": "#004ac6",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#2563eb",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#233144",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#505f76",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#0053db",
+                    "secondary-fixed": "#d3e4fe",
+                    "surface-container-low": "#eff4ff",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#434655",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary": "#943700",
+                    "secondary-container": "#d0e1fb",
+                    "on-secondary-container": "#54647a",
+                    "background": "#f8f9ff",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "surface-variant": "#d5e3fc",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container": "#e6eeff",
+                    "inverse-primary": "#b4c5ff",
+                    "tertiary-container": "#bc4800",
+                    "outline": "#737686",
+                    "on-background": "#0d1c2e",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-highest": "#d5e3fc",
+                    "surface-dim": "#ccdbf3",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "10px",
+                    "lg": "10px",
+                    "xl": "12px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.bg-login-hero {
+    background-image: linear-gradient(to right, rgba(11, 28, 48, 0.7), rgba(11, 28, 48, 0.4)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCgGJS_wLGdr71eO2lHwIXqDKKz-CDiwTwmvd0GBaLNxEg8O3o_TdqHjqNS7w8JsQu2pIS2xSW2-bYpbkmUZDLVdNLzdTmgDjwl22Bqc4Kf6Ia0To2W91LtXQTNIjkJldfB3GOQqqM_fxAuwiUu2GEfsAlOiuwEkMov98ZTqU7uZopT0YOyDVnJKZgqVjEL5ln6f0FMlbYfnJqzbi1ff2r3nwKivtmn-CFpWW5CGI2fBnkKf6u5KUeFEoeiwmwMbd1W1YymxIcIbQ);
+    background-size: cover;
+    background-position: center
+    }
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2)
+    }</style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden h-screen">
+<main class="flex h-full w-full">
+<!-- Left Side: Visual Area (60%) -->
+<section class="hidden lg:flex lg:w-[60%] relative bg-login-hero items-end p-3xl" data-alt="A professional, sun-drenched modern corporate office space with large windows and ergonomic furniture. A diverse group of four professionals in business casual attire are standing around a large digital display, laughing and collaborating harmoniously. The lighting is bright and high-key, with a sophisticated, trust-evoking aesthetic. Overlaid with a professional dark blue gradient that enhances the white typography.">
+<div class="z-10 max-w-2xl animate-fade-in-up">
+<h1 class="font-display-lg text-display-lg text-white mb-md leading-tight">
+                    Powering the modern workforce.
+                </h1>
+<p class="font-body-lg text-body-lg text-white/90 max-w-lg">
+                    The enterprise HRIS designed for precision, clarity, and high-trust management. Streamline your global operations with Nexus HR.
+                </p>
+<div class="mt-2xl flex items-center gap-md">
+<div class="flex -space-x-2">
+<div class="w-10 h-10 rounded-full border-2 border-on-secondary-fixed bg-gray-300 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a smiling young professional woman with glasses in a modern office, representing high-trust HR management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeebpQ4mVUfoLTHN39cgpcqCQx0kPtSrEc1V_ZR1TVdd6wclHc4iNfH1aPi-IH2ttwbu-bM0M3nN19duRu1bP4cTNaQ_xVF2m9rS1raAHv1G_-qJYYFEhgGq6gr2Zk9A3e4VOcoeweW7FXU4jnbdcmze-nhcEB85n0zAAEu8kVZxX3TtJKI2GpgJ8wRtLRsT8oeYAfBBrXQ_b4C56Af5thHozmWfZaob8NDikoZpD0vcanlH9DYk4td6EeiU94fPNKR-Jd_IsdaA"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-on-secondary-fixed bg-gray-300 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a confident senior executive man in a tailored blazer, symbolizing professional enterprise software stability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYWp6BUsrjjVR2Ykov8FtdPRlILR9gxbHHmcZNRhb5Kw7SnDxQOggtffAGv-jEvpgrumauI-j_X_8GBy32OyyerQZflTICMfrhEQY5dyApAaoZEIC6PikFWVH9aKson33KYxk86PWB4rd1OVHRW6ASuHylF7PuUvH23gTKzIB7s8bkulhWEpv4tXFuytX4z_KZ7UBVLw3eFRaQ36mTwryqtwgTd8L5TSVIwG_ajqp1pSOmuAudNKfs7xYZina5ok4oc9NqrJa3LQ"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-on-secondary-fixed bg-gray-300 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a creative designer with headphones, indicating a diverse and modern workforce focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhpbV-LnUN7zvxvqs-GGdiRxHOovXsLvWf_daxs13t61bH5Vpd5nIM1C_R298PGu6bTLnZLtS3Ippe9PlWGYvABWUOvdwHtoqaKjE4cx5sBK-V-mt7ma2YmZ_S585mZ9l2mWGiZs1KcRkRe8UKC-cRhGFYIeyIaIf9kopf_XK7mT58MHKMU2olFwH5RXvE-Qz2EdlC3zQdpbPSVYopWFHaGwbUzskPp5QXb4iOgXky64lx7Odbadf40PZh1egKPUfnXJ1WsgV9Gg"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-white/80">Trusted by 2,000+ Enterprises</span>
+</div>
+</div>
+<!-- Subtle Overlay Texture -->
+<div class="absolute inset-0 bg-gradient-to-t from-on-secondary-fixed via-transparent to-transparent opacity-60 pointer-events-none"></div>
+</section>
+<!-- Right Side: Authentication Area (40%) -->
+<section class="w-full lg:w-[40%] bg-white flex flex-col justify-between p-lg md:p-3xl overflow-y-auto">
+<!-- Top Logo -->
+<div class="flex flex-col items-center mb-xl">
+<div class="flex items-center gap-sm">
+<div class="bg-primary p-xs rounded-lg">
+<span class="material-symbols-outlined text-white text-[32px]">hub</span>
+</div>
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">Nexus HR</span>
+</div>
+</div>
+<!-- Login Form Container -->
+<div class="max-w-md mx-auto w-full">
+<div class="text-center mb-xl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Welcome back</h2>
+<p class="font-body-sm text-body-sm text-secondary">Please enter your credentials to access your dashboard.</p>
+</div>
+<form class="space-y-md" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+<input class="w-full pl-[48px] pr-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md transition-all focus:border-primary focus:ring-2 focus:ring-primary/10" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full pl-[48px] pr-[48px] py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md transition-all focus:border-primary focus:ring-2 focus:ring-primary/10" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember & Forgot -->
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Remember me</span>
+</label>
+<a class="font-label-sm text-label-sm text-primary hover:text-on-primary-fixed-variant transition-colors" href="#">Forgot password?</a>
+</div>
+<!-- Sign In Button -->
+<button class="w-full flex items-center justify-center gap-sm bg-primary text-white font-label-md text-label-md py-md rounded-lg shadow-sm hover:bg-on-primary-fixed-variant active:opacity-90 transition-all duration-150" type="submit">
+                        Sign In
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<!-- SSO Section -->
+<div class="mt-2xl">
+<div class="relative flex items-center justify-center mb-xl">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant"></div>
+</div>
+<span class="relative px-md bg-white font-label-sm text-label-sm text-outline">Or sign in with SSO</span>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<!-- Google SSO -->
+<button class="flex items-center justify-center gap-sm py-md px-md border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors duration-150">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Google</span>
+</button>
+<!-- Microsoft SSO -->
+<button class="flex items-center justify-center gap-sm py-md px-md border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors duration-150">
+<svg class="w-5 h-5" viewbox="0 0 23 23">
+<path d="M0 0h23v23H0z" fill="#f3f3f3"></path>
+<path d="M1 1h10v10H1z" fill="#f35325"></path>
+<path d="M12 1h10v10H12z" fill="#81bc06"></path>
+<path d="M1 12h10v10H1z" fill="#05a6f0"></path>
+<path d="M12 12h10v10H12z" fill="#ffba08"></path>
+</svg>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Microsoft</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-2xl flex flex-col md:flex-row justify-center items-center gap-md pt-lg border-t border-outline-variant">
+<p class="font-body-sm text-body-sm text-secondary">© 2024 Nexus HR Systems</p>
+<div class="flex gap-lg">
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors" href="#">Privacy Policy</a>
+</div>
+</footer>
+</section>
+</main>
+<script>
+        function togglePasswordVisibility() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('password-toggle-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Lightweight animation for page entrance
+        window.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in-up');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = `all 0.6s ease-out ${index * 0.2}s`;
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

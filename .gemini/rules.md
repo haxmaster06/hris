@@ -1,0 +1,348 @@
+# Universal HRIS Platform — Project Rules
+
+> Dokumen ini adalah **kontrak arsitektur** yang WAJIB dipatuhi di setiap baris kode yang ditulis.
+> Berlaku untuk seluruh conversation, seluruh file, seluruh agent.
+
+---
+
+## 1. IDENTITAS PROJECT
+
+- **Nama**: Universal HRIS Platform
+- **Codename**: Nexus HR
+- **Arsitektur**: Modular Monolith (Microservice-Ready)
+- **Stack Backend**: Laravel 12 · PHP 8.4 · PostgreSQL 16 · Redis 7
+- **Stack Frontend**: Next.js 16 LTS (App Router) · TypeScript · TailwindCSS v4 · ShadCN UI (modifikasi)
+- **State Management**: TanStack Query (server) + Zustand (client)
+- **Form**: React Hook Form + Zod
+- **File Storage**: MinIO / S3 Compatible
+- **Queue**: Redis Queue + Laravel Horizon
+- **Auth**: Custom JWT via `tymon/jwt-auth` (NO Sanctum/Breeze/Jetstream)
+- **RBAC**: Spatie Permission + Custom Policy
+- **Multi-Tenant**: Schema-per-tenant via `stancl/tenancy`
+- **Module System**: `nwidart/laravel-modules`
+- **Boundary Enforcement**: `qossmic/deptrac`
+- **Node.js**: v20 LTS
+
+---
+
+## 2. ARSITEKTUR — ATURAN MUTLAK
+
+### 2.1 Modular Monolith
+```
+apps/api/Modules/
+├── Core/           # Auth, Tenant, RBAC, User, Session
+├── Organization/   # Company, Branch, Dept, Division, Position, Grade
+├── Employee/       # Employee CRUD, History, Family, Education
+├── Attendance/     # Check-in/out, Shift, Overtime
+├── Leave/          # Request, Approval, Balance
+├── Recruitment/    # Vacancy, Candidate, Pipeline
+├── Training/       # Training, Session, Result
+├── Certification/  # Certificate, Expiry
+├── Payroll/        # Run, Component, Payslip
+├── Performance/    # KPI, Review
+├── Asset/          # Asset, Assignment
+├── Document/       # Upload, Versioning
+├── Notification/   # Template, Queue, Channel
+├── Audit/          # Log, Compliance
+└── Workflow/       # Approval Flow, State Machine
+```
+
+### 2.2 Module Boundary Rules (DILARANG DILANGGAR)
+- ❌ **DILARANG** cross-module direct DB query (tidak boleh Module A query table milik Module B)
+- ❌ **DILARANG** import Model dari module lain secara langsung
+- ❌ **DILARANG** bypass service layer
+- ✅ **WAJIB** komunikasi antar module via **Service Layer** atau **Domain Events**
+- ✅ **WAJIB** setiap module punya ServiceProvider sendiri
+- ✅ **WAJIB** setiap module punya routes sendiri (di `Modules/{Name}/Routes/api.php`)
+- ✅ **WAJIB** `deptrac` dijalankan di CI untuk enforce boundaries
+
+### 2.3 Tenant Isolation — Schema-Per-Tenant
+
+**Strategy**: PostgreSQL schema separation via `stancl/tenancy`
+
+```
+PostgreSQL
+├── public schema (Central/Landlord)
+│   ├── tenants
+│   ├── domains
+│   └── tenant_configs
+│
+├── tenant_{slug} (Per-Tenant Schema)
+│   ├── users, employees, attendance_logs, ...
+│   └── audit_logs
+```
+
+**Rules:**
+- `tenant_id` column **TIDAK diperlukan** — isolation terjadi di level schema
+- `TenantScope` **TIDAK diperlukan** — `stancl/tenancy` otomatis switch connection
+- Central tables (tenants, domains) ada di `public` schema
+- Semua module tables ada di tenant schema
+- Migrasi tenant via `tenants:migrate`, seeding via `tenants:seed`
+- Tenant identification via header `X-Tenant-ID` atau subdomain
+
+---
+
+## 3. DATABASE STANDARDS
+
+### 3.1 Universal Table Fields (Tenant Schema)
+Setiap migration di tenant schema WAJIB include:
+```php
+$table->uuid('id')->primary();              // UUID v7
+$table->timestamps();                        // created_at, updated_at
+$table->softDeletes();                       // deleted_at
+$table->uuid('created_by')->nullable();
+$table->uuid('updated_by')->nullable();
+$table->uuid('deleted_by')->nullable();
+$table->unsignedInteger('version')->default(1);
+// ⚠️ TIDAK perlu tenant_id — isolation via PostgreSQL schema
+```
+
+### 3.2 Naming Conventions
+- Table: `snake_case` plural → `employees`, `leave_requests`, `payroll_runs`
+- Column: `snake_case` → `employee_id`, `join_datetime`, `created_at`
+- Foreign Key: `{table_singular}_id` → `employee_id`, `company_id`
+- Index: `idx_{table}_{columns}` → `idx_employees_tenant_id`
+- Pivot table: alphabetical → `role_user`, `permission_role`
+
+### 3.3 Primary Key
+- UUID v7 (ordered, time-sortable)
+- **DILARANG** auto-increment integer
+
+### 3.4 Indexes (Minimal)
+Setiap table WAJIB index: `id`, `created_at`, `deleted_at`, semua foreign keys.
+
+---
+
+## 4. API STANDARDS
+
+### 4.1 Versioning
+- Base URL: `/api/v1`
+- Tidak boleh breaking change pada versi aktif
+
+### 4.2 Response Format
+```json
+// Success
+{
+  "success": true,
+  "message": "Success",
+  "data": {}
+}
+
+// Error
+{
+  "success": false,
+  "message": "Validation Error",
+  "errors": []
+}
+
+// Paginated
+{
+  "success": true,
+  "data": [],
+  "meta": {
+    "page": 1,
+    "per_page": 20,
+    "total": 100,
+    "last_page": 5
+  }
+}
+```
+
+### 4.3 HTTP Methods
+- `GET` → Read (list/detail)
+- `POST` → Create
+- `PUT` → Full update
+- `PATCH` → Partial update
+- `DELETE` → Soft delete
+
+### 4.4 Naming
+- RESTful resource naming: `/employees`, `/leave-requests`, `/payroll-runs`
+- Nested resource: `/employees/{id}/documents`
+- Actions: `/leave-requests/{id}/approve`, `/payroll-runs/{id}/post`
+
+---
+
+## 5. BACKEND CODE STANDARDS
+
+### 5.1 Layer Architecture (per Module)
+```
+Controller → Service → Repository → Model
+     ↓
+  Request (Validation)
+     ↓
+  Resource (Response Transform)
+```
+
+- **Controller**: Hanya routing + call service + return response. ZERO business logic.
+- **Service**: Semua business logic di sini. Satu method = satu use case.
+- **Repository**: Data access layer. Query builder & Eloquent ada di sini.
+- **Model**: Eloquent model + relationships + scopes + casts.
+- **Request**: Form validation (Zod-like rules).
+- **Resource**: API response transformation (jangan expose raw model).
+
+### 5.2 Naming Conventions (PHP)
+- Class: `PascalCase` → `EmployeeService`, `LeaveRequestController`
+- Method: `camelCase` → `createEmployee()`, `approveLeaveRequest()`
+- Variable: `camelCase` → `$employeeId`, `$leaveBalance`
+- Constant: `UPPER_SNAKE` → `STATUS_ACTIVE`, `ROLE_ADMIN`
+- Config key: `snake_case` → `leave.max_carry_forward`
+
+### 5.3 Testing Requirements
+- Unit test coverage: ≥ 80% per module
+- Feature test: setiap API endpoint
+- Test naming: `test_{action}_{condition}_{expected}` → `test_create_employee_with_valid_data_returns_201`
+
+---
+
+## 6. FRONTEND CODE STANDARDS
+
+### 6.1 Structure
+```
+apps/web/src/
+├── app/              # Next.js App Router pages
+├── components/       # Shared UI components
+│   ├── ui/           # Primitives (Button, Input, Modal)
+│   └── layout/       # Shell, Sidebar, Topbar
+├── features/         # Feature modules (mirror backend modules)
+│   ├── auth/
+│   ├── employees/
+│   ├── attendance/
+│   └── ...
+├── lib/              # Utilities (API client, helpers)
+├── hooks/            # Shared custom hooks
+├── stores/           # Zustand global stores
+└── types/            # Shared TypeScript types
+```
+
+### 6.2 Feature Module Structure
+```
+features/{name}/
+├── components/       # Feature-specific UI
+├── hooks/            # Feature hooks (useEmployees, useLeaveRequests)
+├── services/         # API calls (employeeService.ts)
+├── stores/           # Feature state (if needed)
+├── types/            # Feature types
+├── utils/            # Feature helpers
+├── schemas/          # Zod validation schemas
+└── index.ts          # Public exports
+```
+
+### 6.3 Naming Conventions (TypeScript)
+- Component: `PascalCase` → `EmployeeTable.tsx`, `LeaveRequestForm.tsx`
+- Hook: `camelCase` with `use` prefix → `useEmployees.ts`, `useLeaveBalance.ts`
+- Service: `camelCase` with `Service` suffix → `employeeService.ts`
+- Type/Interface: `PascalCase` → `Employee`, `LeaveRequest`, `PaginatedResponse<T>`
+- Constant: `UPPER_SNAKE` → `API_BASE_URL`, `DEFAULT_PAGE_SIZE`
+- Utility: `camelCase` → `formatCurrency.ts`, `dateUtils.ts`
+
+### 6.4 State Management Rules
+- **Server state** (data dari API): TanStack Query — WAJIB. Jangan simpan di Zustand.
+- **Client state** (UI state, form, theme): Zustand
+- **Form state**: React Hook Form + Zod
+
+### 6.5 API Client Rules
+- Gunakan typed API client (Axios/fetch wrapper)
+- Semua response harus di-type dengan TypeScript
+- Error handling terpusat (interceptor)
+- Auto-refresh token di interceptor
+
+---
+
+## 7. SECURITY RULES
+
+### 7.1 Authentication
+- JWT Access Token: 15–60 menit
+- JWT Refresh Token: 7–30 hari (rotation wajib)
+- Token disimpan di httpOnly cookie (BUKAN localStorage)
+
+### 7.2 Authorization
+- Permission format: `module.action.scope` → `employee.read.own`, `payroll.read.all`
+- Setiap API endpoint WAJIB punya middleware permission check
+- Setiap query WAJIB filter by tenant_id
+
+### 7.3 Input Validation
+- Backend: Form Request class — WAJIB
+- Frontend: Zod schema — WAJIB
+- **DILARANG** raw query / string interpolation di SQL
+
+### 7.4 Sensitive Data
+- Salary, tax_id, bank_account → field-level access control
+- **DILARANG** expose di API response tanpa permission check
+- Encrypt at rest untuk data sensitif (AES-256)
+
+---
+
+## 8. AUDIT RULES
+
+- Setiap CREATE, UPDATE, DELETE WAJIB tercatat di `audit_logs`
+- Audit log: APPEND ONLY — **DILARANG** update atau delete
+- Data audit: user_id, tenant_id, action, entity_type, entity_id, old_value, new_value, ip_address, user_agent, timestamp
+- Audit log retention: minimum 5 tahun
+
+---
+
+## 9. EVENT & INTEGRATION RULES
+
+### 9.1 Domain Events
+- Setiap state change penting WAJIB emit domain event
+- Events: `EmployeeCreated`, `EmployeePromoted`, `LeaveApproved`, `PayrollGenerated`, dll.
+- Event disimpan di `domain_events` table (outbox pattern)
+- Event harus immutable dan idempotent
+
+### 9.2 Inter-Module Communication
+- ✅ Via Service Layer (sync) — untuk read operations
+- ✅ Via Domain Events (async) — untuk side effects
+- ❌ DILARANG direct Model import cross-module
+- ❌ DILARANG direct DB query cross-module
+
+---
+
+## 10. GIT & WORKFLOW
+
+### 10.1 Branch Strategy
+- `main` — production ready, protected
+- `develop` — active development
+- `feature/{module}/{description}` — feature branch
+- `hotfix/{description}` — urgent fix
+- `release/{version}` — release candidate
+
+### 10.2 Commit Convention
+```
+feat(employee): add employee CRUD endpoints
+fix(payroll): fix overtime calculation rounding
+refactor(core): extract tenant middleware
+test(leave): add leave balance unit tests
+docs(api): update attendance API documentation
+chore(infra): update docker-compose Redis version
+```
+
+### 10.3 PR Rules
+- Semua merge ke `develop` WAJIB via Pull Request
+- PR harus include: description, related issue, test evidence
+- CI/CD harus pass (lint + test + type-check) sebelum merge
+
+---
+
+## 11. DOCUMENTATION RULES
+
+- Setiap module WAJIB punya README.md
+- Setiap API endpoint WAJIB terdokumentasi (OpenAPI 3.1)
+- Complex business logic WAJIB ada inline comment
+- DILARANG menghapus comment/docstring yang sudah ada (kecuali outdated)
+
+---
+
+## 12. AI AGENT BEHAVIOR RULES
+
+Ketika bekerja di project ini, AI agent WAJIB:
+
+1. **Selalu cek module boundary** — sebelum menulis kode, pastikan kode berada di module yang tepat
+2. **Selalu include tenant_id** — di setiap migration, model scope, dan query
+3. **Selalu include audit fields** — di setiap migration
+4. **Selalu gunakan service layer** — controller TIDAK BOLEH berisi business logic
+5. **Selalu buat test** — setiap fitur baru HARUS disertai unit test
+6. **Selalu ikuti response format standar** — gunakan ApiResponse helper
+7. **Jangan buat file di luar module structure** — ikuti struktur yang sudah ditetapkan
+8. **Jangan tambah dependency tanpa justifikasi** — setiap package baru harus ada alasan kuat
+9. **Referensi mockup** — untuk UI, selalu cek folder `Mockup/` sebelum membuat komponen
+10. **Gunakan bahasa Inggris untuk code** — variable, function, class, comment dalam bahasa Inggris
