@@ -35,7 +35,6 @@ class CreateTenantCommand extends Command
         // Create the tenant in public schema central database
         // This automatically creates PostgreSQL schema "tenant_{slug}", runs migrations and seeds it.
         $tenant = Tenant::create([
-            'id' => $slug, // Using slug as tenant ID
             'name' => $name,
             'slug' => $slug,
         ]);
@@ -49,7 +48,7 @@ class CreateTenantCommand extends Command
 
         $this->info("Domain mapped successfully!");
         $this->info("Tenant ID: {$tenant->id}");
-        $this->info("Schema: tenant_{$slug}");
+        $this->info("Schema: " . $tenant->database()->getName());
         $this->info("Access URL: http://{$domainName}");
 
         return 0;
