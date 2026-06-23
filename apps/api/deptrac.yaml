@@ -1,0 +1,143 @@
+deptrac:
+  paths:
+    - ./app
+    - ./Modules
+  exclude_files: []
+  layers:
+    - name: App
+      collectors:
+        - type: directory
+          private: false
+          value: app/.*
+    - name: Core
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Core/.*
+    - name: Organization
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Organization/.*
+    - name: Employee
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Employee/.*
+    - name: Attendance
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Attendance/.*
+    - name: Leave
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Leave/.*
+    - name: Recruitment
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Recruitment/.*
+    - name: Training
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Training/.*
+    - name: Certification
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Certification/.*
+    - name: Payroll
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Payroll/.*
+    - name: Performance
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Performance/.*
+    - name: Asset
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Asset/.*
+    - name: Document
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Document/.*
+    - name: Notification
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Notification/.*
+    - name: Audit
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Audit/.*
+    - name: Workflow
+      collectors:
+        - type: directory
+          private: false
+          value: Modules/Workflow/.*
+
+  ruleset:
+    App:
+      - Core
+      - Organization
+      - Employee
+      - Attendance
+      - Leave
+      - Recruitment
+      - Training
+      - Certification
+      - Payroll
+      - Performance
+      - Asset
+      - Document
+      - Notification
+      - Audit
+      - Workflow
+    Core: []
+    Organization:
+      - Core
+    Employee:
+      - Core
+      - Organization
+    Attendance:
+      - Core
+      - Employee
+    Leave:
+      - Core
+      - Employee
+    Recruitment:
+      - Core
+    Training:
+      - Core
+    Certification:
+      - Core
+      - Employee
+    Payroll:
+      - Core
+      - Employee
+      - Attendance
+      - Leave
+    Performance:
+      - Core
+      - Employee
+    Asset:
+      - Core
+      - Employee
+    Document:
+      - Core
+      - Employee
+    Notification:
+      - Core
+    Audit:
+      - Core
+    Workflow:
+      - Core

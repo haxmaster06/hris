@@ -20,6 +20,7 @@ desktop.ini
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
+.agent/
 
 # === Environment Files ===
 .env
@@ -85,11 +86,11 @@ pnpm-debug.log*
 # === Build Artifacts ===
 *.map
 
-# === Package Managers ===
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-composer.lock
+# === Package Managers (Tracked for consistency) ===
+# !package-lock.json
+# !yarn.lock
+# !pnpm-lock.yaml
+# !composer.lock
 
 # === Secrets (NEVER commit) ===
 *.pem

@@ -1,0 +1,142 @@
+services:
+  # === Application Services ===
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: ../../infra/docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../apps/api:/var/www/html
+    environment:
+      - APP_ENV=local
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=hris
+      - DB_USERNAME=hris_user
+      - DB_PASSWORD=hris_secret
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_CONNECTION=redis
+      - CACHE_STORE=redis
+      - FILESYSTEM_DISK=s3
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_BUCKET=hris-documents
+      - AWS_ENDPOINT=http://minio:9000
+      - AWS_USE_PATH_STYLE_ENDPOINT=true
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=mailpit
+      - MAIL_PORT=1025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - hris-network
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: ../../infra/docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    networks:
+      - hris-network
+
+  queue-worker:
+    build:
+      context: ../apps/api
+      dockerfile: ../../infra/docker/Dockerfile.api
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    volumes:
+      - ../apps/api:/var/www/html
+    depends_on:
+      - api
+    networks:
+      - hris-network
+
+  scheduler:
+    build:
+      context: ../apps/api
+      dockerfile: ../../infra/docker/Dockerfile.api
+    command: php artisan schedule:work
+    volumes:
+      - ../apps/api:/var/www/html
+    depends_on:
+      - api
+    networks:
+      - hris-network
+
+  # === Infrastructure Services ===
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: hris
+      POSTGRES_USER: hris_user
+      POSTGRES_PASSWORD: hris_secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hris_user -d hris"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hris-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hris-network
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - hris-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
+    networks:
+      - hris-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  hris-network:
+    driver: bridge
