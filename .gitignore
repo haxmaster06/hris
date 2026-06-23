@@ -20,7 +20,6 @@ desktop.ini
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
-.agent/
 
 # === Environment Files ===
 .env
