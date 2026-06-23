@@ -23,23 +23,32 @@ class TenantPermissionSeeder extends Seeder
             'core.roles.create', 'core.roles.read', 'core.roles.update', 'core.roles.delete',
             
             // Organization
-            'organization.companies.read', 'organization.companies.update',
+            'organization.companies.create', 'organization.companies.read', 'organization.companies.update', 'organization.companies.delete',
             'organization.branches.create', 'organization.branches.read', 'organization.branches.update', 'organization.branches.delete',
             'organization.departments.create', 'organization.departments.read', 'organization.departments.update', 'organization.departments.delete',
+            'organization.divisions.create', 'organization.divisions.read', 'organization.divisions.update', 'organization.divisions.delete',
             'organization.positions.create', 'organization.positions.read', 'organization.positions.update', 'organization.positions.delete',
+            'organization.grades.create', 'organization.grades.read', 'organization.grades.update', 'organization.grades.delete',
             
             // Employee
             'employee.create', 'employee.read', 'employee.update', 'employee.delete',
             'employee.history.read',
             
             // Attendance
-            'attendance.checkin', 'attendance.checkout',
-            'attendance.read.own', 'attendance.read.all',
-            'attendance.update', 'attendance.delete',
+            'shift.create', 'shift.read', 'shift.update', 'shift.delete',
+            'employee_shift.create', 'employee_shift.read', 'employee_shift.update', 'employee_shift.delete',
+            'attendance.read', 'attendance.create', 'attendance.update', 'attendance.delete',
             
             // Leave
-            'leave.apply', 'leave.view.own', 'leave.view.all',
-            'leave.approve', 'leave.reject', 'leave.update', 'leave.delete',
+            'leave_type.create', 'leave_type.read', 'leave_type.update', 'leave_type.delete',
+            'leave.create', 'leave.read', 'leave.update', 'leave.delete',
+
+            // Document
+            'document_category.create', 'document_category.read', 'document_category.update', 'document_category.delete',
+            'document.create', 'document.read', 'document.delete',
+
+            // Report
+            'report.employee', 'report.attendance', 'report.leave',
         ];
 
         foreach ($permissions as $permission) {
@@ -59,11 +68,19 @@ class TenantPermissionSeeder extends Seeder
             'organization.companies.read',
             'organization.branches.read', 'organization.branches.update',
             'organization.departments.create', 'organization.departments.read', 'organization.departments.update',
+            'organization.divisions.create', 'organization.divisions.read', 'organization.divisions.update',
             'organization.positions.create', 'organization.positions.read', 'organization.positions.update',
+            'organization.grades.create', 'organization.grades.read', 'organization.grades.update',
             'employee.create', 'employee.read', 'employee.update', 'employee.delete',
             'employee.history.read',
-            'attendance.read.all', 'attendance.update',
-            'leave.view.all', 'leave.approve', 'leave.reject',
+            'shift.create', 'shift.read', 'shift.update', 'shift.delete',
+            'employee_shift.create', 'employee_shift.read', 'employee_shift.update', 'employee_shift.delete',
+            'attendance.read', 'attendance.update',
+            'leave_type.create', 'leave_type.read', 'leave_type.update', 'leave_type.delete',
+            'leave.read', 'leave.update', 'leave.delete',
+            'document_category.create', 'document_category.read', 'document_category.update', 'document_category.delete',
+            'document.create', 'document.read', 'document.delete',
+            'report.employee', 'report.attendance', 'report.leave',
         ]);
 
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'api']);
@@ -71,10 +88,13 @@ class TenantPermissionSeeder extends Seeder
             'organization.companies.read',
             'organization.branches.read',
             'organization.departments.read',
+            'organization.divisions.read',
             'organization.positions.read',
+            'organization.grades.read',
             'employee.read',
-            'attendance.checkin', 'attendance.checkout', 'attendance.read.own',
-            'leave.apply', 'leave.view.own',
+            'attendance.create', 'attendance.read',
+            'leave.create', 'leave.read',
+            'document.read',
         ]);
     }
 }

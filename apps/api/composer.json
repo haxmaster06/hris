@@ -10,6 +10,7 @@
         "laravel/framework": "^13.8",
         "laravel/horizon": "^5.47",
         "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.34",
         "nwidart/laravel-modules": "^13.0",
         "spatie/laravel-permission": "^8.0",
         "stancl/tenancy": "^3.10",
@@ -77,6 +78,17 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": true,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": false,
+            "merge-extra-deep": false
         }
     },
     "config": {

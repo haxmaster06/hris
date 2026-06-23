@@ -28,6 +28,7 @@ abstract class BaseModel extends Model
             if (auth()->check()) {
                 $model->created_by = $model->created_by ?? auth()->id();
             }
+            $model->version = $model->version ?? 1;
         });
 
         static::updating(function ($model) {
