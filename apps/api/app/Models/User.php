@@ -75,6 +75,29 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    /**
+     * Get the employee profile associated with the user.
+     */
+    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\Modules\Employee\Models\Employee::class);
+    }
+
+    /**
+     * Get the company profile associated with the user.
+     */
+    public function company(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(
+            \Modules\Organization\Models\Company::class,
+            \Modules\Employee\Models\Employee::class,
+            'user_id',
+            'id',
+            'id',
+            'company_id'
+        );
+    }
+
     // === JWTSubject Methods ===
 
     /**
@@ -94,6 +117,8 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims(): array
     {
-        return [];
+        return [
+            'tenant_id' => function_exists('tenant') && tenant() ? tenant('id') : null,
+        ];
     }
 }

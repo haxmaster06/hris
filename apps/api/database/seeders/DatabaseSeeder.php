@@ -18,7 +18,28 @@ class DatabaseSeeder extends Seeder
                 TenantAdminSeeder::class,
             ]);
         } else {
-            // Landlord / Central DB seeders (if any) can be placed here
+            // Seed central tenants if they don't exist yet to support multiple tenant setups
+            if (!\App\Models\Tenant::where('slug', 'haxmaster')->exists()) {
+                $tenant1 = \App\Models\Tenant::create([
+                    'id' => 'haxmaster',
+                    'name' => 'Haxmaster Utama Corp',
+                    'slug' => 'haxmaster',
+                ]);
+                $tenant1->domains()->create([
+                    'domain' => 'haxmaster.local',
+                ]);
+            }
+
+            if (!\App\Models\Tenant::where('slug', 'haxmaster2')->exists()) {
+                $tenant2 = \App\Models\Tenant::create([
+                    'id' => 'haxmaster2',
+                    'name' => 'Haxmaster Sekunder Ltd',
+                    'slug' => 'haxmaster2',
+                ]);
+                $tenant2->domains()->create([
+                    'domain' => 'haxmaster2.local',
+                ]);
+            }
         }
     }
 }

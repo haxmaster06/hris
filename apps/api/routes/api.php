@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Landlord\TenantController;
 
 Route::prefix('v1')->group(function () {
     Route::get('/health', function () {
@@ -16,4 +17,8 @@ Route::prefix('v1')->group(function () {
             ]
         ]);
     });
+
+    // Central Tenant Management
+    Route::get('tenants/list', [TenantController::class, 'publicList']);
+    Route::apiResource('tenants', TenantController::class)->only(['index', 'store', 'update', 'destroy']);
 });

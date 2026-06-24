@@ -47,8 +47,11 @@ class AuthController extends BaseController
         }
 
         // Include roles and permissions
+        $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+
         $userData = [
             'id' => $user->id,
+            'employee_id' => $employee?->id,
             'name' => $user->name,
             'email' => $user->email,
             'roles' => $user->getRoleNames(),

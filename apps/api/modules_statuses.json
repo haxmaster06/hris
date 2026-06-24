@@ -4,5 +4,8 @@
     "Attendance": true,
     "Leave": true,
     "Document": true,
-    "Report": true
+    "Report": true,
+    "Recruitment": true,
+    "Training": true,
+    "Certification": true
 }

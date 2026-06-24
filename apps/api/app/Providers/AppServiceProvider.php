@@ -21,5 +21,20 @@ class AppServiceProvider extends ServiceProvider
             $cleanId = str_replace('-', '', (string) $tenant->id);
             return config('tenancy.database.prefix') . $cleanId . config('tenancy.database.suffix');
         });
+
+        // Super Admin Authorization Gate Bypass
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            if (isset($user->is_super_admin) && $user->is_super_admin === true) {
+                return true;
+            }
+            try {
+                if ($user->hasRole('Super Admin')) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                // Ignore DB exceptions when roles table might not exist during migrations
+            }
+            return null;
+        });
     }
 }

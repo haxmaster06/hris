@@ -26,11 +26,71 @@ class InitializeTenancy
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // 0. Super Admin Cross-Tenant authentication bypass
+        $token = $request->bearerToken();
+        if ($token) {
+            try {
+                $payload = \Tymon\JWTAuth\Facades\JWTAuth::setToken($token)->getPayload();
+                $originalTenantId = $payload->get('tenant_id');
+
+                if ($originalTenantId) {
+                    $tenantModel = config('tenancy.tenant_model');
+                    $originalTenant = $tenantModel::find($originalTenantId);
+
+                    if ($originalTenant) {
+                        // Switch to original tenant temporarily
+                        $this->tenancy->initialize($originalTenant);
+
+                        $user = \Tymon\JWTAuth\Facades\JWTAuth::setToken($token)->authenticate();
+
+                        if ($user && $user->hasRole('Super Admin')) {
+                            // User is Super Admin! Now resolve target tenant
+                            $user->is_super_admin = true;
+                            $targetTenantId = $request->header('X-Tenant-ID');
+
+                            if ($targetTenantId && $targetTenantId !== $originalTenantId) {
+                                $targetTenant = $tenantModel::find($targetTenantId);
+                                if (!$targetTenant) {
+                                    $targetTenant = $tenantModel::where('slug', $targetTenantId)->first();
+                                }
+
+                                if ($targetTenant) {
+                                    $this->tenancy->end();
+                                    $this->tenancy->initialize($targetTenant);
+                                }
+                            }
+
+                            // Keep the user authenticated in Auth guards so it does not query DB again
+                            \Illuminate\Support\Facades\Auth::setUser($user);
+                            \Illuminate\Support\Facades\Auth::guard('api')->setUser($user);
+
+                            return $next($request);
+                        }
+
+                        // Revert tenancy if user is not Super Admin
+                        $this->tenancy->end();
+                    }
+                }
+            } catch (\Exception $e) {
+                if ($this->tenancy->initialized) {
+                    $this->tenancy->end();
+                }
+            }
+        }
+
         // 1. Try to initialize by X-Tenant-ID header
         $tenantId = $request->header('X-Tenant-ID');
         if ($tenantId) {
             $tenantModel = config('tenancy.tenant_model');
-            $tenant = $tenantModel::find($tenantId);
+            
+            $tenant = null;
+            if (\Illuminate\Support\Str::isUuid($tenantId)) {
+                $tenant = $tenantModel::find($tenantId);
+            }
+            
+            if (!$tenant) {
+                $tenant = $tenantModel::where('slug', $tenantId)->first();
+            }
             
             if ($tenant) {
                 $this->tenancy->initialize($tenant);

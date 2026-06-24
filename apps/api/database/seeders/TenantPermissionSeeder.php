@@ -49,6 +49,17 @@ class TenantPermissionSeeder extends Seeder
 
             // Report
             'report.employee', 'report.attendance', 'report.leave',
+
+            // Recruitment
+            'recruitment.vacancy.create', 'recruitment.vacancy.read', 'recruitment.vacancy.update', 'recruitment.vacancy.delete',
+            'recruitment.candidate.create', 'recruitment.candidate.read', 'recruitment.candidate.update', 'recruitment.candidate.delete',
+            'recruitment.application.create', 'recruitment.application.read', 'recruitment.application.update', 'recruitment.application.delete',
+            'recruitment.interview.create', 'recruitment.interview.read', 'recruitment.interview.update', 'recruitment.interview.delete',
+            'recruitment.approval.create', 'recruitment.approval.read', 'recruitment.approval.update', 'recruitment.approval.delete',
+
+            // Training & Certification
+            'training.create', 'training.read', 'training.update', 'training.delete',
+            'certification.create', 'certification.read', 'certification.update', 'certification.delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -81,6 +92,13 @@ class TenantPermissionSeeder extends Seeder
             'document_category.create', 'document_category.read', 'document_category.update', 'document_category.delete',
             'document.create', 'document.read', 'document.delete',
             'report.employee', 'report.attendance', 'report.leave',
+            'recruitment.vacancy.create', 'recruitment.vacancy.read', 'recruitment.vacancy.update', 'recruitment.vacancy.delete',
+            'recruitment.candidate.create', 'recruitment.candidate.read', 'recruitment.candidate.update', 'recruitment.candidate.delete',
+            'recruitment.application.create', 'recruitment.application.read', 'recruitment.application.update', 'recruitment.application.delete',
+            'recruitment.interview.create', 'recruitment.interview.read', 'recruitment.interview.update', 'recruitment.interview.delete',
+            'recruitment.approval.create', 'recruitment.approval.read', 'recruitment.approval.update', 'recruitment.approval.delete',
+            'training.create', 'training.read', 'training.update', 'training.delete',
+            'certification.create', 'certification.read', 'certification.update', 'certification.delete',
         ]);
 
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'api']);
