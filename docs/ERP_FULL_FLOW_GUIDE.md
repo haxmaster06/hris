@@ -27,7 +27,8 @@ Platform Modules
 ├── M15: Offboarding Management
 ├── M16: Notification Center
 ├── M17: Reporting & Analytics
-└── M18: Audit & Compliance
+├── M18: Audit & Compliance
+└── M19: Integration Layer
 ```
 
 ---
@@ -142,7 +143,29 @@ Vacancy Created (Draft) ──> Published ──> Candidate Applies (Job Applica
 - **Wawancara & Evaluasi Rekrutmen**: Unggah CV kandidat, pencatatan wawancara, dan evaluasi detail interviewer berbasis kriteria (Teknis, Komunikasi, Sikap) dan skor keseluruhan 1-5.
 - **Dokumen & Versi**: Pencatatan versi dokumen historis (`document_versions`) untuk memulihkan atau meninjau berkas terdahulu serta pelacakan tanggal kedaluwarsa berkas.
 
+### 19. Reporting & Analytics (Fase 6)
+- **Dasbor Eksekutif**: Mengintegrasikan visualisasi grafik interaktif menggunakan library `recharts` di `/analytics` untuk menganalisis metrik kepegawaian secara real-time.
+- **Visualisasi Tabular & Chart**:
+  - *Demografi Staf*: Grafik donut/bar memisahkan data Gender, Status Kontrak Kerja, Klasifikasi Usia, dan Masa Bakti.
+  - *Turnover & Retensi*: Grafik garis (Line Chart) tren keluar-masuk karyawan bulanan beserta persentase tingkat retensi.
+  - *Headcount Growth*: Grafik area (Area Chart) akumulasi total jumlah karyawan aktif per periode.
+  - *Distribusi Biaya (Financial Cost)*: Grafik batang horizontal (Horizontal Bar Chart) biaya kompensasi Take Home Pay bulanan per departemen.
+  - *Efektivitas Pelatihan*: Grafik komparatif grouped bar chart membandingkan nilai Pre-Test vs Post-Test ujian program training.
+- **Ekspor Laporan**: Fasilitas ekspor data rekapitulasi kehadiran dan pemakaian cuti tahunan langsung ke file format CSV.
+
+### 20. Employee Self-Service (ESS) & Profile Request (Fase 6)
+- **Ownership-Based Filtering**: Mengamankan query data absensi, cuti, dokumen vault, dan slip gaji pada level controller backend. Apabila pengguna login adalah karyawan biasa (non-admin), sistem secara otomatis membatasi data agar hanya merender milik pribadi.
+- **Penyaringan UI (Conditional UI)**: Menyembunyikan seluruh tombol kendali administratif (tambah/edit/hapus/bulk actions) dan panel persetujuan tim jika diakses sebagai karyawan biasa.
+- **Profile Update Request**:
+  - Memungkinkan karyawan mengajukan pembaruan data mandiri (Email, Nomor Telepon, Alamat).
+  - Data yang diubah tidak langsung disimpan ke database utama karyawan, melainkan dicatat sebagai pengajuan berstatus `pending` di tabel `profile_update_requests`.
+  - HR Admin menerima notifikasi/peninjauan panel di detail profil karyawan terkait untuk memberikan persetujuan (`Approve`) atau penolakan (`Reject`) beserta input komentar. Persetujuan HR otomatis menyinkronkan data perubahan ke profil karyawan utama.
+
+### 21. Integration Layer (Fase 6)
+- **Bank Export Service**: Menyediakan downloader file format transfer bank payroll (Mandiri: fixed-width txt, BCA: CSV, BRI: text, BNI: CSV) yang mendeskripsi Take Home Pay dari siklus penggajian bulanan yang telah dikunci (`locked`) agar siap diunggah ke portal corporate banking.
+- **Notification Gateways**: Infrastruktur pengiriman pesan berbasis kontrak interface modular (`NotificationGatewayInterface`) yang memfasilitasi integrasi pengiriman email SMTP dan notifikasi WhatsApp (Fonnte API Gateway) dengan pencatatan log historis status pengiriman (`notification_logs`).
+
 ---
 
 ### 🎨 Design Aesthetics & Visual Utilities
-- **Vanta.js Integration**: Menyediakan component React `VantaBackground.tsx` yang modular untuk merender animasi latar belakang 3D WebGL (Net, Waves, Fog, Clouds, Halo, Rings, Globe) secara dinamis pada client-side (menggunakan dynamic imports untuk optimasi SSR Next.js).
+- **Vanta.js Integration**: Menyediakan component React `VantaBackground.tsx` di `apps/web/src/components` yang modular untuk merender animasi latar belakang 3D WebGL (Net, Waves, Fog, Clouds, Halo, Rings, Globe) secara dinamis pada client-side (menggunakan dynamic imports untuk optimasi SSR Next.js).

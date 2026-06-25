@@ -276,6 +276,14 @@
       "surveys": "Survei",
       "feedback": "Kotak Saran",
       "awards": "Dinding Penghargaan"
+    },
+    "analytics": {
+      "title": "Analisis Kepegawaian",
+      "desc": "Visualisasikan pertumbuhan headcount, pembagian gender, tren biaya gaji, dan efisiensi pelatihan."
+    },
+    "settings": {
+      "title": "Pengaturan Sistem",
+      "desc": "Kelola konfigurasi integrasi, kunci API, dan mesin alur kerja persetujuan."
     }
   },
   "profile": {
@@ -1146,5 +1154,44 @@
         "submit": "Konfirmasi Pengembalian"
       }
     }
+  },
+  "analytics": {
+    "pageTitle": "Analitik & Laporan",
+    "subtitle": "Visualisasi rekapitulasi data demografis karyawan, biaya gaji, turnover, dan kehadiran.",
+    "tabs": {
+      "workforce": "Demografi Staf",
+      "turnover": "Turnover & Retensi",
+      "cost": "Biaya & Finansial",
+      "attendance": "Presensi & Cuti",
+      "training": "Efektivitas Pelatihan"
+    },
+    "genderDistribution": "Distribusi Gender",
+    "statusDistribution": "Status Kontrak Kerja",
+    "ageDistribution": "Kelompok Usia Karyawan",
+    "tenureDistribution": "Masa Kerja Karyawan",
+    "hiredVsTerminated": "Rekrutan vs Pemutusan Hubungan Kerja (PHK)",
+    "retentionRate": "Tingkat Retensi Staf (%)",
+    "headcountGrowth": "Tren Headcount Karyawan",
+    "costByDept": "Total Pengeluaran Gaji per Departemen",
+    "trainingEffectiveness": "Efektivitas Training (Pre-Test vs Post-Test)",
+    "exportBtn": "Ekspor Laporan CSV"
+  },
+  "integration": {
+    "title": "Pengaturan Integrasi",
+    "subtitle": "Hubungkan platform dengan gateway notifikasi WhatsApp/Email dan ekspor data pembayaran bank.",
+    "configs": "Konfigurasi API & Kredensial",
+    "testConnection": "Uji Koneksi",
+    "provider": "Penyedia Layanan",
+    "isActive": "Status Aktif",
+    "saveSuccess": "Konfigurasi integrasi berhasil disimpan",
+    "testSuccess": "Uji koneksi ke {provider} berhasil!",
+    "bankExport": "Ekspor File Bank Transfer",
+    "bankFormat": "Pilih Format Bank"
+  },
+  "settings": {
+    "title": "Pengaturan Sistem",
+    "subtitle": "Kelola konfigurasi workflow persetujuan (approval) dan modul integrasi eksternal.",
+    "workflows": "Approval Workflows",
+    "integrations": "Integrasi API & Layanan"
   }
 }

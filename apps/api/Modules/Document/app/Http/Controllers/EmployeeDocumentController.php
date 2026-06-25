@@ -20,6 +20,14 @@ class EmployeeDocumentController extends BaseController
 
     public function index(Request $request, string $employeeId): JsonResponse
     {
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            if (!$employee || $employee->id !== $employeeId) {
+                return $this->errorResponse('Access denied', 403);
+            }
+        }
+
         $documents = $this->documentService->listByEmployee(
             employeeId: $employeeId,
             filters: $request->all()
@@ -37,6 +45,14 @@ class EmployeeDocumentController extends BaseController
 
     public function store(UploadDocumentRequest $request, string $employeeId): JsonResponse
     {
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            if (!$employee || $employee->id !== $employeeId) {
+                return $this->errorResponse('Access denied', 403);
+            }
+        }
+
         $document = $this->documentService->upload(
             file: $request->file('file'),
             employeeId: $employeeId,

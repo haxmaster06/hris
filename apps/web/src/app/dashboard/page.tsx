@@ -19,7 +19,8 @@ import {
   ChevronRight,
   GitPullRequest,
   Coins,
-  Gift
+  Gift,
+  TrendingUp
 } from "lucide-react";
 
 export default function DashboardLauncher() {
@@ -161,11 +162,28 @@ export default function DashboardLauncher() {
       color: "bg-indigo-500",
       items: [
         {
+          titleKey: "modules.analytics.title",
+          descKey: "modules.analytics.desc",
+          icon: TrendingUp,
+          href: "/analytics",
+          subLinks: []
+        },
+        {
           titleKey: "modules.users.title",
           descKey: "modules.users.desc",
           icon: ShieldCheck,
           href: "/users",
           subLinks: []
+        },
+        {
+          titleKey: "modules.settings.title",
+          descKey: "modules.settings.desc",
+          icon: Settings,
+          href: "/settings",
+          subLinks: [
+            { nameKey: "settings.workflows", href: "/settings/workflows" },
+            { nameKey: "settings.integrations", href: "/settings/integrations" }
+          ]
         },
         ...(isSuperAdmin ? [{
           titleKey: "modules.hlc.title",

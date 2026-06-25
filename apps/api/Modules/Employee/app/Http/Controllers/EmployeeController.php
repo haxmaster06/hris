@@ -24,7 +24,13 @@ class EmployeeController extends BaseController
     {
         Gate::authorize('employee.read');
 
-        $employees = $this->service->list($request->all());
+        $filters = $request->all();
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $filters['user_id'] = $user->id;
+        }
+
+        $employees = $this->service->list($filters);
 
         if ($request->has('include')) {
             $includes = explode(',', $request->input('include'));
@@ -59,6 +65,11 @@ class EmployeeController extends BaseController
         Gate::authorize('employee.read');
 
         $employee = $this->service->findOrFail($id);
+
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager']) && $employee->user_id !== $user->id) {
+            return $this->errorResponse('Access denied', 403);
+        }
 
         if ($request->has('include')) {
             $includes = explode(',', $request->input('include'));

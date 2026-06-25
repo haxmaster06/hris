@@ -24,7 +24,11 @@ class PayslipController extends BaseController
     public function show(Request $request, string $employeeId): JsonResponse
     {
         // Karyawan biasa hanya boleh melihat payslip miliknya sendiri. HR Manager / Super Admin boleh melihat semua.
-        if (auth()->id() !== $employeeId) {
+        $user = auth()->user();
+        $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+        $loggedInEmployeeId = $employee?->id;
+
+        if ($loggedInEmployeeId !== $employeeId) {
             Gate::authorize('payroll.read');
         }
 

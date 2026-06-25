@@ -17,5 +17,6 @@
     "Disciplinary": true,
     "Talent": true,
     "Engagement": true,
-    "Asset": true
+    "Asset": true,
+    "Integration": true
 }

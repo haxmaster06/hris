@@ -263,6 +263,13 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
         color: "bg-indigo-500",
         items: [
           {
+            titleKey: "modules.analytics.title",
+            descKey: "modules.analytics.desc",
+            icon: TrendingUp,
+            href: "/analytics",
+            subLinks: []
+          },
+          {
             titleKey: "modules.users.title",
             descKey: "modules.users.desc",
             icon: ShieldCheck,
@@ -270,11 +277,14 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
             subLinks: []
           },
           {
-            titleKey: "modules.workflows.title",
-            descKey: "modules.workflows.desc",
+            titleKey: "modules.settings.title",
+            descKey: "modules.settings.desc",
             icon: Settings,
-            href: "/settings/workflows",
-            subLinks: []
+            href: "/settings",
+            subLinks: [
+              { nameKey: "settings.workflows", href: "/settings/workflows" },
+              { nameKey: "settings.integrations", href: "/settings/integrations" }
+            ]
           },
           {
             titleKey: "modules.audit.title",

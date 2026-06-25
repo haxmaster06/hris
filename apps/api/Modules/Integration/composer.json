@@ -1,0 +1,22 @@
+{
+    "name": "nwidart/integration",
+    "description": "Integration configurations, bank exports, and notification services module",
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Integration\\": "app/",
+            "Modules\\Integration\\Database\\Factories\\": "database/factories/",
+            "Modules\\Integration\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Integration\\Tests\\": "tests/"
+        }
+    }
+}

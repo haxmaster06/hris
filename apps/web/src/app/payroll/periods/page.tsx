@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import Header from "@/components/Header";
-import { Play, Check, Lock, Loader2, Eye, Plus, ArrowLeft, Calendar, FileText } from "lucide-react";
+import { Play, Check, Lock, Loader2, Eye, Plus, ArrowLeft, Calendar, FileText, Download } from "lucide-react";
 import Swal from "sweetalert2";
 import Link from "next/link";
 
@@ -28,6 +28,8 @@ export default function PayrollPeriodsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<PayrollPeriod | null>(null);
   const [periodDetails, setPeriodDetails] = useState<any[] | null>(null);
+  const [selectedBank, setSelectedBank] = useState<string>("");
+  const [exportPending, setExportPending] = useState<boolean>(false);
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1; // 1-indexed
@@ -210,9 +212,50 @@ export default function PayrollPeriodsPage() {
     }
   };
 
+  const handleBankExport = async (periodId: string) => {
+    if (!selectedBank) return;
+    try {
+      setExportPending(true);
+      const response = await api.post("/integration/bank-export", {
+        payroll_period_id: periodId,
+        bank: selectedBank,
+      });
+
+      if (response.data.success) {
+        const { filename, content } = response.data.data;
+        // Decode base64 content
+        const byteCharacters = atob(content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "application/octet-stream" });
+
+        // Download via temporary anchor element
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        toast.success("File transfer bank berhasil diunduh.");
+      } else {
+        toast.error("Gagal melakukan ekspor data bank.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Terjadi kesalahan saat memproses ekspor.");
+    } finally {
+      setExportPending(false);
+    }
+  };
+
   const handleViewDetails = async (period: PayrollPeriod) => {
     setSelectedPeriod(period);
     setPeriodDetails(null);
+    setSelectedBank("");
     try {
       const res = await api.get(`/payroll-runs?payroll_period_id=${period.id}&include=employee`);
       setPeriodDetails(res.data.data?.data || res.data.data || []);
@@ -338,6 +381,35 @@ export default function PayrollPeriodsPage() {
                           {lockMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Lock className="h-3.5 w-3.5" />}
                           Kunci Periode
                         </button>
+                      )}
+
+                      {/* Bank Export */}
+                      {selectedPeriod.status === "locked" && (
+                        <div className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-lg p-1 bg-zinc-50 dark:bg-zinc-900/50">
+                          <select
+                            value={selectedBank}
+                            onChange={(e) => setSelectedBank(e.target.value)}
+                            className="bg-transparent text-xs outline-none py-1 px-2 text-zinc-800 dark:text-zinc-200 cursor-pointer"
+                          >
+                            <option value="" className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">-- Pilih Bank --</option>
+                            <option value="bca" className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">BCA (CSV)</option>
+                            <option value="mandiri" className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">Mandiri (Fixed Width)</option>
+                            <option value="bri" className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">BRI (Text)</option>
+                            <option value="bni" className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">BNI (CSV)</option>
+                          </select>
+                          <button
+                            onClick={() => handleBankExport(selectedPeriod.id)}
+                            disabled={!selectedBank || exportPending}
+                            className="inline-flex items-center gap-1 py-1 px-3 rounded bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-bold disabled:opacity-40 cursor-pointer"
+                          >
+                            {exportPending ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <Download className="h-3.5 w-3.5" />
+                            )}
+                            Ekspor
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

@@ -24,7 +24,14 @@ class AttendanceController extends BaseController
     {
         Gate::authorize('attendance.read');
 
-        $logs = $this->service->list($request->all());
+        $filters = $request->all();
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            $filters['employee_id'] = $employee?->id ?? '00000000-0000-0000-0000-000000000000';
+        }
+
+        $logs = $this->service->list($filters);
 
         if ($request->has('include')) {
             $includes = explode(',', $request->input('include'));

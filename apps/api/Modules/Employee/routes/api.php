@@ -10,6 +10,7 @@ use Modules\Employee\Http\Controllers\EmployeeEducationController;
 use Modules\Employee\Http\Controllers\EmployeeExperienceController;
 use Modules\Employee\Http\Controllers\EmployeeHistoryController;
 use Modules\Employee\Http\Controllers\EmergencyContactController;
+use Modules\Employee\Http\Controllers\ProfileUpdateRequestController;
 
 Route::middleware([
     InitializeTenancy::class,
@@ -25,4 +26,10 @@ Route::middleware([
     // Read-only histories routes
     Route::get('employees/{employee}/histories', [EmployeeHistoryController::class, 'index']);
     Route::get('employees/{employee}/histories/{history}', [EmployeeHistoryController::class, 'show']);
+
+    // Profile update requests routes
+    Route::get('profile-update-requests', [ProfileUpdateRequestController::class, 'index']);
+    Route::post('profile-update-requests', [ProfileUpdateRequestController::class, 'store']);
+    Route::post('profile-update-requests/{id}/approve', [ProfileUpdateRequestController::class, 'approve']);
+    Route::post('profile-update-requests/{id}/reject', [ProfileUpdateRequestController::class, 'reject']);
 });

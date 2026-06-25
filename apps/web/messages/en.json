@@ -276,6 +276,14 @@
       "surveys": "Surveys",
       "feedback": "Suggestion Box",
       "awards": "Awards Wall"
+    },
+    "analytics": {
+      "title": "HR Analytics",
+      "desc": "Visualize headcount growth, gender split, payroll cost trends, and training efficiency."
+    },
+    "settings": {
+      "title": "System Settings",
+      "desc": "Manage integration configuration, API keys, and workflow engines."
     }
   },
   "profile": {
@@ -1146,5 +1154,44 @@
         "submit": "Confirm Return"
       }
     }
+  },
+  "analytics": {
+    "pageTitle": "Analytics & Reports",
+    "subtitle": "Visualize demographic data, payroll expenses, turnover, and attendance summaries.",
+    "tabs": {
+      "workforce": "Staff Demographics",
+      "turnover": "Turnover & Retention",
+      "cost": "Cost & Financials",
+      "attendance": "Attendance & Leave",
+      "training": "Training Effectiveness"
+    },
+    "genderDistribution": "Gender Distribution",
+    "statusDistribution": "Employment Contract Status",
+    "ageDistribution": "Employee Age Distribution",
+    "tenureDistribution": "Employee Tenure Distribution",
+    "hiredVsTerminated": "Hired vs Terminated Staff",
+    "retentionRate": "Staff Retention Rate (%)",
+    "headcountGrowth": "Employee Headcount Growth",
+    "costByDept": "Total Payroll Cost by Department",
+    "trainingEffectiveness": "Training Effectiveness (Pre-Test vs Post-Test)",
+    "exportBtn": "Export Report CSV"
+  },
+  "integration": {
+    "title": "Integration Settings",
+    "subtitle": "Connect the platform with WhatsApp/Email notification gateways and export bank transfer payloads.",
+    "configs": "API Configurations & Credentials",
+    "testConnection": "Test Connection",
+    "provider": "Service Provider",
+    "isActive": "Is Active",
+    "saveSuccess": "Integration configuration saved successfully",
+    "testSuccess": "Connection to {provider} tested successfully!",
+    "bankExport": "Bank Export Paylists",
+    "bankFormat": "Select Bank Format"
+  },
+  "settings": {
+    "title": "System Settings",
+    "subtitle": "Manage approval workflows and external API integration configurations.",
+    "workflows": "Approval Workflows",
+    "integrations": "API & Integrations"
   }
 }

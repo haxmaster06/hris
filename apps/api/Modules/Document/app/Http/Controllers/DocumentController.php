@@ -39,6 +39,15 @@ class DocumentController extends BaseController
     public function show(string $id): JsonResponse
     {
         $document = $this->documentService->findOrFail($id);
+
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            if (!$employee || $document->employee_id !== $employee->id) {
+                return $this->errorResponse('Access denied', 403);
+            }
+        }
+
         $document->signed_url = $this->documentService->getSignedUrl($document->id);
 
         return $this->successResponse(
@@ -48,6 +57,16 @@ class DocumentController extends BaseController
 
     public function destroy(string $id): JsonResponse
     {
+        $document = $this->documentService->findOrFail($id);
+
+        $user = auth()->user();
+        if (!$user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager'])) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            if (!$employee || $document->employee_id !== $employee->id) {
+                return $this->errorResponse('Access denied', 403);
+            }
+        }
+
         $this->documentService->delete($id);
 
         return $this->successResponse(

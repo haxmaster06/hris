@@ -17,6 +17,10 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     {
         $query = $this->model->query();
 
+        if (!empty($filters['user_id'])) {
+            $query->where('user_id', $filters['user_id']);
+        }
+
         if (!empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('first_name', 'ilike', "%{$filters['search']}%")

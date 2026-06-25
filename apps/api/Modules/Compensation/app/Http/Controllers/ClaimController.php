@@ -20,9 +20,19 @@ class ClaimController extends BaseController
 
     public function index(Request $request): JsonResponse
     {
-        Gate::authorize('payroll.read');
+        $user = auth()->user();
+        $isHR = $user->hasRole(['Super Admin', 'HR Admin', 'HR Manager', 'Manager']);
 
-        $claims = $this->repository->paginate($request->all());
+        if (!$isHR) {
+            $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+            $filters = $request->all();
+            $filters['employee_id'] = $employee?->id ?? '00000000-0000-0000-0000-000000000000';
+        } else {
+            Gate::authorize('payroll.read');
+            $filters = $request->all();
+        }
+
+        $claims = $this->repository->paginate($filters);
 
         return $this->successResponse(
             ClaimResource::collection($claims),
@@ -34,7 +44,11 @@ class ClaimController extends BaseController
     {
         // Karyawan biasa boleh membuat klaim miliknya sendiri. HR boleh membuatkan untuk siapa saja.
         $employeeId = $request->input('employee_id');
-        if (auth()->id() !== $employeeId) {
+        $user = auth()->user();
+        $employee = \Modules\Employee\Models\Employee::where('user_id', $user->id)->first();
+        $loggedInEmployeeId = $employee?->id;
+
+        if ($loggedInEmployeeId !== $employeeId) {
             Gate::authorize('payroll.write');
         }
 

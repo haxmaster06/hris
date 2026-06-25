@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useTranslations } from "next-intl";
+import { useAuthorization } from "@/hooks/useAuthorization";
 
 interface Employee {
   id: string;
@@ -60,6 +61,7 @@ export default function DocumentsReportsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
+  const { isAdmin, employeeId } = useAuthorization();
   const [mounted, setMounted] = useState(false);
   const [selectedEmpId, setSelectedEmpId] = useState("");
 
@@ -94,15 +96,21 @@ export default function DocumentsReportsPage() {
   const { data: employees } = useQuery<Employee[]>({
     queryKey: ["employees"],
     queryFn: () => api.get("/employees").then((res) => res.data.data?.data || res.data.data || []),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && isAdmin,
   });
 
   // Set default employee
   useEffect(() => {
-    if (employees && employees.length > 0 && !selectedEmpId) {
-      setSelectedEmpId(employees[0].id);
+    if (isAdmin) {
+      if (employees && employees.length > 0 && !selectedEmpId) {
+        setSelectedEmpId(employees[0].id);
+      }
+    } else {
+      if (employeeId && selectedEmpId !== employeeId) {
+        setSelectedEmpId(employeeId);
+      }
     }
-  }, [employees, selectedEmpId]);
+  }, [employees, selectedEmpId, isAdmin, employeeId]);
 
   // Fetch Document Categories
   const { data: categories } = useQuery<DocumentCategory[]>({
@@ -320,22 +328,24 @@ export default function DocumentsReportsPage() {
 
       <main className="max-w-6xl mx-auto px-6 mt-8 space-y-6">
         {/* Context Selector Card */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-4 shadow-sm text-zinc-900 dark:text-zinc-100">
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t("activeEmployeeFilter")}</span>
-          <select
-            value={selectedEmpId}
-            onChange={(e) => setSelectedEmpId(e.target.value)}
-            className="w-full sm:w-64 px-3 py-1.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-xs font-semibold focus:outline-none"
-          >
-            {employees?.map((emp) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.first_name} {emp.last_name} ({emp.employee_number})
-              </option>
-            ))}
-          </select>
-        </div>
+        {isAdmin && (
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-4 shadow-sm text-zinc-900 dark:text-zinc-100">
+            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t("activeEmployeeFilter")}</span>
+            <select
+              value={selectedEmpId}
+              onChange={(e) => setSelectedEmpId(e.target.value)}
+              className="w-full sm:w-64 px-3 py-1.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-xs font-semibold focus:outline-none"
+            >
+              {employees?.map((emp) => (
+                <option key={emp.id} value={emp.id}>
+                  {emp.first_name} {emp.last_name} ({emp.employee_number})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className={isAdmin ? "grid grid-cols-1 md:grid-cols-2 gap-8" : "max-w-3xl mx-auto"}>
         {/* Sisi Kiri: Document Vault */}
         <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm space-y-6">
@@ -345,76 +355,78 @@ export default function DocumentsReportsPage() {
             </h3>
 
             {/* Document Upload Form */}
-            <form onSubmit={handleUploadSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("category")}</label>
-                  <select
-                    value={docCategoryId}
-                    onChange={(e) => setDocCategoryId(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
-                  >
-                    {categories?.map((cat) => (
-                      <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
-                    ))}
-                  </select>
+            {isAdmin && (
+              <form onSubmit={handleUploadSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("category")}</label>
+                    <select
+                      value={docCategoryId}
+                      onChange={(e) => setDocCategoryId(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
+                    >
+                      {categories?.map((cat) => (
+                        <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Doc Type</label>
+                    <select
+                      value={docType}
+                      onChange={(e) => setDocType(e.target.value)}
+                      className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
+                    >
+                      <option value="ktp">KTP / ID Card</option>
+                      <option value="npwp">NPWP / Tax Card</option>
+                      <option value="contract">Employment Contract</option>
+                      <option value="certificate">Certification</option>
+                      <option value="transcript">Academic Transcript</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("expiryDate")}</label>
+                    <input
+                      type="date"
+                      value={expiryDate}
+                      onChange={(e) => setExpiryDate(e.target.value)}
+                      className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Doc Type</label>
-                  <select
-                    value={docType}
-                    onChange={(e) => setDocType(e.target.value)}
-                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
-                  >
-                    <option value="ktp">KTP / ID Card</option>
-                    <option value="npwp">NPWP / Tax Card</option>
-                    <option value="contract">Employment Contract</option>
-                    <option value="certificate">Certification</option>
-                    <option value="transcript">Academic Transcript</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("expiryDate")}</label>
+
+                {/* Drag/Drop File Input Area */}
+                <div className="border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl p-6 text-center cursor-pointer transition-colors relative">
                   <input
-                    type="date"
-                    value={expiryDate}
-                    onChange={(e) => setExpiryDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm"
+                    type="file"
+                    onChange={handleFileChange}
+                    required
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
+                  <div className="space-y-2">
+                    <UploadCloud className="h-10 w-10 text-zinc-400 mx-auto" />
+                    <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+                      {selectedFile ? selectedFile.name : t("dragDropHint")}
+                    </p>
+                    <p className="text-[10px] text-zinc-400">{t("fileLimitHint")}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Drag/Drop File Input Area */}
-              <div className="border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl p-6 text-center cursor-pointer transition-colors relative">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  required
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="space-y-2">
-                  <UploadCloud className="h-10 w-10 text-zinc-400 mx-auto" />
-                  <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                    {selectedFile ? selectedFile.name : t("dragDropHint")}
-                  </p>
-                  <p className="text-[10px] text-zinc-400">{t("fileLimitHint")}</p>
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={isUploading}
+                    className="inline-flex items-center gap-2 py-2 px-5 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
+                  >
+                    {isUploading && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {t("uploadButton")}
+                  </button>
                 </div>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isUploading}
-                  className="inline-flex items-center gap-2 py-2 px-5 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
-                >
-                  {isUploading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {t("uploadButton")}
-                </button>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
 
           {/* Uploaded Documents List */}
@@ -481,13 +493,15 @@ export default function DocumentsReportsPage() {
                               <Download className="h-4 w-4" />
                             </a>
                           )}
-                          <button
-                            onClick={() => deleteDocMutation.mutate(doc.id)}
-                            className="p-1.5 rounded-md text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20"
-                            title={t("deleteTooltip")}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => deleteDocMutation.mutate(doc.id)}
+                              className="p-1.5 rounded-md text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20"
+                              title={t("deleteTooltip")}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
 
@@ -523,7 +537,8 @@ export default function DocumentsReportsPage() {
         </div>
 
         {/* Sisi Kanan: Reporting Hub */}
-        <div className="space-y-6">
+        {isAdmin && (
+          <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm space-y-6">
             <h3 className="text-md font-bold text-zinc-950 dark:text-zinc-50 flex items-center gap-2">
               <FileSpreadsheet className="h-5 w-5 text-zinc-500" />
@@ -634,6 +649,7 @@ export default function DocumentsReportsPage() {
             </div>
           </div>
         </div>
+        )}
         </div>
       </main>
     </div>
