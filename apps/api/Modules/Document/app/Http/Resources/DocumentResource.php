@@ -24,6 +24,8 @@ class DocumentResource extends JsonResource
             'storage_provider' => $this->storage_provider,
             'storage_path' => $this->storage_path,
             'expiry_date' => $this->expiry_date?->toDateString(),
+            'document_type' => $this->document_type,
+            'versions' => DocumentVersionResource::collection($this->whenLoaded('versions')),
             'signed_url' => $this->when(isset($this->resource->signed_url), $this->resource->signed_url),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),

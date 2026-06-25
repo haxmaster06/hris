@@ -1,0 +1,11 @@
+{
+    "name": "Audit",
+    "alias": "audit",
+    "description": "Handles database audit logging observer, trail, login histories tracking, and compliance monitoring",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Audit\\Providers\\AuditServiceProvider"
+    ],
+    "files": []
+}

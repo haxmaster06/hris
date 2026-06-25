@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { Edit2, Trash2, Plus, Loader2, Eye } from "lucide-react";
@@ -16,12 +17,15 @@ interface Company {
 
 export default function CompanyTab() {
   const queryClient = useQueryClient();
+  const t = useTranslations();
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [formData, setFormData] = useState({ name: "", code: "", tax_number: "", address: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const entityName = t("modules.organization.legalEntity");
 
   // Fetch Companies
   const { data: companiesData, isLoading } = useQuery({
@@ -37,11 +41,11 @@ export default function CompanyTab() {
     mutationFn: (newCompany: typeof formData) => api.post("/companies", newCompany),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Legal Entity created successfully");
+      toast.success(t("common.createdSuccess", { entity: entityName }));
       closeModal();
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create legal entity");
+      toast.error(err.response?.data?.message || t("common.failedCreate", { entity: entityName }));
     },
   });
 
@@ -51,11 +55,11 @@ export default function CompanyTab() {
       api.put(`/companies/${updated.id}`, updated.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Legal Entity updated successfully");
+      toast.success(t("common.updatedSuccess", { entity: entityName }));
       closeModal();
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update legal entity");
+      toast.error(err.response?.data?.message || t("common.failedUpdate", { entity: entityName }));
     },
   });
 
@@ -64,10 +68,10 @@ export default function CompanyTab() {
     mutationFn: (id: string) => api.delete(`/companies/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Legal Entity deleted successfully");
+      toast.success(t("common.deletedSuccess", { entity: entityName }));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete legal entity");
+      toast.error(err.response?.data?.message || t("common.failedDelete", { entity: entityName }));
     },
   });
 
@@ -101,7 +105,7 @@ export default function CompanyTab() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this legal entity?")) {
+    if (confirm(t("common.confirmDelete", { entity: entityName }))) {
       deleteMutation.mutate(id);
     }
   };
@@ -131,7 +135,7 @@ export default function CompanyTab() {
         <div className="relative flex-1 max-w-md">
           <input
             type="text"
-            placeholder="Search by name or code..."
+            placeholder={t("common.search") + "..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-950 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-950 dark:focus:ring-zinc-50"
@@ -139,10 +143,10 @@ export default function CompanyTab() {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-1.5 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 transition-all"
+          className="inline-flex items-center gap-1.5 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          Add Legal Entity
+          {t("common.create") + " " + entityName}
         </button>
       </div>
 
@@ -152,18 +156,18 @@ export default function CompanyTab() {
           <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
         </div>
       ) : filteredCompanies.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950">
-          <p className="text-zinc-500 text-sm">No legal entities found.</p>
+        <div className="text-center py-20 border border-dashed border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950 select-none">
+          <p className="text-zinc-500 text-sm">{t("common.noData")}</p>
         </div>
       ) : (
         <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950">
           <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 font-medium border-b border-zinc-200 dark:border-zinc-900">
+            <thead className="bg-zinc-50 dark:bg-zinc-900/50 text-zinc-650 dark:text-zinc-400 font-medium border-b border-zinc-200 dark:border-zinc-900 select-none">
               <tr>
-                <th className="px-6 py-3">Code</th>
-                <th className="px-6 py-3">Name</th>
-                <th className="px-6 py-3 hidden md:table-cell">Tax Number</th>
-                <th className="px-6 py-3 text-right">Actions</th>
+                <th className="px-6 py-3">{t("common.code")}</th>
+                <th className="px-6 py-3">{t("common.name")}</th>
+                <th className="px-6 py-3 hidden md:table-cell">{t("common.taxNumber")}</th>
+                <th className="px-6 py-3 text-right">{t("common.actions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-900 text-zinc-800 dark:text-zinc-200">
@@ -176,20 +180,22 @@ export default function CompanyTab() {
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => handleOpenView(company)}
-                        className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500"
-                        title="View Infolist"
+                        className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500 cursor-pointer"
+                        title={t("common.view")}
                       >
                         <Eye className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(company)}
-                        className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-300"
+                        className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-300 cursor-pointer"
+                        title={t("common.edit")}
                       >
                         <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(company.id)}
-                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 text-red-600"
+                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 text-red-650 cursor-pointer"
+                        title={t("common.delete")}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -207,34 +213,34 @@ export default function CompanyTab() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-zinc-900">
-              <h3 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">Legal Entity Detail (Infolist)</h3>
-              <button onClick={closeModal} className="text-zinc-400 hover:text-zinc-650 text-xl">&times;</button>
+              <h3 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">{entityName + " " + t("common.view")}</h3>
+              <button onClick={closeModal} className="text-zinc-400 hover:text-zinc-600 text-xl cursor-pointer">&times;</button>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[10px] uppercase font-bold text-zinc-400">Legal Entity Code</p>
+                <p className="text-[10px] uppercase font-bold text-zinc-400">{entityName + " " + t("common.code")}</p>
                 <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{selectedCompany.code}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-bold text-zinc-400">Legal Entity Name</p>
+                <p className="text-[10px] uppercase font-bold text-zinc-400">{entityName + " " + t("common.name")}</p>
                 <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{selectedCompany.name}</p>
               </div>
               <div className="col-span-2">
-                <p className="text-[10px] uppercase font-bold text-zinc-400">Tax Registration Number</p>
+                <p className="text-[10px] uppercase font-bold text-zinc-400">{t("common.taxNumber")}</p>
                 <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{selectedCompany.tax_number || "-"}</p>
               </div>
               <div className="col-span-2">
-                <p className="text-[10px] uppercase font-bold text-zinc-400">Address</p>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">{selectedCompany.address || "-"}</p>
+                <p className="text-[10px] uppercase font-bold text-zinc-400">{t("common.address")}</p>
+                <p className="text-sm text-zinc-655 dark:text-zinc-400">{selectedCompany.address || "-"}</p>
               </div>
             </div>
             <div className="flex justify-end pt-4 border-t border-zinc-100 dark:border-zinc-900">
               <button
                 onClick={closeModal}
-                className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85"
+                className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85 cursor-pointer"
               >
-                Close View
+                {t("common.close")}
               </button>
             </div>
           </div>
@@ -250,14 +256,16 @@ export default function CompanyTab() {
           >
             <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-zinc-900">
               <h3 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedCompany ? "Edit Legal Entity" : "Add New Legal Entity"}
+                {selectedCompany 
+                  ? t("common.edit") + " " + entityName 
+                  : t("common.create") + " " + entityName}
               </h3>
-              <button type="button" onClick={closeModal} className="text-zinc-400 hover:text-zinc-650 text-xl">&times;</button>
+              <button type="button" onClick={closeModal} className="text-zinc-400 hover:text-zinc-600 text-xl cursor-pointer">&times;</button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Legal Entity Code</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{entityName + " " + t("common.code")}</label>
                 <input
                   type="text"
                   required
@@ -268,7 +276,7 @@ export default function CompanyTab() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Legal Entity Name</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{entityName + " " + t("common.name")}</label>
                 <input
                   type="text"
                   required
@@ -279,7 +287,7 @@ export default function CompanyTab() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Tax Number</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("common.taxNumber")}</label>
                 <input
                   type="text"
                   value={formData.tax_number}
@@ -289,7 +297,7 @@ export default function CompanyTab() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Address</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("common.address")}</label>
                 <textarea
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -304,17 +312,19 @@ export default function CompanyTab() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85"
+                className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85 cursor-pointer"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
+                className="inline-flex items-center gap-2 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 disabled:opacity-50 cursor-pointer"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-                {selectedCompany ? "Update Legal Entity" : "Create Legal Entity"}
+                {selectedCompany 
+                  ? t("common.save") 
+                  : t("common.create")}
               </button>
             </div>
           </form>

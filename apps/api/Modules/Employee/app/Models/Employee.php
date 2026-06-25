@@ -13,6 +13,8 @@ use Modules\Organization\Models\Company;
 use Modules\Organization\Models\Branch;
 use Modules\Organization\Models\Department;
 use Modules\Organization\Models\Position;
+use Modules\Organization\Models\Division;
+use Modules\Organization\Models\Grade;
 
 class Employee extends BaseModel
 {
@@ -28,14 +30,31 @@ class Employee extends BaseModel
         'company_id',
         'branch_id',
         'department_id',
+        'division_id',
         'position_id',
+        'grade_id',
+        'reports_to',
         'employee_number',
         'first_name',
         'last_name',
         'gender',
         'birth_date',
         'join_date',
+        'end_date',
+        'phone',
+        'email',
+        'id_number',
+        'tax_number',
+        'blood_type',
+        'religion',
+        'marital_status',
+        'address',
+        'city',
+        'province',
+        'postal_code',
         'status',
+        'employment_type',
+        'photo_url',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -45,6 +64,7 @@ class Employee extends BaseModel
     protected $casts = [
         'birth_date' => 'date',
         'join_date' => 'date',
+        'end_date' => 'date',
         'version' => 'integer',
     ];
 
@@ -81,11 +101,59 @@ class Employee extends BaseModel
     }
 
     /**
+     * Get the division of the employee.
+     */
+    public function division(): BelongsTo
+    {
+        return $this->belongsTo(Division::class);
+    }
+
+    /**
      * Get the position of the employee.
      */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    /**
+     * Get the grade of the employee.
+     */
+    public function grade(): BelongsTo
+    {
+        return $this->belongsTo(Grade::class);
+    }
+
+    /**
+     * Get the supervisor of the employee.
+     */
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'reports_to');
+    }
+
+    /**
+     * Get the subordinates of the employee.
+     */
+    public function subordinates(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'reports_to');
+    }
+
+    /**
+     * Get emergency contacts of the employee.
+     */
+    public function emergencyContacts(): HasMany
+    {
+        return $this->hasMany(EmergencyContact::class);
+    }
+
+    /**
+     * Get lifecycle events of the employee.
+     */
+    public function lifecycleEvents(): HasMany
+    {
+        return $this->hasMany(\Modules\EmployeeLifecycle\Models\LifecycleEvent::class);
     }
 
     /**
@@ -120,3 +188,4 @@ class Employee extends BaseModel
         return $this->hasMany(EmployeeHistory::class);
     }
 }
+

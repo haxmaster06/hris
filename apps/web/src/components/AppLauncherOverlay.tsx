@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { 
   Building2, 
   Users, 
@@ -13,7 +14,15 @@ import {
   ShieldCheck, 
   X,
   ChevronRight,
-  Settings
+  Settings,
+  GitPullRequest,
+  Coins,
+  Gift,
+  TrendingUp,
+  ShieldAlert,
+  Sparkles,
+  Laptop,
+  MessageSquare
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -24,6 +33,7 @@ interface AppLauncherOverlayProps {
 
 export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverlayProps) {
   const { user } = useAuthStore();
+  const t = useTranslations();
   const isAdmin = user?.roles?.includes("Super Admin") || user?.roles?.includes("HR Manager");
   const isSuperAdmin = user?.roles?.includes("Super Admin");
 
@@ -77,105 +87,207 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
 
   if (!shouldRender) return null;
 
-  // Categorized mega menu items
+  // Categorized mega menu items with translation keys
   const categories = [
     {
-      title: "Core HR & Organization",
-      description: "Manage organizational setup, corporate hierarchy, and personnel directories.",
+      titleKey: "categories.coreHr",
+      descKey: "categories.coreHrDesc",
       color: "bg-blue-500",
       items: [
         {
-          title: "Organization Hub",
-          desc: "Corporate entities, branches, departments, divisions, positions, and salary grades.",
+          titleKey: "modules.organization.title",
+          descKey: "modules.organization.desc",
           icon: Building2,
           href: "/organization",
           subLinks: []
         },
         {
-          title: "Employee Directory",
-          desc: "Employee directory profiles, career log histories, and new member onboarding.",
+          titleKey: "modules.employees.title",
+          descKey: "modules.employees.desc",
           icon: Users,
           href: "/employees",
           subLinks: []
+        },
+        {
+          titleKey: "modules.lifecycle.title",
+          descKey: "modules.lifecycle.desc",
+          icon: GitPullRequest,
+          href: "/employee-lifecycle",
+          subLinks: [
+            { nameKey: "modules.lifecycle.events", href: "/employee-lifecycle/events" },
+            { nameKey: "modules.lifecycle.onboarding", href: "/employee-lifecycle/onboarding" }
+          ]
         }
       ]
     },
     {
-      title: "Workforce & Operations",
-      description: "Track logs of daily check-ins, leaves, and document archives.",
+      titleKey: "categories.workforce",
+      descKey: "categories.workforceDesc",
       color: "bg-amber-500",
       items: [
         {
-          title: "Attendance & Leave",
-          desc: "Check-in/out tracking, shift logs, leave balances, and day-off approvals.",
+          titleKey: "modules.attendance.title",
+          descKey: "modules.attendance.desc",
           icon: Clock,
           href: "/attendance-leave",
           subLinks: []
         },
         {
-          title: "Docs & Reports",
-          desc: "Secure storage of dossier files and CSV report generation engines.",
+          titleKey: "modules.documents.title",
+          descKey: "modules.documents.desc",
           icon: FolderLock,
           href: "/documents-reports",
           subLinks: []
+        },
+        {
+          titleKey: "modules.payroll.title",
+          descKey: "modules.payroll.desc",
+          icon: Coins,
+          href: "/payroll",
+          subLinks: [
+            { nameKey: "modules.payroll.components", href: "/payroll/components" },
+            { nameKey: "modules.payroll.periods", href: "/payroll/periods" },
+            { nameKey: "modules.payroll.salary", href: "/payroll/salary" },
+            { nameKey: "modules.payroll.loans", href: "/payroll/loans" }
+          ]
+        },
+        {
+          titleKey: "modules.compensation.title",
+          descKey: "modules.compensation.desc",
+          icon: Gift,
+          href: "/compensation",
+          subLinks: [
+            { nameKey: "modules.compensation.benefits", href: "/compensation/benefits" },
+            { nameKey: "modules.compensation.claims", href: "/compensation/claims" },
+            { nameKey: "modules.compensation.bonus", href: "/compensation/bonus" }
+          ]
+        },
+        {
+          titleKey: "modules.assets.title",
+          descKey: "modules.assets.desc",
+          icon: Laptop,
+          href: "/assets",
+          subLinks: [
+            { nameKey: "modules.assets.registry", href: "/assets/registry" },
+            { nameKey: "modules.assets.assignments", href: "/assets/assignments" }
+          ]
         }
       ]
     },
     {
-      title: "Talent & Development",
-      description: "Acquire candidates, manage training, and audit professional compliance licenses.",
+      titleKey: "categories.talent",
+      descKey: "categories.talentDesc",
       color: "bg-fuchsia-500",
       items: [
         {
-          title: "Recruitment Hub",
-          desc: "Job openings pipeline, talent pool records, interview logs, and director approvals.",
+          titleKey: "modules.recruitment.title",
+          descKey: "modules.recruitment.desc",
           icon: Briefcase,
           href: "/recruitment",
           subLinks: [
-            { name: "Vacancies", href: "/recruitment/vacancies" },
-            { name: "Candidates", href: "/recruitment/candidates" },
-            { name: "Pipeline", href: "/recruitment/pipeline" },
-            { name: "Approvals", href: "/recruitment/approvals" }
+            { nameKey: "modules.recruitment.vacancies", href: "/recruitment/vacancies" },
+            { nameKey: "modules.recruitment.candidates", href: "/recruitment/candidates" },
+            { nameKey: "modules.recruitment.pipeline", href: "/recruitment/pipeline" },
+            { nameKey: "modules.recruitment.approvals", href: "/recruitment/approvals" }
           ]
         },
         {
-          title: "Training Hub",
-          desc: "Define master course catalogs, schedule sessions, and evaluate participants.",
+          titleKey: "modules.training.title",
+          descKey: "modules.training.desc",
           icon: GraduationCap,
           href: "/training",
           subLinks: [
-            { name: "Courses", href: "/training/master" },
-            { name: "Sessions", href: "/training/sessions" }
+            { nameKey: "modules.training.courses", href: "/training/master" },
+            { nameKey: "modules.training.sessions", href: "/training/sessions" }
           ]
         },
         {
-          title: "Certification Hub",
-          desc: "Track matrix obligations, upload PDF credentials, and check renewal dates.",
+          titleKey: "modules.certification.title",
+          descKey: "modules.certification.desc",
           icon: Award,
           href: "/certification",
           subLinks: [
-            { name: "License Master", href: "/certification/master" },
-            { name: "Employee Logs", href: "/certification/employee" }
+            { nameKey: "modules.certification.licenseMaster", href: "/certification/master" },
+            { nameKey: "modules.certification.employeeLogs", href: "/certification/employee" }
+          ]
+        },
+        {
+          titleKey: "modules.performance.title",
+          descKey: "modules.performance.desc",
+          icon: TrendingUp,
+          href: "/performance",
+          subLinks: [
+            { nameKey: "modules.performance.kpi", href: "/performance/kpi" },
+            { nameKey: "modules.performance.periods", href: "/performance/periods" },
+            { nameKey: "modules.performance.reviews", href: "/performance/reviews" },
+            { nameKey: "modules.performance.pip", href: "/performance/pip" }
+          ]
+        },
+        {
+          titleKey: "modules.disciplinary.title",
+          descKey: "modules.disciplinary.desc",
+          icon: ShieldAlert,
+          href: "/disciplinary",
+          subLinks: [
+            { nameKey: "modules.disciplinary.cases", href: "/disciplinary" }
+          ]
+        },
+        {
+          titleKey: "modules.talent.title",
+          descKey: "modules.talent.desc",
+          icon: Sparkles,
+          href: "/talent",
+          subLinks: [
+            { nameKey: "modules.talent.skills", href: "/talent/skills" },
+            { nameKey: "modules.talent.careerPath", href: "/talent/career-path" },
+            { nameKey: "modules.talent.succession", href: "/talent/succession" }
+          ]
+        },
+        {
+          titleKey: "modules.engagement.title",
+          descKey: "modules.engagement.desc",
+          icon: MessageSquare,
+          href: "/engagement",
+          subLinks: [
+            { nameKey: "modules.engagement.surveys", href: "/engagement/surveys" },
+            { nameKey: "modules.engagement.feedback", href: "/engagement/feedback" },
+            { nameKey: "modules.engagement.awards", href: "/engagement/awards" }
           ]
         }
       ]
     },
     ...(isAdmin ? [
       {
-        title: "Administration & Security",
-        description: "RBAC tenant security, user credentials management, and audit trails.",
+        titleKey: "categories.admin",
+        descKey: "categories.adminDesc",
         color: "bg-indigo-500",
         items: [
           {
-            title: "Users & Security",
-            desc: "Tenant user account listings, password resets, and Spatie RBAC permission mappings.",
+            titleKey: "modules.users.title",
+            descKey: "modules.users.desc",
             icon: ShieldCheck,
             href: "/users",
             subLinks: []
           },
+          {
+            titleKey: "modules.workflows.title",
+            descKey: "modules.workflows.desc",
+            icon: Settings,
+            href: "/settings/workflows",
+            subLinks: []
+          },
+          {
+            titleKey: "modules.audit.title",
+            descKey: "modules.audit.desc",
+            icon: FolderLock,
+            href: "/audit-trail",
+            subLinks: [
+              { nameKey: "modules.audit.loginHistory", href: "/audit-trail/login-history" }
+            ]
+          },
           ...(isSuperAdmin ? [{
-            title: "High Level Control",
-            desc: "Manage multiple organization tenant databases, provisioning, and routing.",
+            titleKey: "modules.hlc.title",
+            descKey: "modules.hlc.desc",
             icon: Settings,
             href: "/high-level-control",
             subLinks: []
@@ -190,7 +302,7 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
     if (isAdmin) return cat;
     // Non-admins only see Attendance and Docs & Reports
     const filteredItems = cat.items.filter(item => 
-      item.title === "Attendance & Leave" || item.title === "Docs & Reports"
+      item.href === "/attendance-leave" || item.href === "/documents-reports"
     );
     return { ...cat, items: filteredItems };
   }).filter(cat => cat.items.length > 0);
@@ -221,24 +333,24 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-5 mb-6 border-b border-zinc-250/60 dark:border-zinc-900">
+        <div className="flex items-center justify-between pb-5 mb-6 border-b border-zinc-200/60 dark:border-zinc-900">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 flex items-center justify-center font-black text-sm shadow-md">
               N
             </div>
             <div>
               <h3 className="font-extrabold text-md text-zinc-900 dark:text-zinc-50 tracking-tight">
-                Enterprise App Launcher
+                {t("launcher.title")}
               </h3>
-              <p className="text-[11px] text-zinc-550 mt-0.5">
-                Press Esc or Ctrl+K to close • Direct access to all active human resource modules
+              <p className="text-[11px] text-zinc-500 mt-0.5">
+                {t("launcher.hint")}
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="h-9 w-9 flex items-center justify-center rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors shadow-sm"
+            className="h-9 w-9 flex items-center justify-center rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors shadow-sm cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -247,12 +359,12 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
         {/* Mega Menu Layout Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {visibleCategories.map((cat) => (
-            <div key={cat.title} className="flex flex-col space-y-4">
+            <div key={cat.titleKey} className="flex flex-col space-y-4">
               {/* Category Title Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-zinc-200/60 dark:border-zinc-900/60">
                 <span className={`h-2 w-2 rounded-full ${cat.color}`} />
                 <h4 className="text-[11px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                  {cat.title}
+                  {t(cat.titleKey)}
                 </h4>
               </div>
 
@@ -261,21 +373,21 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
                 {cat.items.map((mod) => {
                   const Icon = mod.icon;
                   return (
-                    <div key={mod.title} className="flex flex-col">
+                    <div key={mod.titleKey} className="flex flex-col">
                       <Link
                         href={mod.href}
                         onClick={onClose}
                         className="flex items-start gap-3 p-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all duration-200 group text-left"
                       >
-                        <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-650 dark:text-zinc-450 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 shadow-sm border border-zinc-200/40 dark:border-zinc-800/40 transition-colors">
+                        <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 shadow-sm border border-zinc-200/40 dark:border-zinc-800/40 transition-colors">
                           <Icon className="h-4.5 w-4.5" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h5 className="text-xs font-black text-zinc-800 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
-                            {mod.title}
+                            {t(mod.titleKey)}
                           </h5>
                           <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-1 leading-normal font-medium">
-                            {mod.desc}
+                            {t(mod.descKey)}
                           </p>
                         </div>
                       </Link>
@@ -285,13 +397,13 @@ export default function AppLauncherOverlay({ isOpen, onClose }: AppLauncherOverl
                         <div className="mt-1.5 pl-10 pr-2 flex flex-wrap gap-x-2 gap-y-1">
                           {mod.subLinks.map((sub) => (
                             <Link
-                              key={sub.name}
+                              key={sub.nameKey}
                               href={sub.href}
                               onClick={onClose}
-                              className="text-[10px] font-bold text-zinc-400 hover:text-zinc-950 dark:text-zinc-500 dark:hover:text-zinc-200 transition-colors flex items-center gap-0.5 border border-zinc-200/60 dark:border-zinc-900 px-2 py-0.5 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                              className="text-[10px] font-bold text-zinc-400 hover:text-zinc-950 dark:text-zinc-550 dark:hover:text-zinc-200 transition-colors flex items-center gap-0.5 border border-zinc-200/60 dark:border-zinc-900 px-2 py-0.5 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900"
                             >
                               <ChevronRight className="h-2.5 w-2.5" />
-                              {sub.name}
+                              {t(sub.nameKey)}
                             </Link>
                           ))}
                         </div>

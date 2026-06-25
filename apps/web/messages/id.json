@@ -1,0 +1,1150 @@
+{
+  "common": {
+    "appName": "Nexus HR",
+    "loading": "Memuat...",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Ubah",
+    "view": "Lihat",
+    "create": "Buat",
+    "search": "Cari",
+    "filter": "Filter",
+    "back": "Kembali",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "yes": "Ya",
+    "no": "Tidak",
+    "noData": "Tidak ada data tersedia",
+    "actions": "Aksi",
+    "status": "Status",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "allStatuses": "Semua Status",
+    "allCompanies": "Semua Entitas Legal",
+    "allBranches": "Semua Cabang",
+    "allDepartments": "Semua Departemen",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "company": "Perusahaan",
+    "toggleTheme": "Ganti Tema",
+    "copyright": "© {year} HBM Corp. Semua hak dilindungi.",
+    "createdSuccess": "{entity} berhasil dibuat",
+    "updatedSuccess": "{entity} berhasil diubah",
+    "deletedSuccess": "{entity} berhasil dihapus",
+    "failedCreate": "Gagal membuat {entity}",
+    "failedUpdate": "Gagal mengubah {entity}",
+    "failedDelete": "Gagal menghapus {entity}",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus {entity} ini?",
+    "code": "Kode",
+    "name": "Nama",
+    "address": "Alamat",
+    "description": "Deskripsi",
+    "taxNumber": "NPWP",
+    "parent": "Induk",
+    "type": "Tipe"
+  },
+  "login": {
+    "pageTitle": "Masuk — Nexus HR",
+    "welcome": "Selamat Datang Kembali",
+    "subtitle": "Masukkan kredensial Anda untuk mengakses dashboard tenant.",
+    "selectCompany": "Pilih Perusahaan",
+    "loadingCompanies": "Memuat daftar perusahaan...",
+    "pleaseSelect": "Silakan pilih perusahaan",
+    "emailAddress": "Alamat Email",
+    "password": "Kata Sandi",
+    "signingIn": "Sedang masuk...",
+    "corporatePortal": "Portal HR Perusahaan",
+    "successMessage": "Selamat datang kembali! Login berhasil.",
+    "errorCredentials": "Kredensial tidak valid atau tidak sesuai perusahaan.",
+    "errorLoadTenants": "Gagal memuat daftar tenant aktif dari database.",
+    "brandTagline": "Platform HRIS Universal",
+    "brandDescription": "Sistem Informasi Sumber Daya Manusia terpadu kelas perusahaan untuk HBM Corp, menyajikan arsitektur modular yang aman dan dinamis.",
+    "versionBadge": "Nexus HR v1.0 MVP"
+  },
+  "validation": {
+    "required": "Kolom ini wajib diisi",
+    "selectCompany": "Silakan pilih perusahaan",
+    "invalidEmail": "Alamat email tidak valid",
+    "passwordMin": "Kata sandi minimal 6 karakter"
+  },
+  "dashboard": {
+    "pageTitle": "Nexus HR",
+    "subtitle": "Kelola personel organisasi, pantau kepatuhan, dan lihat analitik operasional.",
+    "footerNote": "Portal Akses Langsung • Klik modul atau sub-item untuk mengelola sumber daya tenant",
+    "activeCompany": "Perusahaan Aktif: {company}"
+  },
+  "launcher": {
+    "title": "Peluncur Aplikasi",
+    "hint": "Tekan Esc atau Ctrl+K untuk menutup • Akses langsung ke semua modul sumber daya manusia",
+    "openLauncher": "Buka Peluncur Aplikasi (Ctrl+K)"
+  },
+  "categories": {
+    "coreHr": "HR Inti & Organisasi",
+    "coreHrDesc": "Kelola struktur organisasi, hierarki perusahaan, dan direktori personel.",
+    "workforce": "Tenaga Kerja & Operasional",
+    "workforceDesc": "Pantau log check-in harian, cuti, dan arsip dokumen.",
+    "talent": "Talenta & Pengembangan",
+    "talentDesc": "Rekrut kandidat, kelola pelatihan, dan audit lisensi kepatuhan profesional.",
+    "admin": "Administrasi & Keamanan",
+    "adminDesc": "Keamanan tenant RBAC, manajemen kredensial pengguna, dan jejak audit."
+  },
+  "modules": {
+    "organization": {
+      "title": "Pusat Organisasi",
+      "desc": "Entitas legal, cabang, departemen, divisi, jabatan, dan golongan gaji.",
+      "configureSubtitle": "Konfigurasi entitas legal, lokasi cabang, dan struktur organisasi.",
+      "totalBranches": "Total Cabang",
+      "departments": "Departemen",
+      "activePositions": "Posisi Aktif",
+      "salaryGrades": "Golongan Gaji",
+      "companies": "Perusahaan",
+      "legalEntity": "Entitas Legal",
+      "branches": "Cabang",
+      "divisions": "Divisi",
+      "positions": "Jabatan",
+      "grades": "Golongan",
+      "costCenters": "Pusat Biaya (Cost Center)",
+      "orgChart": "Bagan Organisasi"
+    },
+    "lifecycle": {
+      "title": "Employee Lifecycle",
+      "desc": "Kelola mutasi karyawan, promosi jabatan, pemutusan kontrak kerja, dan orientasi onboarding.",
+      "onboarding": "Orientasi Karyawan Baru",
+      "events": "Mutasi & Karir"
+    },
+    "employees": {
+      "title": "Direktori Karyawan",
+      "desc": "Profil karyawan, riwayat karier, dan onboarding anggota baru.",
+      "viewSubtitle": "Lihat direktori perusahaan, tambah anggota tim, dan cek log karier.",
+      "totalStaff": "Total Staf",
+      "permanent": "Tetap",
+      "contract": "Kontrak",
+      "probation": "Percobaan",
+      "searchPlaceholder": "Cari berdasarkan nama atau ID karyawan...",
+      "onboard": "Tambah Karyawan",
+      "noResults": "Tidak ditemukan karyawan yang sesuai filter.",
+      "nipId": "NIP / ID",
+      "fullName": "Nama Lengkap",
+      "department": "Departemen",
+      "viewProfile": "Lihat Profil",
+      "archiveSuccess": "Profil karyawan berhasil diarsipkan",
+      "archiveFailed": "Gagal menghapus karyawan",
+      "confirmDelete": "Apakah Anda yakin ingin menghapus karyawan ini?",
+      "accessDenied": "Akses ditolak. Diperlukan hak admin.",
+      "personalInfo": "Info Pribadi",
+      "family": "Keluarga",
+      "education": "Pendidikan",
+      "experience": "Pengalaman Kerja",
+      "careerLogs": "Riwayat Karir",
+      "profileTitle": "Profil Karyawan",
+      "profileSubtitle": "Lihat berkas pribadi, sub-sumber daya, dan telusuri log audit.",
+      "personalDossier": "Berkas Pribadi",
+      "gender": "Jenis Kelamin",
+      "birthDate": "Tanggal Lahir",
+      "joinDate": "Tanggal Bergabung",
+      "branchOffice": "Kantor Cabang",
+      "jobPosition": "Posisi Jabatan",
+      "careerLogsTitle": "Log Riwayat Karir",
+      "noCareerLogs": "Tidak ada log riwayat karir yang ditemukan (profil ini belum mengalami mutasi atau perubahan status).",
+      "changedFromTo": "Diubah dari \"{oldValue}\" menjadi \"{newValue}\"",
+      "effectiveDate": "Efektif: {date}",
+      "notFound": "Profil karyawan tidak ditemukan.",
+      "backToDirectory": "Kembali ke Direktori",
+      "accessSelfError": "Akses ditolak. Anda hanya dapat melihat profil Anda sendiri.",
+      "educationTitle": "Riwayat Pendidikan",
+      "experienceTitle": "Riwayat Pengalaman Kerja",
+      "familyTitle": "Anggota Keluarga",
+      "firstName": "Nama Depan",
+      "lastName": "Nama Belakang",
+      "employeeNumber": "Nomor Induk Pegawai (NIP)",
+      "male": "Laki-laki",
+      "female": "Perempuan",
+      "userAccount": "Akun Pengguna (Opsional)",
+      "noLinkedUser": "Tidak ada akun pengguna terkait",
+      "employmentStatus": "Status Karyawan",
+      "onboardSuccess": "Karyawan berhasil didaftarkan",
+      "onboardFailed": "Gagal mendaftarkan karyawan",
+      "updateSuccess": "Profil karyawan berhasil diubah",
+      "updateFailed": "Gagal mengubah karyawan",
+      "relationship": "Hubungan",
+      "spouse": "Suami/Istri",
+      "child": "Anak",
+      "parent": "Orang Tua",
+      "sibling": "Saudara",
+      "phone": "Telepon",
+      "contactPhone": "Telepon Kontak",
+      "noFamily": "Tidak ada anggota keluarga terdaftar.",
+      "institution": "Institusi",
+      "degree": "Gelar",
+      "fieldOfStudy": "Bidang Studi",
+      "graduationYear": "Tahun Kelulusan",
+      "noEducation": "Tidak ada riwayat pendidikan terdaftar.",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai",
+      "noExperience": "Tidak ada pengalaman kerja terdaftar."
+    },
+    "attendance": {
+      "title": "Kehadiran & Cuti",
+      "desc": "Pelacakan check-in/out, log shift, saldo cuti, dan persetujuan libur."
+    },
+    "documents": {
+      "title": "Dokumen & Laporan",
+      "desc": "Penyimpanan aman berkas dossier dan mesin generasi laporan CSV."
+    },
+    "recruitment": {
+      "title": "Pusat Rekrutmen",
+      "desc": "Pipeline lowongan kerja, rekam talent pool, log wawancara, dan persetujuan direktur.",
+      "vacancies": "Lowongan",
+      "candidates": "Kandidat",
+      "pipeline": "Pipeline",
+      "approvals": "Persetujuan"
+    },
+    "training": {
+      "title": "Pusat Pelatihan",
+      "desc": "Definisikan katalog kursus master, jadwalkan sesi, dan evaluasi peserta.",
+      "courses": "Kursus",
+      "sessions": "Sesi"
+    },
+    "certification": {
+      "title": "Pusat Sertifikasi",
+      "desc": "Pantau kewajiban matriks, unggah kredensial PDF, dan cek tanggal perpanjangan.",
+      "licenseMaster": "Master Lisensi",
+      "employeeLogs": "Log Karyawan"
+    },
+    "users": {
+      "title": "Pengguna & Keamanan",
+      "desc": "Daftar akun pengguna tenant, reset kata sandi, dan pemetaan hak akses RBAC Spatie."
+    },
+    "hlc": {
+      "title": "Kontrol Level Tinggi",
+      "desc": "Kelola database tenant multi-organisasi, provisioning, dan routing."
+    },
+    "workflows": {
+      "title": "Pengaturan Workflow",
+      "desc": "Konfigurasi persetujuan berjenjang dinamis per modul target pengajuan dokumen."
+    },
+    "audit": {
+      "title": "Jejak Audit",
+      "desc": "Pelacakan log perubahan data (SIEM) dan riwayat login sesi pengguna.",
+      "loginHistory": "Riwayat Login"
+    },
+    "payroll": {
+      "title": "Sistem Penggajian",
+      "desc": "Kelola komponen gaji, pinjaman kasbon, periode penggajian bulanan, BPJS, PPh 21, dan slip gaji karyawan.",
+      "components": "Komponen Gaji",
+      "periods": "Periode Gaji",
+      "salary": "Atur Gaji",
+      "loans": "Kasbon & Pinjaman"
+    },
+    "compensation": {
+      "title": "Kompensasi & Benefit",
+      "desc": "Kelola pendaftaran asuransi benefit, klaim reimbursement, dan skema bonus insentif karyawan.",
+      "benefits": "Benefit & Asuransi",
+      "claims": "Klaim & Reimbursement",
+      "bonus": "Skema Bonus"
+    },
+    "performance": {
+      "title": "Kinerja (Performance)",
+      "desc": "Kelola evaluasi kinerja karyawan, target KPI, dan Performance Improvement Plan (PIP).",
+      "kpi": "Master KPI",
+      "periods": "Periode Evaluasi",
+      "reviews": "Penilaian Kinerja",
+      "pip": "Rencana PIP"
+    },
+    "disciplinary": {
+      "title": "Kedisiplinan (Disciplinary)",
+      "desc": "Pantau log pelanggaran tata tertib karyawan, investigasi kasus, dan penerbitan surat peringatan (SP).",
+      "cases": "Log Kasus & SP"
+    },
+    "talent": {
+      "title": "Talenta & Karir (Talent)",
+      "desc": "Kelola skill matrix karyawan, peta visual karir, dan perencanaan suksesi 9-Box Grid.",
+      "skills": "Matriks Keahlian",
+      "careerPath": "Peta Rute Karir",
+      "succession": "Board Suksesi"
+    },
+    "assets": {
+      "title": "Manajemen Aset",
+      "desc": "Daftarkan inventaris perangkat keras perusahaan, tugaskan barang, dan proses pengembalian.",
+      "registry": "Daftar Aset",
+      "assignments": "Penugasan Aset"
+    },
+    "engagement": {
+      "title": "Employee Engagement",
+      "desc": "Bangun survei pulse, tampung umpan balik kotak saran, dan apresiasi pencapaian staf.",
+      "surveys": "Survei",
+      "feedback": "Kotak Saran",
+      "awards": "Dinding Penghargaan"
+    }
+  },
+  "profile": {
+    "title": "Profil Akun Pengguna",
+    "activeTenant": "Tenant Aktif:",
+    "activePermissions": "Hak Akses Aktif ({count})",
+    "noRoles": "Tidak Ada Role Ditetapkan",
+    "noPermissions": "Tidak ada hak akses ditemukan",
+    "viewEmployee": "Lihat Profil Karyawan",
+    "noLinkedEmployee": "Tidak Ada Profil Karyawan Terkait",
+    "noLinkedTooltip": "Akun sistem tidak memiliki profil karyawan terkait",
+    "logoutSession": "Keluar Sesi",
+    "logoutSuccess": "Berhasil keluar."
+  },
+  "language": {
+    "label": "Bahasa",
+    "en": "English",
+    "id": "Bahasa Indonesia",
+    "switchSuccess": "Bahasa diubah ke {language}"
+  },
+  "attendance": {
+    "pageTitle": "Kehadiran & Cuti",
+    "subtitle": "Catat jam kerja, lacak sisa cuti, dan ajukan hari libur.",
+    "activeEmployeeContext": "Konteks Karyawan Aktif:",
+    "currentTime": "Waktu Sekarang",
+    "todayShift": "Shift Hari Ini: {start} — {end}",
+    "officeLocation": "Kantor: {location} (Geofenced)",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "remainingLeaveBalances": "Sisa Saldo Cuti",
+    "noLeaveBalances": "Tidak ada saldo cuti yang dialokasikan untuk karyawan ini.",
+    "daysCount": "{count} / {entitled} Hari",
+    "submitLeaveRequest": "Ajukan Permohonan Cuti",
+    "leaveType": "Tipe Cuti",
+    "selectLeaveType": "Pilih Tipe Cuti",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "reason": "Alasan",
+    "reasonPlaceholder": "Alasan mengajukan cuti...",
+    "submitRequest": "Kirim Permohonan",
+    "pendingLeaveApprovals": "Persetujuan Cuti Tertunda (Tampilan Manajer)",
+    "noPendingRequests": "Tidak ada permohonan cuti tertunda yang ditemukan.",
+    "employee": "Karyawan",
+    "dates": "Tanggal",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "leaveHistory": "Riwayat Permohonan Cuti",
+    "noLeaveHistory": "Tidak ada riwayat cuti yang tercatat.",
+    "toast": {
+      "checkInSuccess": "Berhasil check-in!",
+      "checkInFailed": "Gagal check-in",
+      "checkOutSuccess": "Berhasil check-out!",
+      "checkOutFailed": "Gagal check-out",
+      "submitSuccess": "Permohonan cuti berhasil dikirim!",
+      "submitFailed": "Gagal mengirim permohonan cuti",
+      "approveSuccess": "Permohonan cuti disetujui.",
+      "approveFailed": "Gagal menyetujui",
+      "rejectSuccess": "Permohonan cuti ditolak.",
+      "rejectFailed": "Gagal menolak",
+      "selectEmployeeError": "Silakan pilih karyawan terlebih dahulu"
+    }
+  },
+  "documents": {
+    "pageTitle": "Dokumen & Laporan",
+    "subtitle": "Simpan berkas secara aman ke S3/MinIO dan hasilkan laporan ekspor CSV.",
+    "activeEmployeeFilter": "Filter Konteks Karyawan Aktif",
+    "vaultTitle": "Penyimpanan Dokumen",
+    "category": "Kategori",
+    "expiryDate": "Tanggal Kedaluwarsa (Opsional)",
+    "dragDropHint": "Tarik & lepas berkas atau klik untuk mengunggah",
+    "fileLimitHint": "PDF, JPG, PNG hingga 10MB",
+    "uploadButton": "Unggah Berkas",
+    "vaultedFiles": "Berkas yang Tersimpan",
+    "noFiles": "Tidak ada berkas yang disimpan untuk karyawan ini.",
+    "downloadTooltip": "Unduh Dokumen",
+    "deleteTooltip": "Hapus",
+    "reportCenterTitle": "Pusat Ekspor Laporan",
+    "empReportTitle": "Laporan Daftar Karyawan",
+    "exportEmpButton": "Ekspor Laporan Karyawan (CSV)",
+    "attendanceReportTitle": "Ringkasan Log Kehadiran",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "exportAttButton": "Ekspor Ringkasan Kehadiran (CSV)",
+    "leaveReportTitle": "Saldo & Permohonan Cuti",
+    "targetYear": "Tahun Target",
+    "exportLeaveButton": "Ekspor Laporan Cuti (CSV)",
+    "toast": {
+      "deleteSuccess": "Dokumen berhasil dihapus dari penyimpanan.",
+      "deleteFailed": "Gagal menghapus dokumen",
+      "chooseFileError": "Silakan pilih berkas untuk diunggah terlebih dahulu",
+      "selectEmployeeError": "Silakan pilih konteks karyawan terlebih dahulu",
+      "uploadSuccess": "Dokumen berhasil diunggah ke MinIO/S3!",
+      "uploadFailed": "Gagal mengunggah",
+      "noDataExport": "Tidak ditemukan data untuk diekspor.",
+      "exportSuccess": "{filename} berhasil diekspor.",
+      "exportFailed": "Gagal mengekspor",
+      "dateRequiredError": "Tanggal mulai dan selesai wajib diisi",
+      "yearRequiredError": "Tahun wajib diisi"
+    }
+  },
+  "recruitment": {
+    "dashboard": {
+      "pageTitle": "Pusat Rekrutmen",
+      "subtitle": "Kelola lowongan, koordinasikan pipeline kandidat, jadwalkan wawancara, dan proses alur kerja perekrutan.",
+      "stats": {
+        "publishedVacancies": "Lowongan Dipublikasikan",
+        "totalVacancies": "/ {total} total",
+        "totalTalentPool": "Total Kumpulan Bakat",
+        "activeCandidates": "Kandidat Aktif",
+        "pendingApprovals": "Persetujuan Tertunda"
+      },
+      "cards": {
+        "vacanciesTitle": "Lowongan Pekerjaan",
+        "vacanciesDesc": "Buat, publikasikan, dan tutup lowongan pekerjaan utama untuk posisi yang dibuka.",
+        "candidatesTitle": "Direktori Kandidat",
+        "candidatesDesc": "Kelola talent pool kandidat, unggah resume, dan tinjau berkas pelamar.",
+        "pipelineTitle": "Pipeline Kanban",
+        "pipelineDesc": "Visualisasikan kemajuan pelamar di seluruh tahapan perekrutan (Melamar -> Diterima) melalui Kanban.",
+        "approvalsTitle": "Persetujuan Perekrutan",
+        "approvalsDesc": "Tinjau dan setujui permintaan perekrutan (alur kerja HR -> Manajer -> Direktur)."
+      }
+    },
+    "vacancies": {
+      "pageTitle": "Lowongan Pekerjaan",
+      "subtitle": "Tambah lowongan baru, ubah teks lowongan, dan kelola status pekerjaan.",
+      "searchPlaceholder": "Cari lowongan berdasarkan judul...",
+      "statusAll": "Semua Status",
+      "statusDraft": "Draf",
+      "statusPublished": "Dipublikasikan",
+      "statusClosed": "Ditutup",
+      "addVacancy": "Tambah Lowongan",
+      "noVacancies": "Tidak ada lowongan ditemukan.",
+      "thTitle": "Judul / Kode",
+      "thDept": "Departemen / Jabatan",
+      "thSlots": "Slot",
+      "thStatus": "Status",
+      "modalAddTitle": "Tambah Lowongan Kerja",
+      "modalEditTitle": "Ubah Lowongan Kerja",
+      "formCompany": "Perusahaan",
+      "formBranch": "Cabang",
+      "formBranchOpt": "Pilih Cabang (Opsional)",
+      "formDept": "Departemen",
+      "formDeptOpt": "Pilih Departemen (Opsional)",
+      "formPosition": "Jabatan Pekerjaan",
+      "formSlots": "Slot",
+      "formTitle": "Judul Pekerjaan",
+      "formTitlePlaceholder": "misal: Senior Backend Engineer",
+      "formDesc": "Deskripsi Pekerjaan",
+      "formDescPlaceholder": "Jelaskan tugas pekerjaan dan operasi sehari-hari...",
+      "formReqs": "Persyaratan Pekerjaan",
+      "formReqsPlaceholder": "Jelaskan latar belakang pendidikan, keterampilan, dan sertifikasi yang dibutuhkan...",
+      "toast": {
+        "createSuccess": "Lowongan berhasil dibuat",
+        "createFailed": "Gagal membuat lowongan",
+        "updateSuccess": "Lowongan berhasil diubah",
+        "updateFailed": "Gagal mengubah lowongan",
+        "publishSuccess": "Lowongan berhasil dipublikasikan",
+        "publishFailed": "Gagal mempublikasikan lowongan",
+        "closeSuccess": "Lowongan berhasil ditutup",
+        "closeFailed": "Gagal menutup lowongan",
+        "deleteSuccess": "Lowongan berhasil dihapus",
+        "deleteFailed": "Gagal menghapus lowongan",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus lowongan ini?"
+      }
+    },
+    "candidates": {
+      "pageTitle": "Direktori Kandidat",
+      "subtitle": "Lihat database talenta perusahaan, tambah pelamar, dan tinjau resume.",
+      "searchPlaceholder": "Cari kandidat berdasarkan nama atau email...",
+      "addCandidate": "Tambah Kandidat",
+      "noCandidates": "Tidak ada kandidat ditemukan.",
+      "modalAddTitle": "Tambah Profil Kandidat",
+      "modalEditTitle": "Ubah Profil Kandidat",
+      "formFirstName": "Nama Depan",
+      "formLastName": "Nama Belakang",
+      "formEmail": "Alamat Email",
+      "formPhone": "Nomor Telepon",
+      "formResume": "Path Resume CV",
+      "generateMockResume": "Hasilkan Path PDF Mock",
+      "toast": {
+        "createSuccess": "Kandidat berhasil dibuat",
+        "createFailed": "Gagal membuat kandidat",
+        "updateSuccess": "Kandidat berhasil diubah",
+        "updateFailed": "Gagal mengubah kandidat",
+        "deleteSuccess": "Kandidat berhasil dihapus",
+        "deleteFailed": "Gagal menghapus kandidat",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus kandidat ini?",
+        "mockResumeSuccess": "Path resume PDF S3 tiruan berhasil dihasilkan!"
+      }
+    },
+    "pipeline": {
+      "pageTitle": "Kanban Rekrutmen",
+      "subtitle": "Lacak kandidat, jalankan proses pelamar, jadwalkan wawancara, dan finalisasi perekrutan.",
+      "stageApplied": "Melamar",
+      "stageScreening": "Penyaringan",
+      "stageInterview": "Wawancara",
+      "stageAssessment": "Penilaian",
+      "stageOffering": "Penawaran Kerja",
+      "stageHiring": "Persetujuan Kerja",
+      "stageHired": "Diterima",
+      "stageRejected": "Ditolak",
+      "filterVacancy": "Filter Lowongan",
+      "applyCandidate": "Lamar Kandidat",
+      "loading": "Memuat aplikasi pipeline...",
+      "scheduledInterview": "Wawancara Terjadwal",
+      "scheduleInterviewBtn": "Jadwalkan Wawancara",
+      "evaluateBtn": "Evaluasi",
+      "scoreLabel": "Nilai: {score} / 100",
+      "rejectBtn": "Tolak",
+      "modalApplyTitle": "Lamar Kandidat ke Lowongan",
+      "selectCandidate": "Pilih Kandidat",
+      "selectVacancy": "Pilih Lowongan Kerja",
+      "modalScheduleTitle": "Jadwalkan Wawancara Kandidat",
+      "interviewDateTime": "Tanggal & Waktu Wawancara",
+      "assignInterviewer": "Tugaskan Pewawancara",
+      "chooseInterviewer": "Pilih Pewawancara",
+      "preMeetingNotes": "Catatan Pra-pertemuan",
+      "preMeetingPlaceholder": "misal: Fokus pada keterampilan teknis...",
+      "modalScoreTitle": "Kirim Nilai Wawancara",
+      "interviewScore": "Nilai Wawancara (1 - 100)",
+      "feedback": "Umpan Balik / Catatan",
+      "feedbackPlaceholder": "Ringkaskan jawaban dan kekuatan kandidat...",
+      "toast": {
+        "moveSuccess": "Kandidat dipindahkan ke tahapan: {stage}",
+        "moveFailed": "Gagal memindahkan tahapan kandidat",
+        "applySuccess": "Kandidat berhasil melamar ke lowongan",
+        "applyFailed": "Gagal melamar kandidat",
+        "scheduleSuccess": "Wawancara berhasil dijadwalkan",
+        "scheduleFailed": "Gagal menjadwalkan wawancara",
+        "scoreSuccess": "Nilai wawancara dan umpan balik berhasil dikirim",
+        "scoreFailed": "Gagal mengirimkan nilai",
+        "noInterviewFound": "Tidak ditemukan wawancara terjadwal untuk dievaluasi."
+      }
+    },
+    "approvals": {
+      "pageTitle": "Persetujuan Perekrutan",
+      "subtitle": "Tinjau berkas pelamar rekrutmen dan selesaikan persetujuan yang diperlukan.",
+      "pendingReviews": "Ulasan Tertunda",
+      "approvedLog": "Log Disetujui",
+      "rejectedLog": "Log Ditolak",
+      "loading": "Memuat persetujuan perekrutan...",
+      "noApprovals": "Tidak ada persetujuan yang ditemukan untuk status ini.",
+      "stageLabel": "Tahap {stage}",
+      "assignedTo": "Ditugaskan kepada: {name}",
+      "applyingFor": "Melamar untuk: {title}",
+      "comments": "Catatan: ",
+      "modalApproveTitle": "Setujui Permintaan Perekrutan",
+      "modalRejectTitle": "Tolak Permintaan Perekrutan",
+      "commentsLabel": "Catatan",
+      "commentsRequired": "Catatan (Wajib)",
+      "commentsOptional": "Catatan (Opsional)",
+      "approvePlaceholder": "Tulis catatan tambahan...",
+      "rejectPlaceholder": "Harap jelaskan alasan penolakan...",
+      "confirmApprove": "Konfirmasi Setujui",
+      "confirmReject": "Konfirmasi Tolak",
+      "toast": {
+        "approveSuccess": "Tahap perekrutan berhasil disetujui",
+        "approveFailed": "Gagal menyetujui tahap perekrutan",
+        "rejectSuccess": "Tahap perekrutan berhasil ditolak",
+        "rejectFailed": "Gagal menolak tahap perekrutan",
+        "rejectCommentsRequired": "Catatan wajib diisi untuk penolakan"
+      }
+    }
+  },
+  "training": {
+    "status": {
+      "scheduled": "Terjadwal",
+      "ongoing": "Berjalan",
+      "completed": "Selesai",
+      "cancelled": "Dibatalkan",
+      "pending": "Tertunda",
+      "attended": "Hadir",
+      "absent": "Absen",
+      "pass": "Lulus",
+      "fail": "Tidak Lulus"
+    },
+    "dashboard": {
+      "pageTitle": "Pusat Pelatihan",
+      "subtitle": "Tetapkan program pembelajaran korporat, rencanakan sesi pelatihan, koordinasikan peserta, dan catat skor kelulusan.",
+      "stats": {
+        "masterCourses": "Mata Kuliah Master",
+        "totalScheduled": "Sesi Terjadwal",
+        "activeOngoing": "Aktif / Berjalan",
+        "completed": "Sesi Selesai"
+      },
+      "recentActiveTitle": "Sesi Terbaru & Aktif",
+      "trainer": "Trainer: {name}",
+      "noSessions": "Belum ada sesi pelatihan yang dijadwalkan.",
+      "manageParticipantsTooltip": "Kelola Peserta"
+    },
+    "master": {
+      "pageTitle": "Mata Kuliah Pelatihan Master",
+      "subtitle": "Konfigurasi jalur pelatihan, Kategori kurikulum, kode, dan jenis pelatihan.",
+      "searchPlaceholder": "Cari berdasarkan nama atau kode...",
+      "allCategories": "Semua Kategori",
+      "allTypes": "Semua Tipe",
+      "addCourse": "Tambah Kursus",
+      "noCourses": "Tidak ada kursus ditemukan",
+      "noCoursesDesc": "Coba perluas parameter pencarian Anda atau tambahkan kursus baru.",
+      "table": {
+        "code": "Kode Kursus",
+        "name": "Nama Kursus",
+        "category": "Kategori",
+        "type": "Tipe",
+        "description": "Deskripsi",
+        "actions": "Aksi"
+      },
+      "modal": {
+        "addTitle": "Tambah Kursus Master",
+        "editTitle": "Ubah Kursus Master",
+        "formCode": "Kode Kursus",
+        "formName": "Nama Kursus",
+        "formCategory": "Kategori",
+        "formType": "Tipe",
+        "formDesc": "Deskripsi",
+        "codePlaceholder": "misal: TRN-ISO-9001",
+        "namePlaceholder": "misal: Sistem Manajemen Mutu ISO 9001",
+        "descPlaceholder": "Jelaskan tujuan pembelajaran atau prasyarat...",
+        "saveCourse": "Buat Kursus Master",
+        "saveChanges": "Simpan Perubahan"
+      },
+      "toast": {
+        "createSuccess": "Kursus Master berhasil dibuat",
+        "createFailed": "Gagal membuat kursus",
+        "updateSuccess": "Kursus Master berhasil diubah",
+        "updateFailed": "Gagal mengubah kursus",
+        "deleteSuccess": "Kursus Master berhasil dihapus",
+        "deleteFailed": "Gagal menghapus kursus",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus kursus master ini?"
+      }
+    },
+    "sessions": {
+      "pageTitle": "Sesi & Kalender Pelatihan",
+      "subtitle": "Jadwalkan sesi pelatihan, koordinasikan trainer, tempat, dan kelola daftar peserta.",
+      "searchPlaceholder": "Cari berdasarkan kursus atau trainer...",
+      "allStatuses": "Semua Status",
+      "scheduleSession": "Jadwalkan Sesi",
+      "noSessions": "Tidak ada sesi yang dijadwalkan",
+      "noSessionsDesc": "Coba perluas filter Anda atau jadwalkan sesi pelatihan baru.",
+      "venue": "Tempat: {venue}",
+      "trainer": "Trainer: {trainer}",
+      "manageRoster": "Kelola Roster",
+      "modal": {
+        "addTitle": "Jadwalkan Sesi",
+        "editTitle": "Ubah Sesi",
+        "formCourse": "Kursus Master",
+        "selectCourse": "Pilih Kursus Master",
+        "formTrainer": "Nama Trainer",
+        "trainerPlaceholder": "misal: Dr. Jane Doe",
+        "formVenue": "Tempat / Lokasi",
+        "venuePlaceholder": "misal: Ruang Auditorium 4B / Zoom Meeting",
+        "formStart": "Tanggal & Waktu Mulai",
+        "formEnd": "Tanggal & Waktu Selesai",
+        "formStatus": "Status Sesi",
+        "saveSession": "Jadwalkan Sesi",
+        "saveChanges": "Simpan Perubahan"
+      },
+      "toast": {
+        "createSuccess": "Sesi pelatihan berhasil dijadwalkan",
+        "createFailed": "Gagal menjadwalkan sesi",
+        "updateSuccess": "Sesi pelatihan berhasil diubah",
+        "updateFailed": "Gagal mengubah sesi",
+        "deleteSuccess": "Sesi berhasil dihapus",
+        "deleteFailed": "Gagal menghapus sesi",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus sesi pelatihan ini?"
+      }
+    },
+    "participants": {
+      "pageTitle": "Roster Peserta Sesi",
+      "subtitle": "Daftarkan anggota tim, catat kehadiran kelas, dan catat skor kelulusan sertifikasi.",
+      "enrollEmployee": "Daftarkan Karyawan",
+      "rosterEmpty": "Daftar roster kosong",
+      "rosterEmptyDesc": "Belum ada karyawan yang didaftarkan sebagai peserta dalam sesi ini.",
+      "table": {
+        "employee": "Karyawan",
+        "employeeId": "NIP Karyawan",
+        "attendance": "Kehadiran",
+        "score": "Nilai",
+        "result": "Hasil",
+        "remarks": "Catatan",
+        "actions": "Aksi"
+      },
+      "modalEnroll": {
+        "title": "Daftarkan Peserta",
+        "selectEmployee": "Pilih Karyawan",
+        "chooseEmployee": "Pilih karyawan...",
+        "allEnrolled": "Semua karyawan aktif sudah didaftarkan dalam sesi ini.",
+        "submit": "Tambahkan ke Roster Kelas"
+      },
+      "modalGrade": {
+        "title": "Evaluasi Nilai & Kehadiran",
+        "evaluating": "Mengevaluasi Karyawan",
+        "attendance": "Status Kehadiran",
+        "result": "Kelulusan",
+        "pendingEvaluation": "Menunggu Evaluasi",
+        "pass": "Lulus",
+        "fail": "Tidak Lulus",
+        "score": "Nilai",
+        "scorePlaceholder": "misal: 85.50",
+        "remarks": "Catatan & Catatan Kaki",
+        "remarksPlaceholder": "misal: Partisipasi aktif. Melebihi harapan saat tes.",
+        "submit": "Kirim Evaluasi Nilai"
+      },
+      "toast": {
+        "enrollSuccess": "Karyawan berhasil didaftarkan dalam sesi pelatihan",
+        "enrollFailed": "Gagal mendaftarkan karyawan",
+        "gradeSuccess": "Kemajuan peserta berhasil diperbarui",
+        "gradeFailed": "Gagal memperbarui kemajuan",
+        "removeSuccess": "Peserta berhasil dihapus dari roster",
+        "removeFailed": "Gagal menghapus peserta",
+        "confirmRemove": "Apakah Anda yakin ingin menghapus peserta ini dari daftar roster?"
+      }
+    }
+  },
+  "certification": {
+    "status": {
+      "active": "Aktif",
+      "expired": "Kedaluwarsa",
+      "pendingRenewal": "Menunggu Pembaruan"
+    },
+    "dashboard": {
+      "pageTitle": "Pusat Sertifikasi",
+      "subtitle": "Petakan persyaratan wajib posisi jabatan, lacak status lisensi karyawan, dan antisipasi tanggal kedaluwarsa.",
+      "stats": {
+        "licenseMaster": "Master Lisensi",
+        "activeLicenses": "Lisensi Aktif",
+        "renewals": "Pembaruan (< 30 hari)",
+        "expired": "Lisensi Kedaluwarsa"
+      },
+      "matrix": {
+        "title": "Matriks Persyaratan Sertifikasi Jabatan",
+        "subtitle": "Tentukan posisi jabatan mana yang secara kontrak atau hukum wajib memiliki lisensi profesional tertentu.",
+        "mapBtn": "Petakan Persyaratan Jabatan",
+        "noRequirements": "Belum ada persyaratan jabatan wajib yang dipetakan. Petakan posisi di atas untuk mulai memeriksa kepatuhan.",
+        "table": {
+          "position": "Posisi Jabatan",
+          "certification": "Sertifikasi yang Dibutuhkan",
+          "issuer": "Lembaga Penerbit",
+          "mandatory": "Status Wajib",
+          "action": "Aksi"
+        },
+        "mandatoryLabel": "Wajib",
+        "optionalLabel": "Opsional"
+      },
+      "modal": {
+        "title": "Petakan Persyaratan Sertifikasi Jabatan",
+        "position": "Posisi Jabatan",
+        "selectPosition": "Pilih Posisi...",
+        "certification": "Sertifikasi yang Dibutuhkan",
+        "selectCert": "Pilih Sertifikasi...",
+        "mandatoryCheckbox": "Sertifikasi ini wajib secara hukum (Wajib) untuk peran ini",
+        "saveBtn": "Simpan Persyaratan Pemetaan"
+      },
+      "toast": {
+        "mapSuccess": "Pemetaan sertifikasi jabatan berhasil ditambahkan",
+        "mapFailed": "Gagal menambahkan pemetaan",
+        "removeSuccess": "Pemetaan jabatan berhasil dihapus",
+        "removeFailed": "Gagal menghapus pemetaan",
+        "confirmRemove": "Apakah Anda yakin ingin menghapus persyaratan sertifikasi ini untuk posisi jabatan ini?"
+      }
+    },
+    "master": {
+      "pageTitle": "Katalog Master Sertifikasi",
+      "subtitle": "Buat dan konfigurasi jalur sertifikasi, lembaga akreditasi, dan masa berlaku.",
+      "searchPlaceholder": "Cari berdasarkan nama, kode atau penerbit...",
+      "addCert": "Tambah Sertifikasi",
+      "noCerts": "Tidak ada sertifikasi ditemukan",
+      "noCertsDesc": "Coba perluas parameter pencarian Anda atau daftarkan sertifikasi baru.",
+      "table": {
+        "code": "Kode Lisensi",
+        "name": "Nama Lisensi",
+        "issuer": "Penerbit (Lembaga)",
+        "validity": "Masa Berlaku",
+        "actions": "Aksi"
+      },
+      "months": "Bulan",
+      "lifetime": "Seumur Hidup",
+      "modal": {
+        "addTitle": "Tambah Sertifikasi Master",
+        "editTitle": "Ubah Sertifikasi Master",
+        "code": "Kode Sertifikasi",
+        "codePlaceholder": "misal: CERT-HACCP-QC",
+        "name": "Nama Sertifikasi",
+        "namePlaceholder": "misal: Sertifikasi Keamanan Pangan HACCP",
+        "issuer": "Lembaga Penerbit",
+        "issuerPlaceholder": "misal: Badan Sertifikasi Internasional / MUI",
+        "validity": "Masa Berlaku (Bulan)",
+        "validityPlaceholder": "misal: 24 (Biarkan kosong untuk Seumur Hidup)",
+        "validityHint": "Tentukan berapa bulan sertifikat tetap berlaku. Biarkan kosong jika tidak pernah kedaluwarsa.",
+        "saveCert": "Buat Sertifikasi",
+        "saveChanges": "Simpan Perubahan"
+      },
+      "toast": {
+        "createSuccess": "Sertifikasi Master berhasil dibuat",
+        "createFailed": "Gagal membuat sertifikasi",
+        "updateSuccess": "Sertifikasi Master berhasil diubah",
+        "updateFailed": "Gagal mengubah sertifikasi",
+        "deleteSuccess": "Sertifikasi berhasil dihapus",
+        "deleteFailed": "Gagal menghapus sertifikasi",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus sertifikasi ini? Ini juga akan menghapus hubungan dengan karyawan terkait."
+      }
+    },
+    "employee": {
+      "pageTitle": "Lisensi & Kredensial Karyawan",
+      "subtitle": "Log sertifikasi profesional, unggah dokumen verifikasi, dan audit status kepatuhan.",
+      "searchPlaceholder": "Cari berdasarkan nama atau nomor lisensi...",
+      "allStatuses": "Semua Status",
+      "logLicense": "Log Lisensi",
+      "noLicenses": "Tidak ada lisensi ditemukan",
+      "noLicensesDesc": "Coba perluas parameter pencarian Anda atau catat kredensial karyawan baru.",
+      "table": {
+        "employee": "Karyawan",
+        "licenseName": "Nama Lisensi",
+        "licenseNumber": "Nomor Lisensi",
+        "expiry": "Tanggal Kedaluwarsa",
+        "status": "Status",
+        "doc": "Dok",
+        "actions": "Aksi"
+      },
+      "unknownEmployee": "Karyawan Tidak Dikenal",
+      "lifetime": "Seumur Hidup",
+      "none": "Tidak ada",
+      "modal": {
+        "addTitle": "Log Lisensi Karyawan",
+        "editTitle": "Ubah Lisensi Karyawan",
+        "employee": "Karyawan",
+        "selectEmployee": "Pilih Karyawan...",
+        "certification": "Sertifikasi",
+        "selectCert": "Pilih Sertifikasi...",
+        "certNumber": "Nomor Sertifikat / Lisensi",
+        "certNumberPlaceholder": "misal: LIC-901-209-1A",
+        "issueDate": "Tanggal Terbit",
+        "expiryDate": "Tanggal Kedaluwarsa",
+        "uploadDoc": "Unggah Dokumen (PDF/Gambar)",
+        "uploadBtn": "Unggah berkas",
+        "dragDrop": "atau seret dan lepas",
+        "fileLimit": "PDF, PNG, JPG hingga 10MB",
+        "selectedFile": "Terpilih: {name}",
+        "saveCert": "Log Lisensi",
+        "saveChanges": "Simpan Perubahan"
+      },
+      "toast": {
+        "createSuccess": "Kredensial karyawan berhasil dicatat",
+        "createFailed": "Gagal mencatat sertifikasi",
+        "updateSuccess": "Kredensial karyawan berhasil diperbarui",
+        "updateFailed": "Gagal memperbarui sertifikasi",
+        "deleteSuccess": "Kredensial berhasil dihapus",
+        "deleteFailed": "Gagal menghapus kredensial",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus log sertifikasi karyawan ini?"
+      }
+    }
+  },
+  "users": {
+    "pageTitle": "Pengaturan Pengguna & Keamanan",
+    "subtitle": "Kelola pengguna aktif perusahaan, tetapkan peran keamanan, dan kontrol izin akses.",
+    "denied": {
+      "title": "Akses Ditolak",
+      "subtitle": "Bagian visual tidak sah",
+      "header": "Diperlukan Hak Istimewa",
+      "description": "Anda tidak memiliki izin administratif yang diperlukan untuk mengakses konsol Manajemen Pengguna & Peran Tenant.",
+      "backBtn": "Kembali ke Dashboard"
+    },
+    "tabs": {
+      "users": "Akun Pengguna",
+      "roles": "Peran & Hak Akses"
+    },
+    "users": {
+      "searchPlaceholder": "Cari nama atau email pengguna...",
+      "addUser": "Tambah Pengguna",
+      "loading": "Memuat direktori pengguna...",
+      "noResults": "Tidak ada akun pengguna yang cocok dengan kueri.",
+      "table": {
+        "name": "Nama",
+        "email": "Email",
+        "roles": "Peran",
+        "dateAdded": "Tanggal Ditambahkan",
+        "actions": "Aksi"
+      },
+      "toast": {
+        "createSuccess": "Akun pengguna berhasil dibuat.",
+        "createFailed": "Gagal membuat pengguna.",
+        "updateSuccess": "Akun pengguna berhasil diubah.",
+        "updateFailed": "Gagal mengubah pengguna.",
+        "deleteSuccess": "Akun pengguna berhasil dihapus sementara (soft deleted).",
+        "deleteFailed": "Gagal menghapus pengguna.",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus akun pengguna untuk {name}?",
+        "roleWarning": "Pengguna harus memiliki minimal satu peran.",
+        "pinRequired": "PIN otorisasi Super Admin wajib diisi."
+      },
+      "modalAdd": {
+        "title": "Tambah Pengguna Baru",
+        "name": "Nama Lengkap",
+        "email": "Alamat Email",
+        "password": "Kata Sandi",
+        "roles": "Tetapkan Peran",
+        "cancel": "Batal",
+        "save": "Simpan Pengguna"
+      },
+      "modalEdit": {
+        "title": "Ubah Akun Pengguna",
+        "name": "Nama Lengkap",
+        "email": "Alamat Email",
+        "password": "Kata Sandi (Opsional)",
+        "passwordHint": "Biarkan kosong untuk mempertahankan yang sekarang",
+        "roles": "Tetapkan Peran",
+        "pin": "PIN Otorisasi Super Admin",
+        "pinHint": "Diperlukan untuk mengotorisasi pengeditan akun Super Admin.",
+        "pinPlaceholder": "Masukkan 6-digit PIN",
+        "cancel": "Batal",
+        "save": "Simpan Perubahan"
+      }
+    },
+    "roles": {
+      "title": "Peran Tenant & Definisi Keamanan",
+      "addRole": "Tambah Peran",
+      "loading": "Memuat peran keamanan...",
+      "noRoles": "Tidak ada peran keamanan yang dikonfigurasi.",
+      "systemDefault": "Bawaan Sistem",
+      "fullAccess": "Akses Penuh (Semua)",
+      "fullAccessBadge": "★ Akses Administrator Penuh",
+      "noPermissions": "Tidak ada hak akses yang ditetapkan",
+      "morePermissions": "+{count} lagi",
+      "table": {
+        "name": "Nama Peran",
+        "totalPermissions": "Total Hak Akses",
+        "assigned": "Status Hak Akses Ditugaskan",
+        "actions": "Aksi"
+      },
+      "modal": {
+        "addTitle": "Buat Peran Keamanan",
+        "editTitle": "Ubah Peran Keamanan: {name}",
+        "roleName": "Nama Peran",
+        "nameHint": "Perlindungan nama aktif untuk peran bawaan sistem.",
+        "permissionsLabel": "📋 Hak Akses Detail (Pemetaan Hak Akses)",
+        "superAdminNotice": "Super Admin secara otomatis mempertahankan akses penuh. Hak akses individu tidak dapat dihapus secara manual dari peran Super Admin.",
+        "loadingPermissions": "Memuat daftar hak akses...",
+        "selectedCount": "{count} terpilih",
+        "cancel": "Batal",
+        "save": "Simpan Peran Keamanan"
+      },
+      "toast": {
+        "createSuccess": "Peran berhasil dibuat.",
+        "createFailed": "Gagal membuat peran.",
+        "updateSuccess": "Peran berhasil diperbarui.",
+        "updateFailed": "Gagal memperbarui peran.",
+        "deleteSuccess": "Peran berhasil dihapus.",
+        "deleteFailed": "Gagal menghapus peran.",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus peran keamanan \"{name}\" secara permanen?",
+        "roleNameRequired": "Nama peran wajib diisi."
+      }
+    }
+  },
+  "hlc": {
+    "portal": {
+      "title": "Portal Kontrol Tingkat Tinggi",
+      "subtitle": "Masukkan kunci token otorisasi pusat yang dikonfigurasi di lingkungan API Anda untuk mengelola entitas hukum platform.",
+      "tokenLabel": "Kunci Token Pusat",
+      "tokenPlaceholder": "nexus_central_secret",
+      "unlockBtn": "Buka Konsol",
+      "toast": {
+        "unlocked": "Konsol kontrol tingkat tinggi berhasil dibuka.",
+        "invalidToken": "Kunci token otorisasi pusat tidak valid.",
+        "tokenRequired": "Silakan masukkan kunci token pusat."
+      }
+    },
+    "console": {
+      "title": "Konfigurasi Skema Perusahaan",
+      "subtitle": "Daftarkan perusahaan organisasi klien baru, konfigurasikan skema database terisolasi, dan petakan subfolder domain.",
+      "registerBtn": "Daftarkan Perusahaan",
+      "stats": {
+        "activeCompanies": "Total Perusahaan Aktif",
+        "isolationMethod": "Metode Isolasi",
+        "isolationDesc": "PostgreSQL Schema-per-Tenant",
+        "gatewayDomain": "Domain Gateway",
+        "gatewayDesc": "*.local (Subdomain Dev)"
+      },
+      "tableTitle": "Daftar Perusahaan Terdaftar",
+      "table": {
+        "name": "Nama Perusahaan",
+        "slug": "Pengidentifikasi Slug",
+        "domain": "Domain Terpeta",
+        "date": "Tanggal Penyediaan",
+        "actions": "Aksi"
+      },
+      "portalBtn": "Portal",
+      "noTenants": "Belum ada perusahaan terdaftar. Tambahkan perusahaan pertama Anda di atas.",
+      "toast": {
+        "registerSuccess": "Perusahaan baru terdaftar. Skema database diinisialisasi!",
+        "registerFailed": "Gagal mendaftarkan perusahaan.",
+        "updateSuccess": "Detail perusahaan berhasil diperbarui!",
+        "updateFailed": "Gagal memperbarui perusahaan.",
+        "deleteSuccess": "Skema database perusahaan berhasil dihapus.",
+        "deleteFailed": "Gagal menghapus perusahaan.",
+        "confirmDelete": "Apakah Anda benar-benar yakin ingin menghapus {name}? Ini akan menghapus skema databasenya secara permanen dan menghilangkan semua data.",
+        "logout": "Keluar dari konsol pusat.",
+        "fieldsRequired": "Nama dan slug wajib diisi."
+      },
+      "modalAdd": {
+        "title": "Daftarkan Perusahaan Baru",
+        "name": "Nama Organisasi / Perusahaan",
+        "namePlaceholder": "misal: HBM Manufacturing",
+        "slug": "Slug Subdomain (Alfanumerik)",
+        "slugPlaceholder": "misal: hbm-mfg",
+        "slugHint": "Ini menjadi subdomain: misal {slug}.local",
+        "logo": "Logo Perusahaan (Opsional)",
+        "cancel": "Batal",
+        "submit": "Inisialisasi Skema"
+      },
+      "modalEdit": {
+        "title": "Ubah Perusahaan",
+        "name": "Nama Organisasi / Perusahaan",
+        "slug": "Slug Subdomain (Alfanumerik)",
+        "slugHint": "Ini menjadi subdomain: misal {slug}.local",
+        "logo": "Logo Perusahaan (Opsional)",
+        "currentLogo": "Logo Saat Ini",
+        "cancel": "Batal",
+        "submit": "Simpan Perubahan"
+      }
+    }
+  },
+  "engagement": {
+    "dashboard": {
+      "title": "Employee Engagement",
+      "subtitle": "Pantau survei pulse, kelola kotak saran karyawan, dan rayakan pencapaian organisasi.",
+      "activeSurveys": "Survei Aktif",
+      "recentFeedback": "Kotak Saran Terbaru",
+      "awardsWall": "Dinding Penghargaan"
+    },
+    "surveys": {
+      "title": "Manajer Survei",
+      "subtitle": "Buat dan kelola survei kepuasan, pulse, dan kustom.",
+      "createBtn": "Buat Survei",
+      "status": {
+        "draft": "Draf",
+        "published": "Diterbitkan",
+        "closed": "Ditutup",
+        "archived": "Diarsipkan"
+      },
+      "table": {
+        "title": "Judul Survei",
+        "type": "Tipe",
+        "status": "Status",
+        "dates": "Tanggal Aktif",
+        "anonymous": "Anonim",
+        "responses": "Tanggapan",
+        "actions": "Aksi"
+      },
+      "builder": {
+        "title": "Pembuat Survei",
+        "titleLabel": "Judul Survei",
+        "descLabel": "Deskripsi",
+        "typeLabel": "Tipe Survei",
+        "isAnonymousLabel": "Tanggapan survei bersifat anonim",
+        "audienceLabel": "Target Audiens",
+        "startDateLabel": "Tanggal Mulai",
+        "endDateLabel": "Tanggal Berakhir",
+        "addQuestion": "Tambah Pertanyaan",
+        "questionText": "Teks pertanyaan",
+        "questionType": "Tipe input pertanyaan",
+        "requiredCheckbox": "Wajib Diisi",
+        "saveSurvey": "Simpan Survei",
+        "cancel": "Batal"
+      },
+      "analytics": {
+        "title": "Analitik Survei",
+        "totalResponses": "Total Tanggapan",
+        "averageScore": "Skor Rata-rata",
+        "minMax": "Rentang Min / Max",
+        "distribution": "Distribusi Jawaban",
+        "recentAnswers": "Jawaban Teks Terbaru"
+      },
+      "respond": {
+        "title": "Pengisian Survei",
+        "anonymousWarning": "Survei ini bersifat anonim. Identitas Anda tidak akan dicatat.",
+        "submit": "Kirim Tanggapan",
+        "success": "Tanggapan survei berhasil dikirim!"
+      }
+    },
+    "feedback": {
+      "title": "Kotak Saran",
+      "subtitle": "Berikan saran konstruktif, ajukan keluhan, atau apresiasi rekan kerja.",
+      "anonymousLabel": "Kirim secara anonim",
+      "typeLabel": "Tipe Umpan Balik",
+      "categoryLabel": "Kategori",
+      "contentPlaceholder": "Ketik saran atau keluhan Anda di sini...",
+      "submitBtn": "Kirim Umpan Balik",
+      "table": {
+        "employee": "Karyawan",
+        "type": "Tipe",
+        "category": "Kategori",
+        "content": "Konten",
+        "status": "Status",
+        "date": "Tanggal Kirim",
+        "action": "Aksi"
+      },
+      "respondModal": {
+        "title": "Tanggapi Umpan Balik",
+        "responseText": "Catatan Tanggapan HR",
+        "statusLabel": "Status Resolusi",
+        "submit": "Kirim Resolusi"
+      }
+    },
+    "awards": {
+      "title": "Dinding Penghargaan",
+      "subtitle": "Rayakan dan ucapkan selamat kepada karyawan berprestasi.",
+      "addBtn": "Berikan Penghargaan",
+      "modal": {
+        "title": "Berikan Penghargaan Karyawan",
+        "employee": "Pilih Karyawan",
+        "awardTitle": "Nama Penghargaan",
+        "category": "Kategori Penghargaan",
+        "date": "Tanggal Diberikan",
+        "description": "Kutipan Apresiasi",
+        "submit": "Terbitkan Penghargaan"
+      }
+    }
+  },
+  "assets": {
+    "dashboard": {
+      "title": "Manajemen Aset",
+      "subtitle": "Daftarkan inventaris perusahaan, tugaskan aset fisik kepada karyawan, dan kelola pengembalian barang.",
+      "totalAssets": "Total Aset Terdaftar",
+      "assigned": "Sedang Ditugaskan",
+      "available": "Tersedia di Stok",
+      "maintenance": "Dalam Pemeliharaan"
+    },
+    "registry": {
+      "title": "Daftar Aset",
+      "addBtn": "Daftarkan Aset",
+      "modal": {
+        "title": "Daftarkan Aset",
+        "editTitle": "Ubah Detail Aset",
+        "number": "Nomor Tag Aset",
+        "name": "Nama Aset",
+        "category": "Kategori",
+        "brand": "Merek",
+        "model": "Model",
+        "serial": "Nomor Seri",
+        "specs": "Spesifikasi",
+        "purchaseDate": "Tanggal Pembelian",
+        "price": "Harga Pembelian",
+        "vendor": "Vendor",
+        "condition": "Kondisi Fisik",
+        "status": "Status Inventaris",
+        "location": "Lokasi Penyimpanan",
+        "notes": "Catatan Internal",
+        "submit": "Simpan Aset"
+      }
+    },
+    "assignments": {
+      "title": "Penugasan Aset",
+      "assignBtn": "Tugaskan Aset",
+      "modal": {
+        "title": "Tugaskan Aset Perusahaan",
+        "asset": "Pilih Aset",
+        "employee": "Tugaskan Kepada Karyawan",
+        "date": "Tanggal Serah Terima",
+        "expectedReturn": "Tanggal Estimasi Kembali",
+        "condition": "Kondisi Saat Penyerahan",
+        "notes": "Catatan Penyerahan",
+        "submit": "Konfirmasi Penugasan"
+      },
+      "returnModal": {
+        "title": "Daftarkan Pengembalian Aset",
+        "date": "Tanggal Dikembalikan",
+        "condition": "Kondisi Saat Pengembalian",
+        "notes": "Catatan Pengembalian",
+        "submit": "Konfirmasi Pengembalian"
+      }
+    }
+  }
+}

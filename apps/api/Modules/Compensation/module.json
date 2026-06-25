@@ -1,0 +1,11 @@
+{
+    "name": "Compensation",
+    "alias": "compensation",
+    "description": "Handles employee benefits, enrollment, claims reimbursement, and bonus schemes",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Compensation\\Providers\\CompensationServiceProvider"
+    ],
+    "files": []
+}

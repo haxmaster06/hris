@@ -13,6 +13,9 @@ use Modules\Recruitment\Http\Requests\UpdateInterviewRequest;
 use Modules\Recruitment\Http\Resources\InterviewCollection;
 use Modules\Recruitment\Http\Resources\InterviewResource;
 use Modules\Recruitment\Services\InterviewService;
+use Modules\Recruitment\Models\Interview;
+use Modules\Recruitment\Models\InterviewEvaluation;
+use Illuminate\Support\Facades\DB;
 
 class InterviewController extends BaseController
 {
@@ -94,6 +97,47 @@ class InterviewController extends BaseController
         return $this->successResponse(
             new InterviewResource($interview),
             'Interview result submitted successfully'
+        );
+    }
+
+    public function submitEvaluation(Request $request, string $id): JsonResponse
+    {
+        Gate::authorize('recruitment.interview.update');
+
+        $interview = Interview::findOrFail($id);
+
+        $validated = $request->validate([
+            'evaluator_id' => ['required', 'uuid', 'exists:employees,id'],
+            'criteria' => ['required', 'array'],
+            'overall_score' => ['required', 'numeric', 'min:1', 'max:5'],
+            'recommendation' => ['required', 'string', 'in:hire,reject,next_round'],
+            'comments' => ['nullable', 'string'],
+        ]);
+
+        $evaluation = DB::transaction(function () use ($id, $validated, $interview) {
+            $eval = InterviewEvaluation::updateOrCreate(
+                ['interview_id' => $id],
+                [
+                    'evaluator_id' => $validated['evaluator_id'],
+                    'criteria' => $validated['criteria'],
+                    'overall_score' => $validated['overall_score'],
+                    'recommendation' => $validated['recommendation'],
+                    'comments' => $validated['comments'] ?? null,
+                ]
+            );
+
+            // Map 1-5 overall score to 1-100 rating
+            $interview->update([
+                'score' => (int) ($validated['overall_score'] * 20),
+                'status' => 'completed',
+            ]);
+
+            return $eval;
+        });
+
+        return $this->successResponse(
+            new InterviewResource($interview->load('evaluation')),
+            'Interview evaluation submitted successfully'
         );
     }
 }

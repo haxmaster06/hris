@@ -32,10 +32,15 @@ class Vacancy extends BaseModel
         'requirements',
         'slots',
         'status',
+        'vacancy_type',
+        'salary_range_min',
+        'salary_range_max',
     ];
 
     protected $casts = [
         'slots' => 'integer',
+        'salary_range_min' => 'decimal:2',
+        'salary_range_max' => 'decimal:2',
     ];
 
     public function company(): BelongsTo

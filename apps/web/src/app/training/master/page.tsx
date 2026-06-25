@@ -7,7 +7,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { 
-  ArrowLeft, 
   Plus, 
   Search, 
   Loader2, 
@@ -15,9 +14,9 @@ import {
   Edit2, 
   BookOpen
 } from "lucide-react";
-import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Training {
   id: string;
@@ -29,6 +28,9 @@ interface Training {
 }
 
 export default function MasterTrainingManagement() {
+  const t = useTranslations("training.master");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -73,11 +75,11 @@ export default function MasterTrainingManagement() {
     mutationFn: (data: any) => api.post("/trainings", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trainings"] });
-      toast.success("Master Training created successfully");
+      toast.success(t("toast.createSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create training");
+      toast.error(err.response?.data?.message || t("toast.createFailed"));
     }
   });
 
@@ -85,11 +87,11 @@ export default function MasterTrainingManagement() {
     mutationFn: ({ id, data }: { id: string; data: any }) => api.put(`/trainings/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trainings"] });
-      toast.success("Master Training updated successfully");
+      toast.success(t("toast.updateSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update training");
+      toast.error(err.response?.data?.message || t("toast.updateFailed"));
     }
   });
 
@@ -97,10 +99,10 @@ export default function MasterTrainingManagement() {
     mutationFn: (id: string) => api.delete(`/trainings/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trainings"] });
-      toast.success("Training deleted successfully");
+      toast.success(t("toast.deleteSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete training");
+      toast.error(err.response?.data?.message || t("toast.deleteFailed"));
     }
   });
 
@@ -125,7 +127,7 @@ export default function MasterTrainingManagement() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this master training?")) {
+    if (confirm(t("toast.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -147,6 +149,26 @@ export default function MasterTrainingManagement() {
     }
   };
 
+  const getCategoryLabel = (cat: string) => {
+    if (locale === "id") {
+      switch (cat) {
+        case "Leadership": return "Kepemimpinan";
+        case "Technical": return "Teknis";
+        case "Safety": return "Keselamatan";
+        case "Compliance": return "Kepatuhan";
+        default: return cat;
+      }
+    }
+    return cat;
+  };
+
+  const getTypeLabel = (type: string) => {
+    if (locale === "id") {
+      return type === "Internal" ? "Internal" : "Eksternal";
+    }
+    return type;
+  };
+
   if (!mounted || !isAuthenticated || !isAdmin) return null;
 
   // Filter implementation
@@ -161,8 +183,8 @@ export default function MasterTrainingManagement() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Master Training Courses"
-        subtitle="Configure training tracks, categories, curriculum codes, and types."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/training"
       />
 
@@ -174,7 +196,7 @@ export default function MasterTrainingManagement() {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Search by name or code..."
+                placeholder={t("searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -186,11 +208,11 @@ export default function MasterTrainingManagement() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             >
-              <option value="">All Categories</option>
-              <option value="Leadership">Leadership</option>
-              <option value="Technical">Technical</option>
-              <option value="Safety">Safety</option>
-              <option value="Compliance">Compliance</option>
+              <option value="">{t("allCategories")}</option>
+              <option value="Leadership">{getCategoryLabel("Leadership")}</option>
+              <option value="Technical">{getCategoryLabel("Technical")}</option>
+              <option value="Safety">{getCategoryLabel("Safety")}</option>
+              <option value="Compliance">{getCategoryLabel("Compliance")}</option>
             </select>
 
             <select
@@ -198,9 +220,9 @@ export default function MasterTrainingManagement() {
               onChange={(e) => setTypeFilter(e.target.value)}
               className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             >
-              <option value="">All Types</option>
-              <option value="Internal">Internal</option>
-              <option value="External">External</option>
+              <option value="">{t("allTypes")}</option>
+              <option value="Internal">{getTypeLabel("Internal")}</option>
+              <option value="External">{getTypeLabel("External")}</option>
             </select>
           </div>
 
@@ -208,7 +230,7 @@ export default function MasterTrainingManagement() {
             onClick={handleOpenCreate}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
           >
-            <Plus className="h-4 w-4" /> Add Course
+            <Plus className="h-4 w-4" /> {t("addCourse")}
           </button>
         </div>
 
@@ -220,20 +242,20 @@ export default function MasterTrainingManagement() {
         ) : filteredTrainings.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl">
             <BookOpen className="h-12 w-12 mx-auto text-zinc-300 mb-3" />
-            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">No courses found</h3>
-            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">Try expanding your search parameters or add a new course.</p>
+            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">{t("noCourses")}</h3>
+            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">{t("noCoursesDesc")}</p>
           </div>
         ) : (
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl overflow-hidden shadow-sm">
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Course Code</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Course Name</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Type</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Description</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-right">Actions</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.code")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.name")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.category")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.type")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.description")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-right">{t("table.actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -248,14 +270,14 @@ export default function MasterTrainingManagement() {
                         ${training.category === "Safety" ? "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300" : ""}
                         ${training.category === "Compliance" ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300" : ""}
                       `}>
-                        {training.category}
+                        {getCategoryLabel(training.category)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-semibold
                         ${training.type === "Internal" ? "bg-teal-100 text-teal-800 dark:bg-teal-950/40 dark:text-teal-300" : "bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300"}
                       `}>
-                        {training.type}
+                        {getTypeLabel(training.type)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-zinc-500 dark:text-zinc-400 max-w-xs truncate">{training.description || "-"}</td>
@@ -264,14 +286,14 @@ export default function MasterTrainingManagement() {
                         <button
                           onClick={() => handleOpenEdit(training)}
                           className="p-2 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-                          title="Edit Course"
+                          title={tCommon("edit")}
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(training.id)}
                           className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
-                          title="Delete Course"
+                          title={tCommon("delete")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -291,20 +313,20 @@ export default function MasterTrainingManagement() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedTraining ? "Edit Master Course" : "Add Master Course"}
+                {selectedTraining ? t("modal.editTitle") : t("modal.addTitle")}
               </h2>
               <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-semibold">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Course Code</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formCode")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. TRN-ISO-9001"
+                  placeholder={t("modal.codePlaceholder")}
                   value={formCode}
                   onChange={(e) => setFormCode(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -312,11 +334,11 @@ export default function MasterTrainingManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Course Name</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formName")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. ISO 9001 Quality Management System"
+                  placeholder={t("modal.namePlaceholder")}
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -325,36 +347,36 @@ export default function MasterTrainingManagement() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Category</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formCategory")}</label>
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value as any)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="Leadership">Leadership</option>
-                    <option value="Technical">Technical</option>
-                    <option value="Safety">Safety</option>
-                    <option value="Compliance">Compliance</option>
+                    <option value="Leadership">{getCategoryLabel("Leadership")}</option>
+                    <option value="Technical">{getCategoryLabel("Technical")}</option>
+                    <option value="Safety">{getCategoryLabel("Safety")}</option>
+                    <option value="Compliance">{getCategoryLabel("Compliance")}</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Type</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formType")}</label>
                   <select
                     value={formType}
                     onChange={(e) => setFormType(e.target.value as any)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="Internal">Internal</option>
-                    <option value="External">External</option>
+                    <option value="Internal">{getTypeLabel("Internal")}</option>
+                    <option value="External">{getTypeLabel("External")}</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Description</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formDesc")}</label>
                 <textarea
-                  placeholder="Describe the learning objectives or prerequisite requirements..."
+                  placeholder={t("modal.descPlaceholder")}
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
                   rows={4}
@@ -369,7 +391,7 @@ export default function MasterTrainingManagement() {
                   className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-primary text-white rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-primary/95 transition-colors"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {selectedTraining ? "Save Changes" : "Create Master Course"}
+                  {selectedTraining ? t("modal.saveChanges") : t("modal.saveCourse")}
                 </button>
               </div>
             </form>

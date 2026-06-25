@@ -7,5 +7,15 @@
     "Report": true,
     "Recruitment": true,
     "Training": true,
-    "Certification": true
+    "Certification": true,
+    "EmployeeLifecycle": true,
+    "Payroll": true,
+    "Compensation": true,
+    "Workflow": true,
+    "Audit": true,
+    "Performance": true,
+    "Disciplinary": true,
+    "Talent": true,
+    "Engagement": true,
+    "Asset": true
 }

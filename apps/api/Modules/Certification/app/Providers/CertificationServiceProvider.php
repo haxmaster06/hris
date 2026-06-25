@@ -22,7 +22,9 @@ class CertificationServiceProvider extends ModuleServiceProvider
      *
      * @var string[]
      */
-    // protected array $commands = [];
+    protected array $commands = [
+        \Modules\Certification\Console\Commands\CheckExpiredCertificates::class,
+    ];
 
     /**
      * Provider classes to register.

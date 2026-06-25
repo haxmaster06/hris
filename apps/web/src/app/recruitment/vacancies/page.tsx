@@ -22,6 +22,7 @@ import Link from "next/link";
 
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface Vacancy {
   id: string;
@@ -41,6 +42,8 @@ interface Vacancy {
 }
 
 export default function VacancyManagement() {
+  const t = useTranslations("recruitment.vacancies");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -111,11 +114,11 @@ export default function VacancyManagement() {
     mutationFn: (data: any) => api.post("/vacancies", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vacancies"] });
-      toast.success("Vacancy created successfully");
+      toast.success(t("toast.createSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create vacancy");
+      toast.error(err.response?.data?.message || t("toast.createFailed"));
     }
   });
 
@@ -123,11 +126,11 @@ export default function VacancyManagement() {
     mutationFn: ({ id, data }: { id: string; data: any }) => api.put(`/vacancies/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vacancies"] });
-      toast.success("Vacancy updated successfully");
+      toast.success(t("toast.updateSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update vacancy");
+      toast.error(err.response?.data?.message || t("toast.updateFailed"));
     }
   });
 
@@ -135,10 +138,10 @@ export default function VacancyManagement() {
     mutationFn: (id: string) => api.post(`/vacancies/${id}/publish`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vacancies"] });
-      toast.success("Vacancy published successfully");
+      toast.success(t("toast.publishSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to publish vacancy");
+      toast.error(err.response?.data?.message || t("toast.publishFailed"));
     }
   });
 
@@ -146,10 +149,10 @@ export default function VacancyManagement() {
     mutationFn: (id: string) => api.post(`/vacancies/${id}/close`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vacancies"] });
-      toast.success("Vacancy closed successfully");
+      toast.success(t("toast.closeSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to close vacancy");
+      toast.error(err.response?.data?.message || t("toast.closeFailed"));
     }
   });
 
@@ -157,10 +160,10 @@ export default function VacancyManagement() {
     mutationFn: (id: string) => api.delete(`/vacancies/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vacancies"] });
-      toast.success("Vacancy deleted successfully");
+      toast.success(t("toast.deleteSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete vacancy");
+      toast.error(err.response?.data?.message || t("toast.deleteFailed"));
     }
   });
 
@@ -213,7 +216,7 @@ export default function VacancyManagement() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this vacancy?")) {
+    if (confirm(t("toast.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -229,8 +232,8 @@ export default function VacancyManagement() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Job Vacancies"
-        subtitle="Add openings, edit vacancy text, and manage job statuses."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/recruitment"
       />
 
@@ -243,7 +246,7 @@ export default function VacancyManagement() {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Search vacancies by title..."
+                placeholder={t("searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9 pr-4 py-2 w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -256,10 +259,10 @@ export default function VacancyManagement() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               >
-                <option value="">All Status</option>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="closed">Closed</option>
+                <option value="">{t("statusAll")}</option>
+                <option value="draft">{t("statusDraft")}</option>
+                <option value="published">{t("statusPublished")}</option>
+                <option value="closed">{t("statusClosed")}</option>
               </select>
             </div>
           </div>
@@ -268,7 +271,7 @@ export default function VacancyManagement() {
             onClick={handleOpenCreate}
             className="flex items-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
           >
-            <Plus className="h-4 w-4" /> Add Vacancy
+            <Plus className="h-4 w-4" /> {t("addVacancy")}
           </button>
         </div>
 
@@ -276,23 +279,23 @@ export default function VacancyManagement() {
         {isLoading ? (
           <div className="h-64 flex flex-col justify-center items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-            <p className="text-sm text-zinc-500">Loading vacancies...</p>
+            <p className="text-sm text-zinc-500">{tCommon("loading")}</p>
           </div>
         ) : filteredVacancies.length === 0 ? (
           <div className="h-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl flex flex-col justify-center items-center gap-3">
             <Briefcase className="h-8 w-8 text-zinc-300" />
-            <p className="text-sm text-zinc-500">No vacancies found.</p>
+            <p className="text-sm text-zinc-500">{t("noVacancies")}</p>
           </div>
         ) : (
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl overflow-hidden shadow-sm">
             <table className="w-full border-collapse text-left text-sm text-zinc-500 dark:text-zinc-400">
               <thead className="bg-zinc-50 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 border-b border-zinc-200 dark:border-zinc-800 font-semibold">
                 <tr>
-                  <th className="px-6 py-4">Title / Code</th>
-                  <th className="px-6 py-4">Department / Position</th>
-                  <th className="px-6 py-4">Slots</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-6 py-4">{t("thTitle")}</th>
+                  <th className="px-6 py-4">{t("thDept")}</th>
+                  <th className="px-6 py-4">{t("thSlots")}</th>
+                  <th className="px-6 py-4">{t("thStatus")}</th>
+                  <th className="px-6 py-4 text-right">{tCommon("actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -368,23 +371,23 @@ export default function VacancyManagement() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedVacancy ? "Edit Job Vacancy" : "Add Job Vacancy"}
+                {selectedVacancy ? t("modalEditTitle") : t("modalAddTitle")}
               </h2>
               <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-sm">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Company</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formCompany")}</label>
                 <select
                   required
                   value={formCompanyId}
                   onChange={(e) => setFormCompanyId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                 >
-                  <option value="">Select Company</option>
+                  <option value="">{t("formCompany")}</option>
                   {Array.isArray(companies) && companies.map((c: any) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
@@ -393,13 +396,13 @@ export default function VacancyManagement() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Branch</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formBranch")}</label>
                   <select
                     value={formBranchId}
                     onChange={(e) => setFormBranchId(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="">Select Branch (Optional)</option>
+                    <option value="">{t("formBranchOpt")}</option>
                     {Array.isArray(branches) && branches.filter((b: any) => b.company_id === formCompanyId).map((b: any) => (
                       <option key={b.id} value={b.id}>{b.name}</option>
                     ))}
@@ -407,13 +410,13 @@ export default function VacancyManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Department</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formDept")}</label>
                   <select
                     value={formDeptId}
                     onChange={(e) => setFormDeptId(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="">Select Dept (Optional)</option>
+                    <option value="">{t("formDeptOpt")}</option>
                     {Array.isArray(departments) && departments.filter((d: any) => d.company_id === formCompanyId).map((d: any) => (
                       <option key={d.id} value={d.id}>{d.name}</option>
                     ))}
@@ -423,14 +426,14 @@ export default function VacancyManagement() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Job Position</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formPosition")}</label>
                   <select
                     required
                     value={formPositionId}
                     onChange={(e) => setFormPositionId(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="">Select Position</option>
+                    <option value="">{t("formPosition")}</option>
                     {Array.isArray(positions) && positions.map((p: any) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
@@ -438,7 +441,7 @@ export default function VacancyManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Slots</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formSlots")}</label>
                   <input
                     type="number"
                     required
@@ -451,11 +454,11 @@ export default function VacancyManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Job Title</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formTitle")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Senior Backend Engineer"
+                  placeholder={t("formTitlePlaceholder")}
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -463,11 +466,11 @@ export default function VacancyManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Description</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formDesc")}</label>
                 <textarea
                   required
                   rows={3}
-                  placeholder="Describe the job duties and day-to-day operations..."
+                  placeholder={t("formDescPlaceholder")}
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -475,11 +478,11 @@ export default function VacancyManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Requirements</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formReqs")}</label>
                 <textarea
                   required
                   rows={3}
-                  placeholder="Describe educational backgrounds, skills, and certifications needed..."
+                  placeholder={t("formReqsPlaceholder")}
                   value={formReqs}
                   onChange={(e) => setFormReqs(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -492,14 +495,14 @@ export default function VacancyManagement() {
                   onClick={() => setIsFormOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending || updateMutation.isPending}
                   className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/95 disabled:opacity-50 transition-colors"
                 >
-                  {(createMutation.isPending || updateMutation.isPending) ? "Saving..." : "Save Vacancy"}
+                  {(createMutation.isPending || updateMutation.isPending) ? tCommon("loading") : tCommon("save")}
                 </button>
               </div>
             </form>

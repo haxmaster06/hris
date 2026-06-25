@@ -1,0 +1,11 @@
+{
+    "name": "Payroll",
+    "alias": "payroll",
+    "description": "Handles employee salaries, components, calculation of basic salary, allowances, deductions, BPJS, PPh 21, loans, and payslip generation",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Payroll\\Providers\\PayrollServiceProvider"
+    ],
+    "files": []
+}

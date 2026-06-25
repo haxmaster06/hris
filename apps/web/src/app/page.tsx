@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
   const router = useRouter();
+  const t = useTranslations();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
@@ -18,8 +20,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black">
-      <div className="animate-pulse text-zinc-500 text-sm font-sans">
-        Redirecting...
+      <div className="animate-pulse text-zinc-500 text-sm font-sans select-none">
+        {t("common.loading")}
       </div>
     </div>
   );

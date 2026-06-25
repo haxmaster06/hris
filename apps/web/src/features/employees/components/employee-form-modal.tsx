@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { Loader2 } from "lucide-react";
@@ -30,6 +31,7 @@ interface EmployeeFormModalProps {
 
 export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }: EmployeeFormModalProps) {
   const queryClient = useQueryClient();
+  const t = useTranslations();
   const [formData, setFormData] = useState<Employee>({
     user_id: "",
     company_id: "",
@@ -98,11 +100,11 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
     mutationFn: (newEmp: Employee) => api.post("/employees", newEmp),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee onboarded successfully");
+      toast.success(t("modules.employees.onboardSuccess"));
       onClose();
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to onboard employee");
+      toast.error(err.response?.data?.message || t("modules.employees.onboardFailed"));
       setIsSubmitting(false);
     },
   });
@@ -112,11 +114,11 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
     mutationFn: (updated: { id: string; data: Employee }) => api.put(`/employees/${updated.id}`, updated.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee profile updated successfully");
+      toast.success(t("modules.employees.updateSuccess"));
       onClose();
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update employee");
+      toast.error(err.response?.data?.message || t("modules.employees.updateFailed"));
       setIsSubmitting(false);
     },
   });
@@ -141,98 +143,100 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
       >
         <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-zinc-900">
           <h3 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-            {selectedEmployee ? "Edit Employee Profile" : "Onboard New Employee"}
+            {selectedEmployee 
+              ? t("common.edit") + " " + t("modules.employees.profileTitle") 
+              : t("modules.employees.onboard")}
           </h3>
-          <button type="button" onClick={onClose} className="text-zinc-400 hover:text-zinc-600">&times;</button>
+          <button type="button" onClick={onClose} className="text-zinc-400 hover:text-zinc-650 text-xl cursor-pointer">&times;</button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-1">
           {/* First Name */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">First Name</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.firstName")}</label>
             <input
               type="text"
               required
               value={formData.first_name}
               onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
               placeholder="John"
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950 focus:outline-none"
             />
           </div>
 
           {/* Last Name */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Last Name</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.lastName")}</label>
             <input
               type="text"
               required
               value={formData.last_name}
               onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
               placeholder="Doe"
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950 focus:outline-none"
             />
           </div>
 
           {/* Employee Number */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Employee Number (NIP)</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.employeeNumber")}</label>
             <input
               type="text"
               required
               value={formData.employee_number}
               onChange={(e) => setFormData({ ...formData, employee_number: e.target.value })}
               placeholder="e.g. EMP-2026-001"
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950 focus:outline-none"
             />
           </div>
 
           {/* Gender */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Gender</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.gender")}</label>
             <select
               value={formData.gender}
               onChange={(e: any) => setFormData({ ...formData, gender: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950 focus:outline-none cursor-pointer"
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="male">{t("modules.employees.male")}</option>
+              <option value="female">{t("modules.employees.female")}</option>
             </select>
           </div>
 
           {/* Birth Date */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Birth Date</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.birthDate")}</label>
             <input
               type="date"
               required
               value={formData.birth_date}
               onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
             />
           </div>
 
           {/* Join Date */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Join Date</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.joinDate")}</label>
             <input
               type="date"
               required
               value={formData.join_date}
               onChange={(e) => setFormData({ ...formData, join_date: e.target.value })}
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
             />
           </div>
 
           {/* User Account */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">User Account (Optional)</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.userAccount")}</label>
             <select
               value={formData.user_id || ""}
               onChange={(e) => setFormData({ ...formData, user_id: e.target.value || null })}
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-zinc-950 focus:outline-none cursor-pointer"
             >
-              <option value="">No linked user account</option>
+              <option value="">{t("modules.employees.noLinkedUser")}</option>
               {users?.map((u: any) => (
                 <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
               ))}
@@ -241,12 +245,12 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
 
           {/* Company */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Legal Entity (Entitas Legal)</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.organization.legalEntity")}</label>
             <select
               value={formData.company_id}
               onChange={(e) => setFormData({ ...formData, company_id: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:outline-none cursor-pointer"
             >
               {companies?.map((c: any) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
@@ -256,12 +260,12 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
 
           {/* Branch */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Branch</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.organization.branches")}</label>
             <select
               value={formData.branch_id}
               onChange={(e) => setFormData({ ...formData, branch_id: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:outline-none cursor-pointer"
             >
               {branches?.map((b: any) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
@@ -271,12 +275,12 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
 
           {/* Department */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Department</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.department")}</label>
             <select
               value={formData.department_id}
               onChange={(e) => setFormData({ ...formData, department_id: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:outline-none cursor-pointer"
             >
               {departments?.map((d: any) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
@@ -286,12 +290,12 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
 
           {/* Position */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Position</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.organization.positions")}</label>
             <select
               value={formData.position_id}
               onChange={(e) => setFormData({ ...formData, position_id: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:outline-none cursor-pointer"
             >
               {positions?.map((p: any) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -301,16 +305,16 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
 
           {/* Status */}
           <div className="col-span-1 sm:col-span-2">
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Employment Status</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("modules.employees.employmentStatus")}</label>
             <select
               value={formData.status}
               onChange={(e: any) => setFormData({ ...formData, status: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:ring-2 focus:outline-none cursor-pointer"
             >
-              <option value="probation">Probation</option>
-              <option value="contract">Contract</option>
-              <option value="permanent">Permanent</option>
+              <option value="probation">{t("modules.employees.probation")}</option>
+              <option value="contract">{t("modules.employees.contract")}</option>
+              <option value="permanent">{t("modules.employees.permanent")}</option>
             </select>
           </div>
         </div>
@@ -319,17 +323,17 @@ export default function EmployeeFormModal({ isOpen, onClose, selectedEmployee }:
           <button
             type="button"
             onClick={onClose}
-            className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85"
+            className="py-2 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-sm font-semibold hover:opacity-85 cursor-pointer"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 py-2 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/95 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 py-2 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/95 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            {selectedEmployee ? "Update Profile" : "Onboard Employee"}
+            {selectedEmployee ? t("common.save") : t("modules.employees.onboard")}
           </button>
         </div>
       </form>

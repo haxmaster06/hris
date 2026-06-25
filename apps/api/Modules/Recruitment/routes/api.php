@@ -28,6 +28,7 @@ Route::middleware([
 
     // Interviews
     Route::post('interviews/{id}/submit-result', [InterviewController::class, 'submitResult']);
+    Route::post('interviews/{id}/evaluation', [InterviewController::class, 'submitEvaluation']);
     Route::apiResource('interviews', InterviewController::class);
 
     // Hiring Approvals

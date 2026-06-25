@@ -1,0 +1,11 @@
+{
+    "name": "EmployeeLifecycle",
+    "alias": "employeelifecycle",
+    "description": "Handles employee promotion, mutation, demotion, onboarding, and offboarding",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\EmployeeLifecycle\\Providers\\EmployeeLifecycleServiceProvider"
+    ],
+    "files": []
+}

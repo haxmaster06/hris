@@ -1,0 +1,1150 @@
+{
+  "common": {
+    "appName": "Nexus HR",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "noData": "No data available",
+    "actions": "Actions",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "allStatuses": "All Statuses",
+    "allCompanies": "All Legal Entities",
+    "allBranches": "All Branches",
+    "allDepartments": "All Departments",
+    "signIn": "Sign In",
+    "signOut": "Log Out",
+    "company": "Company",
+    "toggleTheme": "Toggle Theme",
+    "copyright": "© {year} HBM Corp. All rights reserved.",
+    "createdSuccess": "{entity} created successfully",
+    "updatedSuccess": "{entity} updated successfully",
+    "deletedSuccess": "{entity} deleted successfully",
+    "failedCreate": "Failed to create {entity}",
+    "failedUpdate": "Failed to update {entity}",
+    "failedDelete": "Failed to delete {entity}",
+    "confirmDelete": "Are you sure you want to delete this {entity}?",
+    "code": "Code",
+    "name": "Name",
+    "address": "Address",
+    "description": "Description",
+    "taxNumber": "Tax Number",
+    "parent": "Parent",
+    "type": "Type"
+  },
+  "login": {
+    "pageTitle": "Login — Nexus HR",
+    "welcome": "Welcome back",
+    "subtitle": "Please enter your credentials to access your tenant dashboard.",
+    "selectCompany": "Select Company",
+    "loadingCompanies": "Loading companies...",
+    "pleaseSelect": "Please select a company",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "signingIn": "Signing you in...",
+    "corporatePortal": "Corporate HR Portal",
+    "successMessage": "Welcome back! Login successful.",
+    "errorCredentials": "Invalid credentials or company mismatch.",
+    "errorLoadTenants": "Failed to load active tenants from database.",
+    "brandTagline": "Universal HRIS Platform",
+    "brandDescription": "Enterprise-grade integrated Human Resource Information System for HBM Corp, featuring a secure and dynamic modular architecture.",
+    "versionBadge": "Nexus HR v1.0 MVP"
+  },
+  "validation": {
+    "required": "This field is required",
+    "selectCompany": "Please select a company",
+    "invalidEmail": "Invalid email address",
+    "passwordMin": "Password must be at least 6 characters"
+  },
+  "dashboard": {
+    "pageTitle": "Nexus HR",
+    "subtitle": "Manage organization personnel, track compliance, and view operational analytics.",
+    "footerNote": "Direct Access Portal • Click modules or sub-items to manage tenant resources",
+    "activeCompany": "Active Company: {company}"
+  },
+  "launcher": {
+    "title": "Enterprise App Launcher",
+    "hint": "Press Esc or Ctrl+K to close • Direct access to all active human resource modules",
+    "openLauncher": "Open App Launcher (Ctrl+K)"
+  },
+  "categories": {
+    "coreHr": "Core HR & Organization",
+    "coreHrDesc": "Manage organizational setup, corporate hierarchy, and personnel directories.",
+    "workforce": "Workforce & Operations",
+    "workforceDesc": "Track logs of daily check-ins, leaves, and document archives.",
+    "talent": "Talent & Development",
+    "talentDesc": "Acquire candidates, manage training, and audit professional compliance licenses.",
+    "admin": "Administration & Security",
+    "adminDesc": "RBAC tenant security, user credentials management, and audit trails."
+  },
+  "modules": {
+    "organization": {
+      "title": "Organization Hub",
+      "desc": "Corporate entities, branches, departments, divisions, positions, and salary grades.",
+      "configureSubtitle": "Configure legal entities, branch locations, and organizational structures.",
+      "totalBranches": "Total Branches",
+      "departments": "Departments",
+      "activePositions": "Active Positions",
+      "salaryGrades": "Salary Grades",
+      "companies": "Companies",
+      "legalEntity": "Legal Entity",
+      "branches": "Branches",
+      "divisions": "Divisions",
+      "positions": "Positions",
+      "grades": "Grades",
+      "costCenters": "Cost Center",
+      "orgChart": "Organization Chart"
+    },
+    "lifecycle": {
+      "title": "Employee Lifecycle",
+      "desc": "Manage employee mutation, promotion, contract changes, and onboarding.",
+      "onboarding": "New Hire Onboarding",
+      "events": "Mutation & Career"
+    },
+    "employees": {
+      "title": "Employee Directory",
+      "desc": "Employee directory profiles, career log histories, and new member onboarding.",
+      "viewSubtitle": "View corporate directory, add team members, and check career logs.",
+      "totalStaff": "Total Staff",
+      "permanent": "Permanent",
+      "contract": "Contract",
+      "probation": "Probation",
+      "searchPlaceholder": "Search by name or employee ID...",
+      "onboard": "Onboard Employee",
+      "noResults": "No employees found matching filters.",
+      "nipId": "NIP / ID",
+      "fullName": "Full Name",
+      "department": "Department",
+      "viewProfile": "View Profile",
+      "archiveSuccess": "Employee profile archived successfully",
+      "archiveFailed": "Failed to delete employee",
+      "confirmDelete": "Are you sure you want to delete this employee?",
+      "accessDenied": "Access denied. Admin privileges required.",
+      "personalInfo": "Personal Info",
+      "family": "Family",
+      "education": "Education",
+      "experience": "Work Experience",
+      "careerLogs": "Career Logs",
+      "profileTitle": "Employee Profile",
+      "profileSubtitle": "View personal dossiers, sub-resources and trace audit logs.",
+      "personalDossier": "Personal Dossier",
+      "gender": "Gender",
+      "birthDate": "Birth Date",
+      "joinDate": "Join Date",
+      "branchOffice": "Branch Office",
+      "jobPosition": "Job Position",
+      "careerLogsTitle": "Career History Logs",
+      "noCareerLogs": "No career history logs found (this profile hasn't undergone mutations or status changes).",
+      "changedFromTo": "Changed from \"{oldValue}\" to \"{newValue}\"",
+      "effectiveDate": "Effective: {date}",
+      "notFound": "Employee profile not found.",
+      "backToDirectory": "Back to Directory",
+      "accessSelfError": "Access denied. You can only view your own profile.",
+      "educationTitle": "Education History",
+      "experienceTitle": "Work Experience History",
+      "familyTitle": "Family Members",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "employeeNumber": "Employee Number (NIP)",
+      "male": "Male",
+      "female": "Female",
+      "userAccount": "User Account (Optional)",
+      "noLinkedUser": "No linked user account",
+      "employmentStatus": "Employment Status",
+      "onboardSuccess": "Employee onboarded successfully",
+      "onboardFailed": "Failed to onboard employee",
+      "updateSuccess": "Employee profile updated successfully",
+      "updateFailed": "Failed to update employee",
+      "relationship": "Relationship",
+      "spouse": "Spouse",
+      "child": "Child",
+      "parent": "Parent",
+      "sibling": "Sibling",
+      "phone": "Phone",
+      "contactPhone": "Contact Phone",
+      "noFamily": "No family members registered.",
+      "institution": "Institution",
+      "degree": "Degree",
+      "fieldOfStudy": "Field of Study",
+      "graduationYear": "Graduation Year",
+      "noEducation": "No education recorded.",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "noExperience": "No previous experience recorded."
+    },
+    "attendance": {
+      "title": "Attendance & Leave",
+      "desc": "Check-in/out tracking, shift logs, leave balances, and day-off approvals."
+    },
+    "documents": {
+      "title": "Docs & Reports",
+      "desc": "Secure storage of dossier files and CSV report generation engines."
+    },
+    "recruitment": {
+      "title": "Recruitment Hub",
+      "desc": "Job openings pipeline, talent pool records, interview logs, and director approvals.",
+      "vacancies": "Vacancies",
+      "candidates": "Candidates",
+      "pipeline": "Pipeline",
+      "approvals": "Approvals"
+    },
+    "training": {
+      "title": "Training Hub",
+      "desc": "Define master course catalogs, schedule sessions, and evaluate participants.",
+      "courses": "Courses",
+      "sessions": "Sessions"
+    },
+    "certification": {
+      "title": "Certification Hub",
+      "desc": "Track matrix obligations, upload PDF credentials, and check renewal dates.",
+      "licenseMaster": "License Master",
+      "employeeLogs": "Employee Logs"
+    },
+    "users": {
+      "title": "Users & Security",
+      "desc": "Tenant user account listings, password resets, and Spatie RBAC permission mappings."
+    },
+    "hlc": {
+      "title": "High Level Control",
+      "desc": "Manage multiple organization tenant databases, provisioning, and routing."
+    },
+    "workflows": {
+      "title": "Workflow Settings",
+      "desc": "Configure dynamic multi-level approval paths for target transaction modules."
+    },
+    "audit": {
+      "title": "Audit Trail",
+      "desc": "Track database data changes (SIEM) and user session login histories.",
+      "loginHistory": "Login History"
+    },
+    "payroll": {
+      "title": "Payroll",
+      "desc": "Manage salary components, loans, monthly payroll periods, BPJS, PPh 21, and employee payslips.",
+      "components": "Payroll Components",
+      "periods": "Payroll Periods",
+      "salary": "Manage Salary",
+      "loans": "Loans & Cash Advances"
+    },
+    "compensation": {
+      "title": "Compensation & Benefits",
+      "desc": "Manage employee benefits enrollment, claim reimbursements, and incentive bonus schemes.",
+      "benefits": "Benefits & Insurances",
+      "claims": "Reimbursement Claims",
+      "bonus": "Bonus Schemes"
+    },
+    "performance": {
+      "title": "Performance Management",
+      "desc": "Manage employee evaluations, KPI targets, and Performance Improvement Plans (PIP).",
+      "kpi": "Master KPI",
+      "periods": "Evaluation Periods",
+      "reviews": "Performance Reviews",
+      "pip": "PIP Plans"
+    },
+    "disciplinary": {
+      "title": "Disciplinary Management",
+      "desc": "Monitor misconduct reports, conduct investigations, and issue warning letters (SP).",
+      "cases": "Case Logs & Warnings"
+    },
+    "talent": {
+      "title": "Talent & Career Management",
+      "desc": "Manage skill matrices, career paths, and succession planning using the 9-Box Grid.",
+      "skills": "Skill Heatmap",
+      "careerPath": "Career Route Tree",
+      "succession": "Succession Board"
+    },
+    "assets": {
+      "title": "Asset Management",
+      "desc": "Track company hardware registry, assign equipment, and process returns.",
+      "registry": "Registry",
+      "assignments": "Assignments"
+    },
+    "engagement": {
+      "title": "Employee Engagement",
+      "desc": "Build pulse surveys, gather suggestion feedback, and appreciate staff achievements.",
+      "surveys": "Surveys",
+      "feedback": "Suggestion Box",
+      "awards": "Awards Wall"
+    }
+  },
+  "profile": {
+    "title": "User Account Profile",
+    "activeTenant": "Active Tenant:",
+    "activePermissions": "Active Permissions ({count})",
+    "noRoles": "No Assigned Roles",
+    "noPermissions": "No permissions found",
+    "viewEmployee": "View Employee Profile",
+    "noLinkedEmployee": "No Linked Employee Profile",
+    "noLinkedTooltip": "System account has no linked employee profile",
+    "logoutSession": "Log Out Session",
+    "logoutSuccess": "Successfully logged out."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "id": "Bahasa Indonesia",
+    "switchSuccess": "Language changed to {language}"
+  },
+  "attendance": {
+    "pageTitle": "Attendance & Leave",
+    "subtitle": "Log work hours, track remaining leave, and request day offs.",
+    "activeEmployeeContext": "Active Employee Context:",
+    "currentTime": "Current Time",
+    "todayShift": "Today's Shift: {start} — {end}",
+    "officeLocation": "Office: {location} (Geofenced)",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "remainingLeaveBalances": "Remaining Leave Balances",
+    "noLeaveBalances": "No leave balances allocated for this employee.",
+    "daysCount": "{count} / {entitled} Days",
+    "submitLeaveRequest": "Submit Leave Request",
+    "leaveType": "Leave Type",
+    "selectLeaveType": "Select Leave Type",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "reason": "Reason",
+    "reasonPlaceholder": "Reason for requesting time off...",
+    "submitRequest": "Submit Request",
+    "pendingLeaveApprovals": "Pending Leave Approvals (Manager View)",
+    "noPendingRequests": "No pending leave requests found.",
+    "employee": "Employee",
+    "dates": "Dates",
+    "approve": "Approve",
+    "reject": "Reject",
+    "leaveHistory": "Leave Request History",
+    "noLeaveHistory": "No leave history recorded.",
+    "toast": {
+      "checkInSuccess": "Checked in successfully!",
+      "checkInFailed": "Check-in failed",
+      "checkOutSuccess": "Checked out successfully!",
+      "checkOutFailed": "Check-out failed",
+      "submitSuccess": "Leave request submitted successfully!",
+      "submitFailed": "Failed to submit leave request",
+      "approveSuccess": "Leave request approved.",
+      "approveFailed": "Approve failed",
+      "rejectSuccess": "Leave request rejected.",
+      "rejectFailed": "Reject failed",
+      "selectEmployeeError": "Please select an employee first"
+    }
+  },
+  "documents": {
+    "pageTitle": "Documents & Reports",
+    "subtitle": "Vault files securely to S3/MinIO and generate CSV export reports.",
+    "activeEmployeeFilter": "Active Employee Context Filter",
+    "vaultTitle": "Document Vault",
+    "category": "Category",
+    "expiryDate": "Expiry Date (Optional)",
+    "dragDropHint": "Drag & drop files or click to upload",
+    "fileLimitHint": "PDF, JPG, PNG up to 10MB",
+    "uploadButton": "Upload File",
+    "vaultedFiles": "Vaulted Files",
+    "noFiles": "No files vaulted for this employee.",
+    "downloadTooltip": "Download Document",
+    "deleteTooltip": "Delete",
+    "reportCenterTitle": "Report Export Center",
+    "empReportTitle": "Employee List Report",
+    "exportEmpButton": "Export Employee Report (CSV)",
+    "attendanceReportTitle": "Attendance Logs Summary",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "exportAttButton": "Export Attendance Summary (CSV)",
+    "leaveReportTitle": "Leave Balance & Requests",
+    "targetYear": "Target Year",
+    "exportLeaveButton": "Export Leave Report (CSV)",
+    "toast": {
+      "deleteSuccess": "Document removed from vault.",
+      "deleteFailed": "Failed to delete document",
+      "chooseFileError": "Please choose a file to upload",
+      "selectEmployeeError": "Please select an employee context",
+      "uploadSuccess": "Document uploaded successfully to MinIO/S3!",
+      "uploadFailed": "Upload failed",
+      "noDataExport": "No data found to export.",
+      "exportSuccess": "{filename} exported successfully.",
+      "exportFailed": "Export failed",
+      "dateRequiredError": "Start and end date are required",
+      "yearRequiredError": "Year is required"
+    }
+  },
+  "recruitment": {
+    "dashboard": {
+      "pageTitle": "Recruitment Hub",
+      "subtitle": "Manage vacancies, coordinate candidate pipelines, schedule interviews, and process hiring workflows.",
+      "stats": {
+        "publishedVacancies": "Published Vacancies",
+        "totalVacancies": "/ {total} total",
+        "totalTalentPool": "Total Talent Pool",
+        "activeCandidates": "Active Candidates",
+        "pendingApprovals": "Pending Approvals"
+      },
+      "cards": {
+        "vacanciesTitle": "Job Vacancies",
+        "vacanciesDesc": "Create, publish, and close master job vacancies for hiring positions.",
+        "candidatesTitle": "Candidate Directory",
+        "candidatesDesc": "Manage candidate talent pool, upload resumes, and review applicant dossiers.",
+        "pipelineTitle": "Kanban Pipeline",
+        "pipelineDesc": "Visualize applicant progress across hiring stages (Applied -> Hired) via Kanban.",
+        "approvalsTitle": "Hiring Approvals",
+        "approvalsDesc": "Review and sign off on hiring requests (HR -> Manager -> Director workflow)."
+      }
+    },
+    "vacancies": {
+      "pageTitle": "Job Vacancies",
+      "subtitle": "Add openings, edit vacancy text, and manage job statuses.",
+      "searchPlaceholder": "Search vacancies by title...",
+      "statusAll": "All Status",
+      "statusDraft": "Draft",
+      "statusPublished": "Published",
+      "statusClosed": "Closed",
+      "addVacancy": "Add Vacancy",
+      "noVacancies": "No vacancies found.",
+      "thTitle": "Title / Code",
+      "thDept": "Department / Position",
+      "thSlots": "Slots",
+      "thStatus": "Status",
+      "modalAddTitle": "Add Job Vacancy",
+      "modalEditTitle": "Edit Job Vacancy",
+      "formCompany": "Company",
+      "formBranch": "Branch",
+      "formBranchOpt": "Select Branch (Optional)",
+      "formDept": "Department",
+      "formDeptOpt": "Select Dept (Optional)",
+      "formPosition": "Job Position",
+      "formSlots": "Slots",
+      "formTitle": "Job Title",
+      "formTitlePlaceholder": "e.g. Senior Backend Engineer",
+      "formDesc": "Description",
+      "formDescPlaceholder": "Describe the job duties and day-to-day operations...",
+      "formReqs": "Requirements",
+      "formReqsPlaceholder": "Describe educational backgrounds, skills, and certifications needed...",
+      "toast": {
+        "createSuccess": "Vacancy created successfully",
+        "createFailed": "Failed to create vacancy",
+        "updateSuccess": "Vacancy updated successfully",
+        "updateFailed": "Failed to update vacancy",
+        "publishSuccess": "Vacancy published successfully",
+        "publishFailed": "Failed to publish vacancy",
+        "closeSuccess": "Vacancy closed successfully",
+        "closeFailed": "Failed to close vacancy",
+        "deleteSuccess": "Vacancy deleted successfully",
+        "deleteFailed": "Failed to delete vacancy",
+        "confirmDelete": "Are you sure you want to delete this vacancy?"
+      }
+    },
+    "candidates": {
+      "pageTitle": "Candidate Directory",
+      "subtitle": "View corporate talent database, add applicants, and review resumes.",
+      "searchPlaceholder": "Search candidates by name or email...",
+      "addCandidate": "Add Candidate",
+      "noCandidates": "No candidates found.",
+      "modalAddTitle": "Add Candidate Profile",
+      "modalEditTitle": "Edit Candidate Profile",
+      "formFirstName": "First Name",
+      "formLastName": "Last Name",
+      "formEmail": "Email Address",
+      "formPhone": "Phone Number",
+      "formResume": "CV Resume Path",
+      "generateMockResume": "Generate Mock PDF Path",
+      "toast": {
+        "createSuccess": "Candidate created successfully",
+        "createFailed": "Failed to create candidate",
+        "updateSuccess": "Candidate updated successfully",
+        "updateFailed": "Failed to update candidate",
+        "deleteSuccess": "Candidate deleted successfully",
+        "deleteFailed": "Failed to delete candidate",
+        "confirmDelete": "Are you sure you want to delete this candidate?",
+        "mockResumeSuccess": "Mock S3 PDF resume path generated!"
+      }
+    },
+    "pipeline": {
+      "pageTitle": "Recruitment Kanban",
+      "subtitle": "Track candidates, progress applications, schedule interviews, and finalize hiring.",
+      "stageApplied": "Applied",
+      "stageScreening": "Screening",
+      "stageInterview": "Interview",
+      "stageAssessment": "Assessment",
+      "stageOffering": "Offering",
+      "stageHiring": "Hiring Approval",
+      "stageHired": "Hired",
+      "stageRejected": "Rejected",
+      "filterVacancy": "Filter Vacancy",
+      "applyCandidate": "Apply Candidate",
+      "loading": "Loading pipeline applications...",
+      "scheduledInterview": "Scheduled Interview",
+      "scheduleInterviewBtn": "Schedule Interview",
+      "evaluateBtn": "Evaluate",
+      "scoreLabel": "Score: {score} / 100",
+      "rejectBtn": "Reject",
+      "modalApplyTitle": "Apply Candidate to Vacancy",
+      "selectCandidate": "Select Candidate",
+      "selectVacancy": "Select Job Opening",
+      "modalScheduleTitle": "Schedule Candidate Interview",
+      "interviewDateTime": "Interview Date & Time",
+      "assignInterviewer": "Assign Interviewer",
+      "chooseInterviewer": "Choose Interviewer",
+      "preMeetingNotes": "Pre-meeting Notes",
+      "preMeetingPlaceholder": "e.g. Focus on technical skills...",
+      "modalScoreTitle": "Submit Interview Score",
+      "interviewScore": "Interview Score (1 - 100)",
+      "feedback": "Feedback / Notes",
+      "feedbackPlaceholder": "Summarize candidate answers and strengths...",
+      "toast": {
+        "moveSuccess": "Applicant moved to stage: {stage}",
+        "moveFailed": "Failed to move applicant stage",
+        "applySuccess": "Candidate applied to vacancy successfully",
+        "applyFailed": "Failed to apply candidate",
+        "scheduleSuccess": "Interview scheduled successfully",
+        "scheduleFailed": "Failed to schedule interview",
+        "scoreSuccess": "Interview score and feedback submitted successfully",
+        "scoreFailed": "Failed to submit score",
+        "noInterviewFound": "No scheduled interview found to evaluate."
+      }
+    },
+    "approvals": {
+      "pageTitle": "Hiring Approvals",
+      "subtitle": "Review onboarding candidate dossiers and complete required approvals.",
+      "pendingReviews": "Pending Reviews",
+      "approvedLog": "Approved Log",
+      "rejectedLog": "Rejected Log",
+      "loading": "Loading hiring approvals...",
+      "noApprovals": "No approvals found for this status.",
+      "stageLabel": "{stage} stage",
+      "assignedTo": "Assigned to: {name}",
+      "applyingFor": "Applying for: {title}",
+      "comments": "Comments: ",
+      "modalApproveTitle": "Approve Hiring Request",
+      "modalRejectTitle": "Reject Hiring Request",
+      "commentsLabel": "Comments",
+      "commentsRequired": "Comments (Required)",
+      "commentsOptional": "Comments (Optional)",
+      "approvePlaceholder": "Write any additional notes...",
+      "rejectPlaceholder": "Please state the reason for rejection...",
+      "confirmApprove": "Confirm Approve",
+      "confirmReject": "Confirm Reject",
+      "toast": {
+        "approveSuccess": "Hiring stage approved successfully",
+        "approveFailed": "Failed to approve hiring stage",
+        "rejectSuccess": "Hiring stage rejected successfully",
+        "rejectFailed": "Failed to reject hiring stage",
+        "rejectCommentsRequired": "Comments are required for rejection"
+      }
+    }
+  },
+  "training": {
+    "status": {
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "pending": "Pending",
+      "attended": "Attended",
+      "absent": "Absent",
+      "pass": "Pass",
+      "fail": "Fail"
+    },
+    "dashboard": {
+      "pageTitle": "Training Hub",
+      "subtitle": "Establish corporate learning programs, plan training sessions, coordinate attendees, and log passing performance scores.",
+      "stats": {
+        "masterCourses": "Master Courses",
+        "totalScheduled": "Total Scheduled Sessions",
+        "activeOngoing": "Active / Ongoing",
+        "completed": "Sessions Completed"
+      },
+      "recentActiveTitle": "Recent & Active Sessions",
+      "trainer": "Trainer: {name}",
+      "noSessions": "No training sessions scheduled yet.",
+      "manageParticipantsTooltip": "Manage Participants"
+    },
+    "master": {
+      "pageTitle": "Master Training Courses",
+      "subtitle": "Configure training tracks, categories, curriculum codes, and types.",
+      "searchPlaceholder": "Search by name or code...",
+      "allCategories": "All Categories",
+      "allTypes": "All Types",
+      "addCourse": "Add Course",
+      "noCourses": "No courses found",
+      "noCoursesDesc": "Try expanding your search parameters or add a new course.",
+      "table": {
+        "code": "Course Code",
+        "name": "Course Name",
+        "category": "Category",
+        "type": "Type",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "modal": {
+        "addTitle": "Add Master Course",
+        "editTitle": "Edit Master Course",
+        "formCode": "Course Code",
+        "formName": "Course Name",
+        "formCategory": "Category",
+        "formType": "Type",
+        "formDesc": "Description",
+        "codePlaceholder": "e.g. TRN-ISO-9001",
+        "namePlaceholder": "e.g. ISO 9001 Quality Management System",
+        "descPlaceholder": "Describe the learning objectives or prerequisite requirements...",
+        "saveCourse": "Create Master Course",
+        "saveChanges": "Save Changes"
+      },
+      "toast": {
+        "createSuccess": "Master Training created successfully",
+        "createFailed": "Failed to create training",
+        "updateSuccess": "Master Training updated successfully",
+        "updateFailed": "Failed to update training",
+        "deleteSuccess": "Training deleted successfully",
+        "deleteFailed": "Failed to delete training",
+        "confirmDelete": "Are you sure you want to delete this master training?"
+      }
+    },
+    "sessions": {
+      "pageTitle": "Training Sessions & Calendars",
+      "subtitle": "Schedule sessions, coordinate trainers, venues, and manage participant rosters.",
+      "searchPlaceholder": "Search by course or trainer...",
+      "allStatuses": "All Statuses",
+      "scheduleSession": "Schedule Session",
+      "noSessions": "No scheduled sessions",
+      "noSessionsDesc": "Try expanding your filters or schedule a new training session.",
+      "venue": "Venue: {venue}",
+      "trainer": "Trainer: {trainer}",
+      "manageRoster": "Manage Roster",
+      "modal": {
+        "addTitle": "Schedule Session",
+        "editTitle": "Edit Session",
+        "formCourse": "Master Course",
+        "selectCourse": "Select Master Course",
+        "formTrainer": "Trainer Name",
+        "trainerPlaceholder": "e.g. Dr. Jane Doe",
+        "formVenue": "Venue / Location",
+        "venuePlaceholder": "e.g. Auditorium Room 4B / Zoom Meeting",
+        "formStart": "Start Date & Time",
+        "formEnd": "End Date & Time",
+        "formStatus": "Session Status",
+        "saveSession": "Schedule Session",
+        "saveChanges": "Save Changes"
+      },
+      "toast": {
+        "createSuccess": "Training session scheduled successfully",
+        "createFailed": "Failed to schedule session",
+        "updateSuccess": "Training session updated successfully",
+        "updateFailed": "Failed to update session",
+        "deleteSuccess": "Session deleted successfully",
+        "deleteFailed": "Failed to delete session",
+        "confirmDelete": "Are you sure you want to delete this training session?"
+      }
+    },
+    "participants": {
+      "pageTitle": "Session Participants Roster",
+      "subtitle": "Enroll team members, take class attendance, and log passing certification scores.",
+      "enrollEmployee": "Enroll Employee",
+      "rosterEmpty": "Roster is empty",
+      "rosterEmptyDesc": "No employees have been enrolled as participants in this session yet.",
+      "table": {
+        "employee": "Employee",
+        "employeeId": "Employee ID",
+        "attendance": "Attendance",
+        "score": "Score",
+        "result": "Result",
+        "remarks": "Remarks",
+        "actions": "Actions"
+      },
+      "modalEnroll": {
+        "title": "Enroll Participant",
+        "selectEmployee": "Select Employee",
+        "chooseEmployee": "Choose an employee...",
+        "allEnrolled": "All active employees are already enrolled in this session.",
+        "submit": "Add to Class Roster"
+      },
+      "modalGrade": {
+        "title": "Score & Attendance Evaluation",
+        "evaluating": "Evaluating Employee",
+        "attendance": "Attendance Status",
+        "result": "Result Evaluation",
+        "pendingEvaluation": "Pending Evaluation",
+        "pass": "Pass (Lulus)",
+        "fail": "Fail (Tidak Lulus)",
+        "score": "Score (Nilai)",
+        "scorePlaceholder": "e.g. 85.50",
+        "remarks": "Remarks & Notes",
+        "remarksPlaceholder": "e.g. Active participation. Exceeded expectations during test.",
+        "submit": "Submit Grade Evaluation"
+      },
+      "toast": {
+        "enrollSuccess": "Employee enrolled in training session",
+        "enrollFailed": "Failed to enroll employee",
+        "gradeSuccess": "Participant progress updated",
+        "gradeFailed": "Failed to update progress",
+        "removeSuccess": "Participant removed from roster",
+        "removeFailed": "Failed to remove participant",
+        "confirmRemove": "Are you sure you want to remove this participant from the roster?"
+      }
+    }
+  },
+  "certification": {
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "pendingRenewal": "Pending Renewal"
+    },
+    "dashboard": {
+      "pageTitle": "Certification Hub",
+      "subtitle": "Map mandatory position requirements, track employee licensing status, and keep ahead of expiration dates.",
+      "stats": {
+        "licenseMaster": "License Master",
+        "activeLicenses": "Active Licenses",
+        "renewals": "Renewals (< 30d)",
+        "expired": "Expired Licenses"
+      },
+      "matrix": {
+        "title": "Position Certification Requirements Matrix",
+        "subtitle": "Define which job positions are contractually or legally required to possess specific professional licenses.",
+        "mapBtn": "Map Position Requirements",
+        "noRequirements": "No mandatory job requirements mapped. Map a position above to begin checking compliance.",
+        "table": {
+          "position": "Job Position",
+          "certification": "Required Certification",
+          "issuer": "Issuer",
+          "mandatory": "Mandatory Status",
+          "action": "Action"
+        },
+        "mandatoryLabel": "Mandatory (Wajib)",
+        "optionalLabel": "Optional"
+      },
+      "modal": {
+        "title": "Map Position Certification Requirement",
+        "position": "Job Position",
+        "selectPosition": "Select Position...",
+        "certification": "Required Certification",
+        "selectCert": "Select Certification...",
+        "mandatoryCheckbox": "This certification is legally mandatory (Wajib) for this role",
+        "saveBtn": "Save Mapping Requirement"
+      },
+      "toast": {
+        "mapSuccess": "Position certification mapping added",
+        "mapFailed": "Failed to add mapping",
+        "removeSuccess": "Position mapping removed",
+        "removeFailed": "Failed to remove mapping",
+        "confirmRemove": "Are you sure you want to remove this certification requirement for this job position?"
+      }
+    },
+    "master": {
+      "pageTitle": "Master Certifications Catalogue",
+      "subtitle": "Create and configure licensing tracks, accreditation agencies, and validity durations.",
+      "searchPlaceholder": "Search by name, code or issuer...",
+      "addCert": "Add Certification",
+      "noCerts": "No certifications found",
+      "noCertsDesc": "Try expanding your search parameters or register a new certification.",
+      "table": {
+        "code": "License Code",
+        "name": "License Name",
+        "issuer": "Issuer (Lembaga)",
+        "validity": "Validity Period",
+        "actions": "Actions"
+      },
+      "months": "Months (Bulan)",
+      "lifetime": "Lifetime (Seumur Hidup)",
+      "modal": {
+        "addTitle": "Add Certification",
+        "editTitle": "Edit Certification",
+        "code": "Certification Code",
+        "codePlaceholder": "e.g. CERT-HACCP-QC",
+        "name": "Certification Name",
+        "namePlaceholder": "e.g. HACCP Food Safety Certification",
+        "issuer": "Issuer Agency (Lembaga Penerbit)",
+        "issuerPlaceholder": "e.g. Badan Sertifikasi Internasional / MUI",
+        "validity": "Validity Period (Months)",
+        "validityPlaceholder": "e.g. 24 (Leave blank for Lifetime)",
+        "validityHint": "Specify how many months the certificate remains valid. Leave empty if it never expires.",
+        "saveCert": "Create Certification",
+        "saveChanges": "Save Changes"
+      },
+      "toast": {
+        "createSuccess": "Master Certification created successfully",
+        "createFailed": "Failed to create certification",
+        "updateSuccess": "Master Certification updated successfully",
+        "updateFailed": "Failed to update certification",
+        "deleteSuccess": "Certification deleted successfully",
+        "deleteFailed": "Failed to delete certification",
+        "confirmDelete": "Are you sure you want to delete this certification? This will also remove any employee associations."
+      }
+    },
+    "employee": {
+      "pageTitle": "Employee Licensing & Credentials",
+      "subtitle": "Log professional certifications, upload verification documents, and audit compliance status.",
+      "searchPlaceholder": "Search by name or license number...",
+      "allStatuses": "All Statuses",
+      "logLicense": "Log License",
+      "noLicenses": "No licenses found",
+      "noLicensesDesc": "Try expanding your search parameters or log a new employee credential.",
+      "table": {
+        "employee": "Employee",
+        "licenseName": "License Name",
+        "licenseNumber": "License Number",
+        "expiry": "Expiry Date",
+        "status": "Status",
+        "doc": "Doc",
+        "actions": "Actions"
+      },
+      "unknownEmployee": "Unknown Employee",
+      "lifetime": "Lifetime",
+      "none": "None",
+      "modal": {
+        "addTitle": "Log Employee License",
+        "editTitle": "Edit Employee License",
+        "employee": "Employee",
+        "selectEmployee": "Select Employee...",
+        "certification": "Certification",
+        "selectCert": "Select Certification...",
+        "certNumber": "Certificate / License Number",
+        "certNumberPlaceholder": "e.g. LIC-901-209-1A",
+        "issueDate": "Issue Date",
+        "expiryDate": "Expiry Date",
+        "uploadDoc": "Upload Document (PDF/Image)",
+        "uploadBtn": "Upload a file",
+        "dragDrop": "or drag and drop",
+        "fileLimit": "PDF, PNG, JPG up to 10MB",
+        "selectedFile": "Selected: {name}",
+        "saveCert": "Log License",
+        "saveChanges": "Save Changes"
+      },
+      "toast": {
+        "createSuccess": "Employee credential logged successfully",
+        "createFailed": "Failed to log certification",
+        "updateSuccess": "Employee credential updated successfully",
+        "updateFailed": "Failed to update certification",
+        "deleteSuccess": "Credential deleted successfully",
+        "deleteFailed": "Failed to delete credential",
+        "confirmDelete": "Are you sure you want to delete this employee certification log?"
+      }
+    }
+  },
+  "users": {
+    "pageTitle": "User & Security Settings",
+    "subtitle": "Manage active corporate users, assign security roles, and control access permissions.",
+    "denied": {
+      "title": "Access Denied",
+      "subtitle": "Unauthorized visual section",
+      "header": "Privilege Required",
+      "description": "You do not have the required administrative permissions to access the Tenant User & Role Management console.",
+      "backBtn": "Back to Dashboard"
+    },
+    "tabs": {
+      "users": "User Accounts",
+      "roles": "Roles & Permissions"
+    },
+    "users": {
+      "searchPlaceholder": "Search user name or email...",
+      "addUser": "Add User",
+      "loading": "Loading user directory...",
+      "noResults": "No user accounts found matching query.",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "roles": "Roles",
+        "dateAdded": "Date Added",
+        "actions": "Actions"
+      },
+      "toast": {
+        "createSuccess": "User account created successfully.",
+        "createFailed": "Failed to create user.",
+        "updateSuccess": "User account updated successfully.",
+        "updateFailed": "Failed to update user.",
+        "deleteSuccess": "User account soft deleted.",
+        "deleteFailed": "Failed to delete user.",
+        "confirmDelete": "Are you sure you want to soft delete the user account for {name}?",
+        "roleWarning": "User must be assigned at least one role.",
+        "pinRequired": "Super Admin authorization PIN is required."
+      },
+      "modalAdd": {
+        "title": "Add New User",
+        "name": "Full Name",
+        "email": "Email Address",
+        "password": "Password",
+        "roles": "Assign Roles",
+        "cancel": "Cancel",
+        "save": "Save User"
+      },
+      "modalEdit": {
+        "title": "Edit User Account",
+        "name": "Full Name",
+        "email": "Email Address",
+        "password": "Password (Optional)",
+        "passwordHint": "Leave blank to keep current",
+        "roles": "Assign Roles",
+        "pin": "Super Admin Authorization PIN",
+        "pinHint": "Required to authorize editing of Super Admin accounts.",
+        "pinPlaceholder": "Enter 6-digit PIN",
+        "cancel": "Cancel",
+        "save": "Save Changes"
+      }
+    },
+    "roles": {
+      "title": "Tenant Roles & Security Definitions",
+      "addRole": "Add Role",
+      "loading": "Loading security roles...",
+      "noRoles": "No security roles configured.",
+      "systemDefault": "System Default",
+      "fullAccess": "Full Access (All)",
+      "fullAccessBadge": "★ Full Administrator Access",
+      "noPermissions": "No permissions assigned",
+      "morePermissions": "+{count} more",
+      "table": {
+        "name": "Role Name",
+        "totalPermissions": "Total Permissions",
+        "assigned": "Assigned Permissions Status",
+        "actions": "Actions"
+      },
+      "modal": {
+        "addTitle": "Create Security Role",
+        "editTitle": "Edit Security Role: {name}",
+        "roleName": "Role Name",
+        "nameHint": "Name protection is active for default system roles.",
+        "permissionsLabel": "📋 Hak Akses Detail (Permissions Mapping)",
+        "superAdminNotice": "Super Admin automatically retains full access. Individual permissions cannot be manually removed from the Super Admin role.",
+        "loadingPermissions": "Loading permissions registry...",
+        "selectedCount": "{count} selected",
+        "cancel": "Cancel",
+        "save": "Save Security Role"
+      },
+      "toast": {
+        "createSuccess": "Role created successfully.",
+        "createFailed": "Failed to create role.",
+        "updateSuccess": "Role updated successfully.",
+        "updateFailed": "Failed to update role.",
+        "deleteSuccess": "Role deleted successfully.",
+        "deleteFailed": "Failed to delete role.",
+        "confirmDelete": "Are you sure you want to permanently delete the security role \"{name}\"?",
+        "roleNameRequired": "Role name is required."
+      }
+    }
+  },
+  "hlc": {
+    "portal": {
+      "title": "High Level Control Portal",
+      "subtitle": "Enter the central authorization token key configured in your API environment to manage platform legal entities.",
+      "tokenLabel": "Central Token Key",
+      "tokenPlaceholder": "nexus_central_secret",
+      "unlockBtn": "Unlock Console",
+      "toast": {
+        "unlocked": "High level control console unlocked successfully.",
+        "invalidToken": "Invalid central authentication key.",
+        "tokenRequired": "Please enter a central token key."
+      }
+    },
+    "console": {
+      "title": "Company Schemas Setup",
+      "subtitle": "Register new client organization companies, configure isolated database schemas, and map domain subfolders.",
+      "registerBtn": "Register Company",
+      "stats": {
+        "activeCompanies": "Total Active Companies",
+        "isolationMethod": "Isolation Method",
+        "isolationDesc": "PostgreSQL Schema-per-Tenant",
+        "gatewayDomain": "Gateway Domain",
+        "gatewayDesc": "*.local (Dev Subdomain)"
+      },
+      "tableTitle": "Registered Company List",
+      "table": {
+        "name": "Company Name",
+        "slug": "Slug Identifier",
+        "domain": "Mapped Domain",
+        "date": "Date Provisioned",
+        "actions": "Actions"
+      },
+      "portalBtn": "Portal",
+      "noTenants": "No companies registered yet. Add your first company above.",
+      "toast": {
+        "registerSuccess": "New company registered. Database schema initialized!",
+        "registerFailed": "Failed to register company.",
+        "updateSuccess": "Company details updated successfully!",
+        "updateFailed": "Failed to update company.",
+        "deleteSuccess": "Company database schema dropped successfully.",
+        "deleteFailed": "Failed to delete company.",
+        "confirmDelete": "Are you absolutely sure you want to delete {name}? This will permanently drop its database schema and lose all data.",
+        "logout": "Logged out of central console.",
+        "fieldsRequired": "Name and slug are required fields."
+      },
+      "modalAdd": {
+        "title": "Register New Company",
+        "name": "Organization / Company Name",
+        "namePlaceholder": "e.g. HBM Manufacturing",
+        "slug": "Subdomain Slug (alphanumeric)",
+        "slugPlaceholder": "e.g. hbm-mfg",
+        "slugHint": "This becomes the subdomain: e.g. {slug}.local",
+        "logo": "Company Logo (Optional)",
+        "cancel": "Cancel",
+        "submit": "Initialize Schema"
+      },
+      "modalEdit": {
+        "title": "Edit Company",
+        "name": "Organization / Company Name",
+        "slug": "Subdomain Slug (alphanumeric)",
+        "slugHint": "This becomes the subdomain: e.g. {slug}.local",
+        "logo": "Company Logo (Optional)",
+        "currentLogo": "Current Logo",
+        "cancel": "Cancel",
+        "submit": "Save Changes"
+      }
+    }
+  },
+  "engagement": {
+    "dashboard": {
+      "title": "Employee Engagement",
+      "subtitle": "Monitor pulse surveys, manage the employee suggestion box, and celebrate organizational achievements.",
+      "activeSurveys": "Active Surveys",
+      "recentFeedback": "Recent Suggestion Box",
+      "awardsWall": "Awards Wall"
+    },
+    "surveys": {
+      "title": "Surveys Manager",
+      "subtitle": "Build and manage satisfaction, pulse, and custom surveys.",
+      "createBtn": "Create Survey",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "closed": "Closed",
+        "archived": "Archived"
+      },
+      "table": {
+        "title": "Survey Title",
+        "type": "Type",
+        "status": "Status",
+        "dates": "Active Dates",
+        "anonymous": "Anonymous",
+        "responses": "Responses",
+        "actions": "Actions"
+      },
+      "builder": {
+        "title": "Survey Builder",
+        "titleLabel": "Survey Title",
+        "descLabel": "Description",
+        "typeLabel": "Survey Type",
+        "isAnonymousLabel": "Anonymous survey responses",
+        "audienceLabel": "Target Audience",
+        "startDateLabel": "Start Date",
+        "endDateLabel": "End Date",
+        "addQuestion": "Add Question",
+        "questionText": "Question text",
+        "questionType": "Question input type",
+        "requiredCheckbox": "Required",
+        "saveSurvey": "Save Survey",
+        "cancel": "Cancel"
+      },
+      "analytics": {
+        "title": "Survey Analytics",
+        "totalResponses": "Total Submissions",
+        "averageScore": "Average Rating Score",
+        "minMax": "Min / Max Range",
+        "distribution": "Response Distribution",
+        "recentAnswers": "Recent Text Responses"
+      },
+      "respond": {
+        "title": "Survey Response",
+        "anonymousWarning": "This survey is anonymous. Your identity will not be logged.",
+        "submit": "Submit Response",
+        "success": "Survey response submitted successfully!"
+      }
+    },
+    "feedback": {
+      "title": "Suggestion Box",
+      "subtitle": "Provide constructive feedback, file complaints, or appreciate colleagues.",
+      "anonymousLabel": "Submit anonymously",
+      "typeLabel": "Feedback Type",
+      "categoryLabel": "Category",
+      "contentPlaceholder": "Type your suggestions or concerns here...",
+      "submitBtn": "Submit Feedback",
+      "table": {
+        "employee": "Employee",
+        "type": "Type",
+        "category": "Category",
+        "content": "Content",
+        "status": "Status",
+        "date": "Date Submitted",
+        "action": "Action"
+      },
+      "respondModal": {
+        "title": "Respond to Feedback",
+        "responseText": "HR Response Notes",
+        "statusLabel": "Resolution Status",
+        "submit": "Submit Resolution"
+      }
+    },
+    "awards": {
+      "title": "Awards Wall",
+      "subtitle": "Celebrate and congratulate outstanding employees.",
+      "addBtn": "Grant Award",
+      "modal": {
+        "title": "Grant Employee Award",
+        "employee": "Select Employee",
+        "awardTitle": "Award Title",
+        "category": "Award Category",
+        "date": "Awarded Date",
+        "description": "Appreciation Citation",
+        "submit": "Publish Award"
+      }
+    }
+  },
+  "assets": {
+    "dashboard": {
+      "title": "Asset Management",
+      "subtitle": "Register company inventories, assign physical assets to employees, and manage returned items.",
+      "totalAssets": "Total Assets Registered",
+      "assigned": "Currently Assigned",
+      "available": "Available in Stock",
+      "maintenance": "Under Maintenance"
+    },
+    "registry": {
+      "title": "Asset Registry",
+      "addBtn": "Register Asset",
+      "modal": {
+        "title": "Register Asset",
+        "editTitle": "Edit Asset Details",
+        "number": "Asset Tag / Number",
+        "name": "Asset Name",
+        "category": "Category",
+        "brand": "Brand",
+        "model": "Model",
+        "serial": "Serial Number",
+        "specs": "Specifications",
+        "purchaseDate": "Purchase Date",
+        "price": "Purchase Price",
+        "vendor": "Vendor",
+        "condition": "Physical Condition",
+        "status": "Inventory Status",
+        "location": "Storage Location",
+        "notes": "Internal Notes",
+        "submit": "Save Asset"
+      }
+    },
+    "assignments": {
+      "title": "Asset Assignments",
+      "assignBtn": "Assign Asset",
+      "modal": {
+        "title": "Assign Corporate Asset",
+        "asset": "Select Asset",
+        "employee": "Assign To Employee",
+        "date": "Handover Date",
+        "expectedReturn": "Expected Return Date",
+        "condition": "Condition on Handover",
+        "notes": "Handover Notes",
+        "submit": "Confirm Assignment"
+      },
+      "returnModal": {
+        "title": "Register Return Asset",
+        "date": "Returned Date",
+        "condition": "Condition on Return",
+        "notes": "Return Notes",
+        "submit": "Confirm Return"
+      }
+    }
+  }
+}

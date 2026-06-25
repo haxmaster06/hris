@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import { useAuthorization } from "@/hooks/useAuthorization";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { 
-  ArrowLeft, 
   Plus, 
   Search, 
   Loader2, 
@@ -31,6 +31,7 @@ interface Employee extends FormEmployee {
 export default function EmployeeDirectory() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const t = useTranslations();
   const { isAuthenticated } = useAuthStore();
   const { isAdmin } = useAuthorization();
   const [mounted, setMounted] = useState(false);
@@ -50,9 +51,9 @@ export default function EmployeeDirectory() {
       router.push("/login");
     } else if (!isAdmin) {
       router.push("/dashboard");
-      toast.error("Access denied. Admin privileges required.");
+      toast.error(t("modules.employees.accessDenied"));
     }
-  }, [isAuthenticated, isAdmin, router]);
+  }, [isAuthenticated, isAdmin, router, t]);
 
   // Fetch Employees
   const { data: employeesData, isLoading: isLoadingEmployees } = useQuery({
@@ -73,10 +74,10 @@ export default function EmployeeDirectory() {
     mutationFn: (id: string) => api.delete(`/employees/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee profile archived successfully");
+      toast.success(t("modules.employees.archiveSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete employee");
+      toast.error(err.response?.data?.message || t("modules.employees.archiveFailed"));
     },
   });
 
@@ -84,7 +85,7 @@ export default function EmployeeDirectory() {
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent row click navigation
-    if (confirm("Are you sure you want to delete this employee?")) {
+    if (confirm(t("modules.employees.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -122,41 +123,41 @@ export default function EmployeeDirectory() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header 
-        title="Employee Directory" 
-        subtitle="View corporate directory, add team members, and check career logs." 
+        title={t("modules.employees.title")} 
+        subtitle={t("modules.employees.viewSubtitle")} 
         backUrl="/dashboard"
       />
 
       <main className="max-w-6xl mx-auto px-6 mt-8 space-y-8">
         {/* Metric widgets */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm select-none">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Total Staff</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("modules.employees.totalStaff")}</span>
               <Users className="h-4 w-4 text-primary" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{totalCount}</p>
           </div>
 
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm select-none">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Permanent</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("modules.employees.permanent")}</span>
               <UserCheck className="h-4 w-4 text-emerald-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{permanentCount}</p>
           </div>
 
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm select-none">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Contract</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("modules.employees.contract")}</span>
               <Briefcase className="h-4 w-4 text-amber-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{contractCount}</p>
           </div>
 
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-lg p-5 shadow-sm select-none">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Probation</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("modules.employees.probation")}</span>
               <Users className="h-4 w-4 text-purple-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{probationCount}</p>
@@ -164,14 +165,14 @@ export default function EmployeeDirectory() {
         </div>
 
         {/* Action / Filter Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-zinc-950 p-4 border border-zinc-200 dark:border-zinc-900 rounded-xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-zinc-950 p-4 border border-zinc-200 dark:border-zinc-900 rounded-xl animate-enter">
           <div className="flex flex-wrap flex-1 gap-3 max-w-3xl">
             {/* Search */}
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Search by name or employee ID..."
+                placeholder={t("modules.employees.searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -181,20 +182,20 @@ export default function EmployeeDirectory() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-700 dark:text-zinc-300"
+              className="px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
             >
-              <option value="">All Statuses</option>
-              <option value="probation">Probation</option>
-              <option value="contract">Contract</option>
-              <option value="permanent">Permanent</option>
+              <option value="">{t("common.allStatuses")}</option>
+              <option value="probation">{t("modules.employees.probation")}</option>
+              <option value="contract">{t("modules.employees.contract")}</option>
+              <option value="permanent">{t("modules.employees.permanent")}</option>
             </select>
             {/* Department Filter */}
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-700 dark:text-zinc-300"
+              className="px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
             >
-              <option value="">All Departments</option>
+              <option value="">{t("common.allDepartments")}</option>
               {departments?.map((d: any) => (
                 <option key={d.id} value={d.name}>{d.name}</option>
               ))}
@@ -203,9 +204,9 @@ export default function EmployeeDirectory() {
 
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-1.5 py-2 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/95 transition-colors"
+            className="inline-flex items-center gap-1.5 py-2 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/95 transition-colors cursor-pointer"
           >
-            <Plus className="h-4 w-4" /> Onboard Employee
+            <Plus className="h-4 w-4" /> {t("modules.employees.onboard")}
           </button>
         </div>
 
@@ -215,19 +216,19 @@ export default function EmployeeDirectory() {
             <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
           </div>
         ) : filteredEmployees.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950">
-            <p className="text-zinc-500 text-sm">No employees found matching filters.</p>
+          <div className="text-center py-20 border border-dashed border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950 select-none">
+            <p className="text-zinc-500 text-sm">{t("modules.employees.noResults")}</p>
           </div>
         ) : (
           <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-900 rounded-xl bg-white dark:bg-zinc-950">
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 font-medium border-b border-zinc-200 dark:border-zinc-900">
+              <thead className="bg-zinc-50 dark:bg-zinc-900/50 text-zinc-650 dark:text-zinc-400 font-medium border-b border-zinc-200 dark:border-zinc-900 select-none">
                 <tr>
-                  <th className="px-6 py-3">NIP / ID</th>
-                  <th className="px-6 py-3">Full Name</th>
-                  <th className="px-6 py-3">Department</th>
+                  <th className="px-6 py-3">{t("modules.employees.nipId")}</th>
+                  <th className="px-6 py-3">{t("modules.employees.fullName")}</th>
+                  <th className="px-6 py-3">{t("modules.employees.department")}</th>
                   <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3 text-right">Actions</th>
+                  <th className="px-6 py-3 text-right">{t("common.actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-900 text-zinc-800 dark:text-zinc-200">
@@ -242,7 +243,7 @@ export default function EmployeeDirectory() {
                       {emp.first_name} {emp.last_name}
                     </td>
                     <td className="px-6 py-4 text-zinc-500">{emp.department?.name || "-"}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 select-none">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
                         emp.status === "permanent"
                           ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400"
@@ -250,27 +251,33 @@ export default function EmployeeDirectory() {
                           ? "bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400"
                           : "bg-purple-50 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400"
                       }`}>
-                        {emp.status}
+                        {emp.status === "permanent" 
+                          ? t("modules.employees.permanent") 
+                          : emp.status === "contract" 
+                          ? t("modules.employees.contract") 
+                          : t("modules.employees.probation")}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={(e) => { e.stopPropagation(); router.push(`/employees/${emp.id}`); }}
-                          className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500"
-                          title="View Profile"
+                          className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500 cursor-pointer"
+                          title={t("modules.employees.viewProfile")}
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={(e) => handleEdit(emp, e)}
-                          className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-300"
+                          className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-650 dark:text-zinc-300 cursor-pointer"
+                          title={t("common.edit")}
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={(e) => handleDelete(emp.id, e)}
-                          className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 text-red-600"
+                          className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 text-red-650 cursor-pointer"
+                          title={t("common.delete")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

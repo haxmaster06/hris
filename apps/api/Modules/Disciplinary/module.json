@@ -1,0 +1,11 @@
+{
+    "name": "Disciplinary",
+    "alias": "disciplinary",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Disciplinary\\Providers\\DisciplinaryServiceProvider"
+    ],
+    "files": []
+}

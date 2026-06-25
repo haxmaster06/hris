@@ -28,7 +28,7 @@ class EmployeeController extends BaseController
 
         if ($request->has('include')) {
             $includes = explode(',', $request->input('include'));
-            $validRelations = ['company', 'branch', 'department', 'position'];
+            $validRelations = ['company', 'branch', 'department', 'position', 'division', 'grade', 'supervisor', 'subordinates', 'emergencyContacts'];
             foreach ($includes as $relation) {
                 if (in_array($relation, $validRelations)) {
                     $employees->load($relation);
@@ -62,7 +62,7 @@ class EmployeeController extends BaseController
 
         if ($request->has('include')) {
             $includes = explode(',', $request->input('include'));
-            $validRelations = ['company', 'branch', 'department', 'position'];
+            $validRelations = ['company', 'branch', 'department', 'position', 'division', 'grade', 'supervisor', 'subordinates', 'emergencyContacts'];
             foreach ($includes as $relation) {
                 if (in_array($relation, $validRelations)) {
                     $employee->load($relation);

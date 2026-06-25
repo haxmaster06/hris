@@ -23,7 +23,8 @@ class DocumentController extends BaseController
             file: $request->file('file'),
             employeeId: $request->input('employee_id'),
             categoryId: $request->input('document_category_id'),
-            expiryDate: $request->input('expiry_date')
+            expiryDate: $request->input('expiry_date'),
+            documentType: $request->input('document_type')
         );
 
         $document->signed_url = $this->documentService->getSignedUrl($document->id);

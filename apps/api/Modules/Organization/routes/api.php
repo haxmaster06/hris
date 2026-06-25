@@ -10,6 +10,7 @@ use Modules\Organization\Http\Controllers\DepartmentController;
 use Modules\Organization\Http\Controllers\DivisionController;
 use Modules\Organization\Http\Controllers\PositionController;
 use Modules\Organization\Http\Controllers\GradeController;
+use Modules\Organization\Http\Controllers\CostCenterController;
 
 Route::middleware([
     InitializeTenancy::class,
@@ -21,4 +22,5 @@ Route::middleware([
     Route::apiResource('divisions', DivisionController::class);
     Route::apiResource('positions', PositionController::class);
     Route::apiResource('grades', GradeController::class);
+    Route::apiResource('cost-centers', CostCenterController::class);
 });

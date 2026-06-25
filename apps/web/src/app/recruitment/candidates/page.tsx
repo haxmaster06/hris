@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface Candidate {
   id: string;
@@ -33,6 +34,8 @@ interface Candidate {
 }
 
 export default function CandidateManagement() {
+  const t = useTranslations("recruitment.candidates");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -75,11 +78,11 @@ export default function CandidateManagement() {
     mutationFn: (data: any) => api.post("/candidates", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["candidates"] });
-      toast.success("Candidate created successfully");
+      toast.success(t("toast.createSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create candidate");
+      toast.error(err.response?.data?.message || t("toast.createFailed"));
     }
   });
 
@@ -87,11 +90,11 @@ export default function CandidateManagement() {
     mutationFn: ({ id, data }: { id: string; data: any }) => api.put(`/candidates/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["candidates"] });
-      toast.success("Candidate updated successfully");
+      toast.success(t("toast.updateSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update candidate");
+      toast.error(err.response?.data?.message || t("toast.updateFailed"));
     }
   });
 
@@ -99,10 +102,10 @@ export default function CandidateManagement() {
     mutationFn: (id: string) => api.delete(`/candidates/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["candidates"] });
-      toast.success("Candidate deleted successfully");
+      toast.success(t("toast.deleteSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete candidate");
+      toast.error(err.response?.data?.message || t("toast.deleteFailed"));
     }
   });
 
@@ -146,7 +149,7 @@ export default function CandidateManagement() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this candidate?")) {
+    if (confirm(t("toast.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -154,7 +157,7 @@ export default function CandidateManagement() {
   const generateMockResume = () => {
     const randomId = Math.floor(Math.random() * 1000000);
     setFormResumePath(`resumes/resume_mock_${randomId}.pdf`);
-    toast.success("Mock S3 PDF resume path generated!");
+    toast.success(t("toast.mockResumeSuccess"));
   };
 
   const filteredCandidates = Array.isArray(candidates)
@@ -167,8 +170,8 @@ export default function CandidateManagement() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Candidate Directory"
-        subtitle="View corporate talent database, add applicants, and review resumes."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/recruitment"
       />
 
@@ -180,7 +183,7 @@ export default function CandidateManagement() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
             <input
               type="text"
-              placeholder="Search candidates by name or email..."
+              placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 pr-4 py-2 w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -191,7 +194,7 @@ export default function CandidateManagement() {
             onClick={handleOpenCreate}
             className="flex items-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
           >
-            <Plus className="h-4 w-4" /> Add Candidate
+            <Plus className="h-4 w-4" /> {t("addCandidate")}
           </button>
         </div>
 
@@ -199,12 +202,12 @@ export default function CandidateManagement() {
         {isLoading ? (
           <div className="h-64 flex flex-col justify-center items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-            <p className="text-sm text-zinc-500">Loading candidates...</p>
+            <p className="text-sm text-zinc-500">{tCommon("loading")}</p>
           </div>
         ) : filteredCandidates.length === 0 ? (
           <div className="h-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl flex flex-col justify-center items-center gap-3">
             <User className="h-8 w-8 text-zinc-300" />
-            <p className="text-sm text-zinc-500">No candidates found.</p>
+            <p className="text-sm text-zinc-500">{t("noCandidates")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -255,13 +258,13 @@ export default function CandidateManagement() {
                     onClick={() => handleOpenEdit(cand)}
                     className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors"
                   >
-                    <Edit2 className="h-3 w-3" /> Edit
+                    <Edit2 className="h-3 w-3" /> {tCommon("edit")}
                   </button>
                   <button
                     onClick={() => handleDelete(cand.id)}
                     className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 border border-red-200/50 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg text-red-600 dark:text-red-400 transition-colors"
                   >
-                    <Trash2 className="h-3 w-3" /> Delete
+                    <Trash2 className="h-3 w-3" /> {tCommon("delete")}
                   </button>
                 </div>
               </div>
@@ -276,17 +279,17 @@ export default function CandidateManagement() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedCandidate ? "Edit Candidate Profile" : "Add Candidate Profile"}
+                {selectedCandidate ? t("modalEditTitle") : t("modalAddTitle")}
               </h2>
               <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-sm">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">First Name</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formFirstName")}</label>
                   <input
                     type="text"
                     required
@@ -298,7 +301,7 @@ export default function CandidateManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Last Name</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formLastName")}</label>
                   <input
                     type="text"
                     placeholder="Doe"
@@ -310,7 +313,7 @@ export default function CandidateManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formEmail")}</label>
                 <input
                   type="email"
                   required
@@ -322,7 +325,7 @@ export default function CandidateManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("formPhone")}</label>
                 <input
                   type="text"
                   placeholder="e.g. 08123456789"
@@ -334,13 +337,13 @@ export default function CandidateManagement() {
 
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">CV Resume Path</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("formResume")}</label>
                   <button 
                     type="button" 
                     onClick={generateMockResume}
                     className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    Generate Mock PDF Path
+                    {t("generateMockResume")}
                   </button>
                 </div>
                 <input
@@ -358,14 +361,14 @@ export default function CandidateManagement() {
                   onClick={() => setIsFormOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending || updateMutation.isPending}
                   className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/95 disabled:opacity-50 transition-colors"
                 >
-                  {(createMutation.isPending || updateMutation.isPending) ? "Saving..." : "Save Profile"}
+                  {(createMutation.isPending || updateMutation.isPending) ? tCommon("loading") : tCommon("save")}
                 </button>
               </div>
             </form>

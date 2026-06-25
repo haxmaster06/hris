@@ -7,7 +7,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { 
-  ArrowLeft, 
   Plus, 
   Search, 
   Loader2, 
@@ -15,9 +14,9 @@ import {
   Edit2, 
   Award
 } from "lucide-react";
-import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface Certification {
   id: string;
@@ -28,6 +27,8 @@ interface Certification {
 }
 
 export default function MasterCertificationManagement() {
+  const t = useTranslations("certification.master");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -69,11 +70,11 @@ export default function MasterCertificationManagement() {
     mutationFn: (data: any) => api.post("/certifications", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certifications"] });
-      toast.success("Master Certification created successfully");
+      toast.success(t("toast.createSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create certification");
+      toast.error(err.response?.data?.message || t("toast.createFailed"));
     }
   });
 
@@ -81,11 +82,11 @@ export default function MasterCertificationManagement() {
     mutationFn: ({ id, data }: { id: string; data: any }) => api.put(`/certifications/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certifications"] });
-      toast.success("Master Certification updated successfully");
+      toast.success(t("toast.updateSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update certification");
+      toast.error(err.response?.data?.message || t("toast.updateFailed"));
     }
   });
 
@@ -93,10 +94,10 @@ export default function MasterCertificationManagement() {
     mutationFn: (id: string) => api.delete(`/certifications/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certifications"] });
-      toast.success("Certification deleted successfully");
+      toast.success(t("toast.deleteSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete certification");
+      toast.error(err.response?.data?.message || t("toast.deleteFailed"));
     }
   });
 
@@ -119,7 +120,7 @@ export default function MasterCertificationManagement() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this certification? This will also remove any employee associations.")) {
+    if (confirm(t("toast.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -153,8 +154,8 @@ export default function MasterCertificationManagement() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Master Certifications Catalogue"
-        subtitle="Create and configure licensing tracks, accreditation agencies, and validity durations."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/certification"
       />
 
@@ -165,7 +166,7 @@ export default function MasterCertificationManagement() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
             <input
               type="text"
-              placeholder="Search by name, code or issuer..."
+              placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -176,7 +177,7 @@ export default function MasterCertificationManagement() {
             onClick={handleOpenCreate}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
           >
-            <Plus className="h-4 w-4" /> Add Certification
+            <Plus className="h-4 w-4" /> {t("addCert")}
           </button>
         </div>
 
@@ -188,19 +189,19 @@ export default function MasterCertificationManagement() {
         ) : filteredCerts.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl">
             <Award className="h-12 w-12 mx-auto text-zinc-300 mb-3" />
-            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">No certifications found</h3>
-            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">Try expanding your search parameters or register a new certification.</p>
+            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">{t("noCerts")}</h3>
+            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">{t("noCertsDesc")}</p>
           </div>
         ) : (
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl overflow-hidden shadow-sm">
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">License Code</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">License Name</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Issuer (Lembaga)</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Validity Period</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-right">Actions</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.code")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.name")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.issuer")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{t("table.validity")}</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-right">{tCommon("actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -210,21 +211,21 @@ export default function MasterCertificationManagement() {
                     <td className="px-6 py-4 text-sm text-zinc-950 dark:text-zinc-50">{cert.name}</td>
                     <td className="px-6 py-4 text-sm text-zinc-900 dark:text-zinc-200">{cert.issuer}</td>
                     <td className="px-6 py-4 text-sm text-zinc-500 dark:text-zinc-400">
-                      {cert.validity_period ? `${cert.validity_period} Months (Bulan)` : "Lifetime (Seumur Hidup)"}
+                      {cert.validity_period ? `${cert.validity_period} ${t("months")}` : t("lifetime")}
                     </td>
                     <td className="px-6 py-4 text-sm text-right">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(cert)}
                           className="p-2 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-                          title="Edit Certification"
+                          title={tCommon("edit")}
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(cert.id)}
                           className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
-                          title="Delete Certification"
+                          title={tCommon("delete")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -244,20 +245,20 @@ export default function MasterCertificationManagement() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedCert ? "Edit Certification" : "Add Certification"}
+                {selectedCert ? t("modal.editTitle") : t("modal.addTitle")}
               </h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-semibold">
-                Cancel
+              <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 text-sm font-semibold">
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Certification Code</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.code")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. CERT-HACCP-QC"
+                  placeholder={t("modal.codePlaceholder")}
                   value={formCode}
                   onChange={(e) => setFormCode(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -265,11 +266,11 @@ export default function MasterCertificationManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Certification Name</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.name")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. HACCP Food Safety Certification"
+                  placeholder={t("modal.namePlaceholder")}
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -277,11 +278,11 @@ export default function MasterCertificationManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Issuer Agency (Lembaga Penerbit)</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.issuer")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Badan Sertifikasi Internasional / MUI"
+                  placeholder={t("modal.issuerPlaceholder")}
                   value={formIssuer}
                   onChange={(e) => setFormIssuer(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -289,16 +290,16 @@ export default function MasterCertificationManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Validity Period (Months)</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.validity")}</label>
                 <input
                   type="number"
                   min={1}
-                  placeholder="e.g. 24 (Leave blank for Lifetime)"
+                  placeholder={t("modal.validityPlaceholder")}
                   value={formValidity}
                   onChange={(e) => setFormValidity(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
                 />
-                <p className="text-[10px] text-zinc-400 mt-1">Specify how many months the certificate remains valid. Leave empty if it never expires.</p>
+                <p className="text-[10px] text-zinc-400 mt-1">{t("modal.validityHint")}</p>
               </div>
 
               <div className="pt-2">
@@ -308,7 +309,7 @@ export default function MasterCertificationManagement() {
                   className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-primary text-white rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-primary/95 transition-colors"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {selectedCert ? "Save Changes" : "Create Certification"}
+                  {selectedCert ? t("modal.saveChanges") : t("modal.saveCert")}
                 </button>
               </div>
             </form>

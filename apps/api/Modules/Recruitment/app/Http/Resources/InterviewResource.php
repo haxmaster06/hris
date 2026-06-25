@@ -19,6 +19,7 @@ class InterviewResource extends JsonResource
             'notes' => $this->notes,
             'score' => $this->score,
             'status' => $this->status,
+            'evaluation' => $this->whenLoaded('evaluation'),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
             'version' => $this->version,

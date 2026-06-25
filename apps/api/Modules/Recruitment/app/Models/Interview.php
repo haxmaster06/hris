@@ -41,4 +41,9 @@ class Interview extends BaseModel
     {
         return $this->belongsTo(User::class, 'interviewer_id');
     }
+
+    public function evaluation(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(InterviewEvaluation::class, 'interview_id');
+    }
 }

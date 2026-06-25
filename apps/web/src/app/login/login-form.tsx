@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
+import { useTranslations } from "next-intl";
 import { toast } from "@/lib/toast";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
@@ -12,14 +13,13 @@ import { Loader2, KeyRound, Mail, Building2 } from "lucide-react";
 import { TextField, Button, Box, Typography, InputAdornment, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import CompanyLogo from "@/components/CompanyLogo";
 
-
-const loginSchema = zod.object({
-  tenantId: zod.string().min(1, "Please select a company"),
-  email: zod.string().email("Invalid email address"),
-  password: zod.string().min(6, "Password must be at least 6 characters"),
+const createLoginSchema = (t: any) => zod.object({
+  tenantId: zod.string().min(1, t("validation.selectCompany")),
+  email: zod.string().email(t("validation.invalidEmail")),
+  password: zod.string().min(6, t("validation.passwordMin")),
 });
 
-type LoginInput = zod.infer<typeof loginSchema>;
+type LoginInput = zod.infer<ReturnType<typeof createLoginSchema>>;
 
 interface TenantOption {
   id: string;
@@ -30,12 +30,16 @@ interface TenantOption {
 
 export default function LoginForm() {
   const router = useRouter();
+  const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
   const { setAuth, setTenantId, setCompanyDetails } = useAuthStore();
 
   const [tenants, setTenants] = useState<TenantOption[]>([]);
   const [isTenantsLoading, setIsTenantsLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<TenantOption | null>(null);
+
+  // Memoize the schema to avoid recreating on each render pass
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const {
     register,
@@ -55,13 +59,13 @@ export default function LoginForm() {
         setTenants(response.data.data || []);
       } catch (err: any) {
         console.error("Failed to fetch tenants:", err);
-        toast.error("Failed to load active tenants from database.");
+        toast.error(t("login.errorLoadTenants"));
       } finally {
         setIsTenantsLoading(false);
       }
     }
     fetchTenants();
-  }, []);
+  }, [t]);
 
   const tenantIdValue = watch("tenantId");
 
@@ -110,13 +114,13 @@ export default function LoginForm() {
         permissions: userProfile.permissions,
       });
 
-      toast.success("Welcome back! Login successful.");
+      toast.success(t("login.successMessage"));
       router.push("/dashboard");
     } catch (error: any) {
       setIsLoading(false);
       setTenantId(null); // Reset tenant on failure
       setCompanyDetails(null, null);
-      const errorMsg = error.response?.data?.message || "Invalid credentials or company mismatch.";
+      const errorMsg = error.response?.data?.message || t("login.errorCredentials");
       toast.error(errorMsg);
     }
   };
@@ -155,7 +159,7 @@ export default function LoginForm() {
               {selectedCompany.name}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Corporate HR Portal
+              {t("login.corporatePortal")}
             </Typography>
           </Box>
         </Box>
@@ -163,14 +167,14 @@ export default function LoginForm() {
 
       {/* Tenant Input (Select Dropdown) */}
       <FormControl fullWidth error={!!errors.tenantId}>
-        <InputLabel id="tenant-select-label">Select Company</InputLabel>
+        <InputLabel id="tenant-select-label">{t("login.selectCompany")}</InputLabel>
         <Select
           {...tenantIdRegister}
           inputRef={tenantIdRef}
           labelId="tenant-select-label"
           id="tenant-select"
           defaultValue=""
-          label="Select Company"
+          label={t("login.selectCompany")}
           disabled={isTenantsLoading}
           sx={{
             borderRadius: "10px",
@@ -182,7 +186,7 @@ export default function LoginForm() {
           }
         >
           <MenuItem value="">
-            <em>{isTenantsLoading ? "Loading companies..." : "Please select a company"}</em>
+            <em>{isTenantsLoading ? t("login.loadingCompanies") : t("login.pleaseSelect")}</em>
           </MenuItem>
           {tenants.map((tenant) => (
             <MenuItem key={tenant.id} value={tenant.slug}>
@@ -199,7 +203,7 @@ export default function LoginForm() {
       <TextField
         {...emailRegister}
         inputRef={emailRef}
-        label="Email Address"
+        label={t("login.emailAddress")}
         type="email"
         placeholder="admin@nexushr.local"
         fullWidth
@@ -226,7 +230,7 @@ export default function LoginForm() {
       <TextField
         {...passwordRegister}
         inputRef={passwordRef}
-        label="Password"
+        label={t("login.password")}
         type="password"
         placeholder="••••••••"
         fullWidth
@@ -270,10 +274,10 @@ export default function LoginForm() {
         {isLoading ? (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
-            Signing you in...
+            {t("login.signingIn")}
           </Box>
         ) : (
-          "Sign In"
+          t("common.signIn")
         )}
       </Button>
     </Box>

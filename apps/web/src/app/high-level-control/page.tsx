@@ -13,11 +13,9 @@ import {
   Lock, 
   ShieldAlert, 
   Activity, 
-  Check, 
   Loader2, 
   Globe,
   Database,
-  ArrowRight,
   ChevronLeft,
   Edit
 } from "lucide-react";
@@ -25,7 +23,7 @@ import axios from "axios";
 import { toast } from "@/lib/toast";
 import VantaBackground from "@/components/vanta/VantaBackground";
 import CompanyLogo from "@/components/CompanyLogo";
-
+import { useTranslations, useLocale } from "next-intl";
 
 interface Tenant {
   id: string;
@@ -37,6 +35,11 @@ interface Tenant {
 }
 
 export default function HighLevelControlPage() {
+  const tPortal = useTranslations("hlc.portal");
+  const tConsole = useTranslations("hlc.console");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const isId = locale === "id";
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const isSuperAdmin = user?.roles?.includes("Super Admin");
@@ -90,10 +93,10 @@ export default function HighLevelControlPage() {
         setTenants(response.data.data);
         setIsAuthorized(true);
         sessionStorage.setItem("nexus_central_token", inputToken);
-        toast.success("High level control console unlocked successfully.");
+        toast.success(tPortal("toast.unlocked"));
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Invalid central authentication key.";
+      const msg = err.response?.data?.message || tPortal("toast.invalidToken");
       toast.error(msg);
       sessionStorage.removeItem("nexus_central_token");
       setIsAuthorized(false);
@@ -105,7 +108,7 @@ export default function HighLevelControlPage() {
   const handleAuthorize = (e: React.FormEvent) => {
     e.preventDefault();
     if (!token.trim()) {
-      toast.error("Please enter a central token key.");
+      toast.error(tPortal("toast.tokenRequired"));
       return;
     }
     validateAndFetch(token);
@@ -114,7 +117,7 @@ export default function HighLevelControlPage() {
   const handleRegisterTenant = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTenantName.trim() || !newTenantSlug.trim()) {
-      toast.error("Name and slug are required fields.");
+      toast.error(tConsole("toast.fieldsRequired"));
       return;
     }
 
@@ -139,7 +142,7 @@ export default function HighLevelControlPage() {
       );
 
       if (response.data.success) {
-        toast.success("New company registered. Database schema initialized!");
+        toast.success(tConsole("toast.registerSuccess"));
         setTenants([...tenants, response.data.data]);
         setNewTenantName("");
         setNewTenantSlug("");
@@ -147,7 +150,7 @@ export default function HighLevelControlPage() {
         setShowAddModal(false);
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Failed to register company.";
+      const msg = err.response?.data?.message || tConsole("toast.registerFailed");
       toast.error(msg);
     } finally {
       setActionLoading(null);
@@ -158,7 +161,7 @@ export default function HighLevelControlPage() {
     e.preventDefault();
     if (!editingTenant) return;
     if (!editTenantName.trim() || !editTenantSlug.trim()) {
-      toast.error("Name and slug are required fields.");
+      toast.error(tConsole("toast.fieldsRequired"));
       return;
     }
 
@@ -184,14 +187,14 @@ export default function HighLevelControlPage() {
       );
 
       if (response.data.success) {
-        toast.success("Company details updated successfully!");
+        toast.success(tConsole("toast.updateSuccess"));
         setTenants(tenants.map(t => t.id === editingTenant.id ? response.data.data : t));
         setEditTenantLogo(null);
         setShowEditModal(false);
         setEditingTenant(null);
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Failed to update company.";
+      const msg = err.response?.data?.message || tConsole("toast.updateFailed");
       toast.error(msg);
     } finally {
       setActionLoading(null);
@@ -199,7 +202,7 @@ export default function HighLevelControlPage() {
   };
 
   const handleDeleteTenant = async (id: string, name: string) => {
-    if (!confirm(`Are you absolutely sure you want to delete ${name}? This will permanently drop its database schema and lose all data.`)) {
+    if (!confirm(tConsole("toast.confirmDelete", { name }))) {
       return;
     }
 
@@ -210,11 +213,11 @@ export default function HighLevelControlPage() {
       });
 
       if (response.data.success) {
-        toast.success("Company database schema dropped successfully.");
+        toast.success(tConsole("toast.deleteSuccess"));
         setTenants(tenants.filter(t => t.id !== id));
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to delete company.");
+      toast.error(err.response?.data?.message || tConsole("toast.deleteFailed"));
     } finally {
       setActionLoading(null);
     }
@@ -225,7 +228,7 @@ export default function HighLevelControlPage() {
     setToken("");
     setIsAuthorized(false);
     setTenants([]);
-    toast.success("Logged out of central console.");
+    toast.success(tConsole("toast.logout"));
   };
 
   // Auth/Unlock Dialog Overlay
@@ -240,21 +243,21 @@ export default function HighLevelControlPage() {
             <Lock className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">High Level Control Portal</h1>
+            <h1 className="text-2xl font-black text-white tracking-tight">{tPortal("title")}</h1>
             <p className="text-sm text-zinc-400 mt-2">
-              Enter the central authorization token key configured in your API environment to manage platform legal entities.
+              {tPortal("subtitle")}
             </p>
           </div>
 
           <form onSubmit={handleAuthorize} className="space-y-4 text-left">
             <div className="space-y-2">
               <label htmlFor="token-key" className="text-xs font-semibold text-zinc-400">
-                Central Token Key
+                {tPortal("tokenLabel")}
               </label>
               <input
                 id="token-key"
                 type="password"
-                placeholder="nexus_central_secret"
+                placeholder={tPortal("tokenPlaceholder")}
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 className="w-full h-11 bg-zinc-900 border border-zinc-800 rounded-xl px-4 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
@@ -267,7 +270,7 @@ export default function HighLevelControlPage() {
               disabled={loading}
               className="w-full h-11 bg-primary hover:bg-primary/95 disabled:bg-zinc-800 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 hover:scale-[1.01] transition-all"
             >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Unlock Console"}
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : tPortal("unlockBtn")}
             </button>
           </form>
         </div>
@@ -284,9 +287,9 @@ export default function HighLevelControlPage() {
             N
           </div>
           <div>
-            <h1 className="text-md font-bold text-white leading-none">Nexus HR Central</h1>
+            <h1 className="text-md font-bold text-white leading-none">{tCommon("appName")} Central</h1>
             <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase">
-              High Level Control Console
+              {isId ? "Konsol Kontrol Tingkat Tinggi" : "High Level Control Console"}
             </span>
           </div>
         </div>
@@ -301,13 +304,13 @@ export default function HighLevelControlPage() {
           </Link>
           <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
             <Activity className="h-3.5 w-3.5 animate-pulse" />
-            System Control Active
+            {isId ? "Kontrol Sistem Aktif" : "System Control Active"}
           </div>
           <button
             onClick={handleLogoutConsole}
             className="px-3.5 py-1.5 rounded-lg border border-zinc-800 text-xs font-bold text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
           >
-            Lock Console
+            {isId ? "Kunci Konsol" : "Lock Console"}
           </button>
         </div>
       </header>
@@ -317,9 +320,9 @@ export default function HighLevelControlPage() {
         {/* Dashboard Title */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-black tracking-tight">Company Schemas Setup</h2>
+            <h2 className="text-2xl font-black tracking-tight">{tConsole("title")}</h2>
             <p className="text-sm text-zinc-400 mt-1">
-              Register new client organization companies, configure isolated database schemas, and map domain subfolders.
+              {tConsole("subtitle")}
             </p>
           </div>
           <button
@@ -327,7 +330,7 @@ export default function HighLevelControlPage() {
             className="flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-primary hover:bg-primary/95 font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.01] transition-all"
           >
             <Plus className="h-4 w-4" />
-            Register Company
+            {tConsole("registerBtn")}
           </button>
         </div>
 
@@ -338,7 +341,7 @@ export default function HighLevelControlPage() {
               <Building2 className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Total Active Companies</p>
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{tConsole("stats.activeCompanies")}</p>
               <h3 className="text-2xl font-black text-white mt-1">{tenants.length}</h3>
             </div>
           </div>
@@ -348,8 +351,8 @@ export default function HighLevelControlPage() {
               <Database className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Isolation Method</p>
-              <h3 className="text-md font-bold text-zinc-200 mt-1">PostgreSQL Schema-per-Tenant</h3>
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{tConsole("stats.isolationMethod")}</p>
+              <h3 className="text-md font-bold text-zinc-200 mt-1">{tConsole("stats.isolationDesc")}</h3>
             </div>
           </div>
 
@@ -358,8 +361,8 @@ export default function HighLevelControlPage() {
               <Globe className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Gateway Domain</p>
-              <h3 className="text-md font-bold text-zinc-200 mt-1">*.local (Dev Subdomain)</h3>
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{tConsole("stats.gatewayDomain")}</p>
+              <h3 className="text-md font-bold text-zinc-200 mt-1">{tConsole("stats.gatewayDesc")}</h3>
             </div>
           </div>
         </div>
@@ -367,7 +370,7 @@ export default function HighLevelControlPage() {
         {/* Tenant Table List */}
         <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl overflow-hidden shadow-xl">
           <div className="px-6 py-4 border-b border-zinc-850 bg-zinc-900/60">
-            <h3 className="text-sm font-bold text-zinc-200">Registered Company List</h3>
+            <h3 className="text-sm font-bold text-zinc-200">{tConsole("tableTitle")}</h3>
           </div>
 
           {tenants.length > 0 ? (
@@ -375,11 +378,11 @@ export default function HighLevelControlPage() {
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="border-b border-zinc-850 text-zinc-400 text-xs font-bold bg-zinc-950/40">
-                    <th className="px-6 py-4">Company Name</th>
-                    <th className="px-6 py-4">Slug Identifier</th>
-                    <th className="px-6 py-4">Mapped Domain</th>
-                    <th className="px-6 py-4">Date Provisioned</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-4">{tConsole("table.name")}</th>
+                    <th className="px-6 py-4">{tConsole("table.slug")}</th>
+                    <th className="px-6 py-4">{tConsole("table.domain")}</th>
+                    <th className="px-6 py-4">{tConsole("table.date")}</th>
+                    <th className="px-6 py-4 text-right">{tConsole("table.actions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-850">
@@ -410,7 +413,7 @@ export default function HighLevelControlPage() {
                             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
                           >
                             <ExternalLink className="h-3.5 w-3.5" />
-                            Portal
+                            {tConsole("portalBtn")}
                           </Link>
                           <button
                             onClick={() => {
@@ -421,7 +424,7 @@ export default function HighLevelControlPage() {
                             }}
                             disabled={actionLoading !== null}
                             className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-zinc-800 hover:border-blue-900 hover:bg-blue-950/20 text-zinc-400 hover:text-blue-400 transition-colors"
-                            title="Edit Company"
+                            title={tCommon("edit")}
                           >
                             <Edit className="h-3.5 w-3.5" />
                           </button>
@@ -429,7 +432,7 @@ export default function HighLevelControlPage() {
                             onClick={() => handleDeleteTenant(tenant.id, tenant.name)}
                             disabled={actionLoading !== null}
                             className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-zinc-800 hover:border-red-900 hover:bg-red-950/20 text-zinc-400 hover:text-red-400 transition-colors"
-                            title="Drop Company DB"
+                            title={tCommon("delete")}
                           >
                             {actionLoading === tenant.id ? (
                               <Loader2 className="h-3.5 w-3.5 animate-spin text-red-500" />
@@ -447,7 +450,7 @@ export default function HighLevelControlPage() {
           ) : (
             <div className="text-center py-12 text-zinc-500 flex flex-col items-center gap-2">
               <Building2 className="h-8 w-8 text-zinc-600" />
-              <span>No companies registered yet. Add your first company above.</span>
+              <span>{tConsole("noTenants")}</span>
             </div>
           )}
         </div>
@@ -457,8 +460,8 @@ export default function HighLevelControlPage() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-zinc-850 flex items-center justify-between">
-              <h3 className="font-bold text-white">Register New Company</h3>
+            <div className="px-6 py-4 border-b border-zinc-855 flex items-center justify-between">
+              <h3 className="font-bold text-white">{tConsole("modalAdd.title")}</h3>
               <button
                 onClick={() => setShowAddModal(false)}
                 className="text-zinc-400 hover:text-white font-bold text-sm"
@@ -469,11 +472,11 @@ export default function HighLevelControlPage() {
 
             <form onSubmit={handleRegisterTenant} className="p-6 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Organization / Company Name</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalAdd.name")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. HBM Manufacturing"
+                  placeholder={tConsole("modalAdd.namePlaceholder")}
                   value={newTenantName}
                   onChange={(e) => {
                     setNewTenantName(e.target.value);
@@ -482,27 +485,27 @@ export default function HighLevelControlPage() {
                       setNewTenantSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-"));
                     }
                   }}
-                  className="w-full h-10 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full h-10 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Subdomain Slug (alphanumeric)</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalAdd.slug")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. hbm-mfg"
+                  placeholder={tConsole("modalAdd.slugPlaceholder")}
                   value={newTenantSlug}
                   onChange={(e) => setNewTenantSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
-                  className="w-full h-10 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-mono"
+                  className="w-full h-10 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-mono"
                 />
                 <span className="text-[10px] text-zinc-500">
-                  This becomes the subdomain: e.g. <span className="font-mono text-zinc-400">{newTenantSlug || "slug"}.local</span>
+                  {tConsole("modalAdd.slugHint", { slug: newTenantSlug || "slug" })}
                 </span>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Company Logo (Optional)</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalAdd.logo")}</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -511,7 +514,7 @@ export default function HighLevelControlPage() {
                       setNewTenantLogo(e.target.files[0]);
                     }
                   }}
-                  className="w-full h-11 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-sm text-zinc-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 transition-all"
+                  className="w-full h-11 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 py-2 text-sm text-zinc-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 transition-all"
                 />
               </div>
 
@@ -521,7 +524,7 @@ export default function HighLevelControlPage() {
                   onClick={() => setShowAddModal(false)}
                   className="flex-1 h-10 rounded-lg border border-zinc-800 font-semibold text-sm hover:bg-zinc-850 transition-colors"
                 >
-                  Cancel
+                  {tConsole("modalAdd.cancel")}
                 </button>
                 <button
                   type="submit"
@@ -531,7 +534,7 @@ export default function HighLevelControlPage() {
                   {actionLoading === "register" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    "Initialize Schema"
+                    tConsole("modalAdd.submit")
                   )}
                 </button>
               </div>
@@ -545,7 +548,7 @@ export default function HighLevelControlPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-zinc-850 flex items-center justify-between">
-              <h3 className="font-bold text-white">Edit Company</h3>
+              <h3 className="font-bold text-white">{tConsole("modalEdit.title")}</h3>
               <button
                 onClick={() => {
                   setShowEditModal(false);
@@ -560,38 +563,38 @@ export default function HighLevelControlPage() {
 
             <form onSubmit={handleUpdateTenant} className="p-6 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Organization / Company Name</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalEdit.name")}</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. HBM Manufacturing"
                   value={editTenantName}
                   onChange={(e) => setEditTenantName(e.target.value)}
-                  className="w-full h-10 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full h-10 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Subdomain Slug (alphanumeric)</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalEdit.slug")}</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. hbm-mfg"
                   value={editTenantSlug}
                   onChange={(e) => setEditTenantSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
-                  className="w-full h-10 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-mono"
+                  className="w-full h-10 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-mono"
                 />
                 <span className="text-[10px] text-zinc-500">
-                  This becomes the subdomain: e.g. <span className="font-mono text-zinc-400">{editTenantSlug || "slug"}.local</span>
+                  {tConsole("modalEdit.slugHint", { slug: editTenantSlug || "slug" })}
                 </span>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-400">Company Logo (Optional)</label>
+                <label className="text-xs font-semibold text-zinc-400">{tConsole("modalEdit.logo")}</label>
                 {editingTenant?.logo_url && (
-                  <div className="flex items-center gap-3 p-2 bg-zinc-950 border border-zinc-850 rounded-lg mb-2">
+                  <div className="flex items-center gap-3 p-2 bg-zinc-955 border border-zinc-850 rounded-lg mb-2">
                     <CompanyLogo src={editingTenant.logo_url} name={editingTenant.name} size="md" variant="letter" className="rounded-md" />
-                    <span className="text-[10px] text-zinc-500">Current Logo</span>
+                    <span className="text-[10px] text-zinc-505">{tConsole("modalEdit.currentLogo")}</span>
                   </div>
                 )}
                 <input
@@ -602,7 +605,7 @@ export default function HighLevelControlPage() {
                       setEditTenantLogo(e.target.files[0]);
                     }
                   }}
-                  className="w-full h-11 bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-sm text-zinc-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 transition-all"
+                  className="w-full h-11 bg-zinc-955 border border-zinc-800 rounded-lg px-3.5 py-2 text-sm text-zinc-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 transition-all"
                 />
               </div>
 
@@ -616,7 +619,7 @@ export default function HighLevelControlPage() {
                   }}
                   className="flex-1 h-10 rounded-lg border border-zinc-800 font-semibold text-sm hover:bg-zinc-850 transition-colors"
                 >
-                  Cancel
+                  {tConsole("modalEdit.cancel")}
                 </button>
                 <button
                   type="submit"
@@ -626,7 +629,7 @@ export default function HighLevelControlPage() {
                   {actionLoading === "update" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    "Save Changes"
+                    tConsole("modalEdit.submit")
                   )}
                 </button>
               </div>

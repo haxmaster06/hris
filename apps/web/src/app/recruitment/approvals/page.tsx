@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface HiringApproval {
   id: string;
@@ -44,6 +45,8 @@ interface HiringApproval {
 }
 
 export default function HiringApprovalsQueue() {
+  const t = useTranslations("recruitment.approvals");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -87,11 +90,11 @@ export default function HiringApprovalsQueue() {
       queryClient.invalidateQueries({ queryKey: ["hiring-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["approvals-stats"] });
-      toast.success("Hiring stage approved successfully");
+      toast.success(t("toast.approveSuccess"));
       setIsDecisionOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to approve hiring stage");
+      toast.error(err.response?.data?.message || t("toast.approveFailed"));
     }
   });
 
@@ -102,11 +105,11 @@ export default function HiringApprovalsQueue() {
       queryClient.invalidateQueries({ queryKey: ["hiring-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["approvals-stats"] });
-      toast.success("Hiring stage rejected successfully");
+      toast.success(t("toast.rejectSuccess"));
       setIsDecisionOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to reject hiring stage");
+      toast.error(err.response?.data?.message || t("toast.rejectFailed"));
     }
   });
 
@@ -127,7 +130,7 @@ export default function HiringApprovalsQueue() {
       approveMutation.mutate({ id: selectedApproval.id, comments: commentsVal || undefined });
     } else {
       if (!commentsVal) {
-        toast.error("Comments are required for rejection");
+        toast.error(t("toast.rejectCommentsRequired"));
         return;
       }
       rejectMutation.mutate({ id: selectedApproval.id, comments: commentsVal });
@@ -150,8 +153,8 @@ export default function HiringApprovalsQueue() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Hiring Approvals"
-        subtitle="Review onboarding candidate dossiers and complete required approvals."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/recruitment"
       />
 
@@ -167,7 +170,7 @@ export default function HiringApprovalsQueue() {
                 : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900"
             }`}
           >
-            Pending Reviews
+            {t("pendingReviews")}
           </button>
           <button
             onClick={() => setStatusFilter("approved")}
@@ -177,7 +180,7 @@ export default function HiringApprovalsQueue() {
                 : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900"
             }`}
           >
-            Approved Log
+            {t("approvedLog")}
           </button>
           <button
             onClick={() => setStatusFilter("rejected")}
@@ -187,7 +190,7 @@ export default function HiringApprovalsQueue() {
                 : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900"
             }`}
           >
-            Rejected Log
+            {t("rejectedLog")}
           </button>
         </div>
 
@@ -195,12 +198,12 @@ export default function HiringApprovalsQueue() {
         {isLoading ? (
           <div className="h-64 flex flex-col justify-center items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-            <p className="text-sm text-zinc-500">Loading hiring approvals...</p>
+            <p className="text-sm text-zinc-500">{t("loading")}</p>
           </div>
         ) : approvals?.length === 0 ? (
           <div className="h-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl flex flex-col justify-center items-center gap-3">
             <UserCheck className="h-8 w-8 text-zinc-300" />
-            <p className="text-sm text-zinc-500">No approvals found for this status.</p>
+            <p className="text-sm text-zinc-500">{t("noApprovals")}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -209,9 +212,9 @@ export default function HiringApprovalsQueue() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border tracking-wider ${getStageBadge(appr.stage)}`}>
-                      {appr.stage} stage
+                      {t("stageLabel", { stage: appr.stage })}
                     </span>
-                    <span className="text-zinc-400 text-xs">Assigned to: {appr.approver?.name || "HR System"}</span>
+                    <span className="text-zinc-400 text-xs">{t("assignedTo", { name: appr.approver?.name || "HR System" })}</span>
                   </div>
 
                   <div>
@@ -219,15 +222,15 @@ export default function HiringApprovalsQueue() {
                       {appr.application?.candidate?.first_name} {appr.application?.candidate?.last_name}
                     </h3>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 font-medium mt-1">
-                      Applying for: <span className="text-zinc-950 dark:text-zinc-100 font-bold">{appr.application?.vacancy?.title}</span>
+                      {t("applyingFor", { title: appr.application?.vacancy?.title || "" })}
                     </p>
                   </div>
 
                   {appr.comments && (
-                    <div className="flex items-start gap-2 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-2.5 border border-zinc-100 dark:border-zinc-800 max-w-lg text-xs">
+                    <div className="flex items-start gap-2 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-2.5 border border-zinc-150 dark:border-zinc-800 max-w-lg text-xs">
                       <MessageSquare className="h-4 w-4 text-zinc-400 mt-0.5 shrink-0" />
                       <div>
-                        <span className="font-bold text-zinc-700 dark:text-zinc-300">Comments: </span>
+                        <span className="font-bold text-zinc-700 dark:text-zinc-300">{t("comments")}</span>
                         <span className="text-zinc-600 dark:text-zinc-400 italic">"{appr.comments}"</span>
                       </div>
                     </div>
@@ -238,15 +241,15 @@ export default function HiringApprovalsQueue() {
                   <div className="flex items-center gap-3 shrink-0">
                     <button
                       onClick={() => handleOpenDecision(appr, "reject")}
-                      className="px-4 py-2 border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/30 dark:text-red-400 dark:hover:bg-red-950/20 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5"
+                      className="px-4 py-2 border border-red-200 text-red-650 hover:bg-red-50 dark:border-red-900/30 dark:text-red-400 dark:hover:bg-red-950/20 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5"
                     >
-                      <XCircle className="h-4 w-4" /> Reject
+                      <XCircle className="h-4 w-4" /> {t("modalRejectTitle")}
                     </button>
                     <button
                       onClick={() => handleOpenDecision(appr, "approve")}
                       className="px-4 py-2 bg-emerald-600 text-white hover:opacity-90 text-sm font-semibold rounded-lg transition-opacity flex items-center gap-1.5"
                     >
-                      <CheckCircle2 className="h-4 w-4" /> Approve
+                      <CheckCircle2 className="h-4 w-4" /> {t("modalApproveTitle")}
                     </button>
                   </div>
                 ) : (
@@ -257,7 +260,7 @@ export default function HiringApprovalsQueue() {
                         : "bg-red-50 text-red-700 border border-red-250 dark:bg-red-950/20 dark:text-red-400"
                     }`}>
                       {appr.status === "approved" ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-                      {appr.status}
+                      {appr.status === "approved" ? t("modalApproveTitle") : t("modalRejectTitle")}
                     </span>
                   </div>
                 )}
@@ -273,22 +276,22 @@ export default function HiringApprovalsQueue() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">
-                {decisionType === "approve" ? "Approve Hiring Request" : "Reject Hiring Request"}
+                {decisionType === "approve" ? t("modalApproveTitle") : t("modalRejectTitle")}
               </h2>
               <button onClick={() => setIsDecisionOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleDecisionSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
-                  Comments {decisionType === "reject" ? "(Required)" : "(Optional)"}
+                  {t("commentsLabel")} {decisionType === "reject" ? t("commentsRequired") : t("commentsOptional")}
                 </label>
                 <textarea
                   required={decisionType === "reject"}
                   rows={3}
-                  placeholder={decisionType === "approve" ? "Write any additional notes..." : "Please state the reason for rejection..."}
+                  placeholder={decisionType === "approve" ? t("approvePlaceholder") : t("rejectPlaceholder")}
                   value={commentsVal}
                   onChange={(e) => setCommentsVal(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -301,7 +304,7 @@ export default function HiringApprovalsQueue() {
                   onClick={() => setIsDecisionOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
@@ -311,8 +314,8 @@ export default function HiringApprovalsQueue() {
                   }`}
                 >
                   {decisionType === "approve"
-                    ? (approveMutation.isPending ? "Approving..." : "Confirm Approve")
-                    : (rejectMutation.isPending ? "Rejecting..." : "Confirm Reject")
+                    ? (approveMutation.isPending ? tCommon("loading") : t("confirmApprove"))
+                    : (rejectMutation.isPending ? tCommon("loading") : t("confirmReject"))
                   }
                 </button>
               </div>

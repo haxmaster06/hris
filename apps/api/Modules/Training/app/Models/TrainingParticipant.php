@@ -25,10 +25,16 @@ class TrainingParticipant extends BaseModel
         'result_status',
         'score',
         'remarks',
+        'pre_score',
+        'post_score',
+        'certificate_issued',
     ];
 
     protected $casts = [
         'score' => 'decimal:2',
+        'pre_score' => 'decimal:2',
+        'post_score' => 'decimal:2',
+        'certificate_issued' => 'boolean',
     ];
 
     /**

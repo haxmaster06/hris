@@ -20,6 +20,7 @@ class UploadDocumentRequest extends FormRequest
             'employee_id' => ['nullable', 'uuid', 'exists:employees,id'],
             'document_category_id' => ['nullable', 'uuid', 'exists:document_categories,id'],
             'expiry_date' => ['nullable', 'date'],
+            'document_type' => ['nullable', 'string', 'max:50'],
         ];
     }
 }

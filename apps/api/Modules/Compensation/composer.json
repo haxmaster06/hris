@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/compensation",
+    "description": "Compensation and Benefits module for HRIS",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Compensation\\": "app/",
+            "Modules\\Compensation\\Database\\Factories\\": "database/factories/",
+            "Modules\\Compensation\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Compensation\\Tests\\": "tests/"
+        }
+    }
+}

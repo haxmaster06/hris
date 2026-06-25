@@ -23,6 +23,20 @@ class Training extends BaseModel
         'category',
         'type',
         'description',
+        'budget',
+        'actual_cost',
+        'vendor',
+        'pre_test_score',
+        'post_test_score',
+        'effectiveness_rating',
+    ];
+
+    protected $casts = [
+        'budget' => 'decimal:2',
+        'actual_cost' => 'decimal:2',
+        'pre_test_score' => 'decimal:2',
+        'post_test_score' => 'decimal:2',
+        'effectiveness_rating' => 'decimal:2',
     ];
 
     /**

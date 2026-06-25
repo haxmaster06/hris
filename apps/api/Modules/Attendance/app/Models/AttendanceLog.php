@@ -26,11 +26,19 @@ class AttendanceLog extends BaseModel
         'check_out_ip',
         'status',
         'work_hours',
+        'latitude',
+        'longitude',
+        'accuracy',
+        'check_in_address',
+        'check_out_address',
     ];
 
     protected $casts = [
         'date' => 'date',
         'work_hours' => 'decimal:2',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+        'accuracy' => 'decimal:2',
     ];
 
     public function employee(): BelongsTo

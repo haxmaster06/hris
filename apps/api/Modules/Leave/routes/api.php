@@ -7,6 +7,7 @@ use App\Http\Middleware\InitializeTenancy;
 use Modules\Leave\Http\Controllers\LeaveTypeController;
 use Modules\Leave\Http\Controllers\LeaveBalanceController;
 use Modules\Leave\Http\Controllers\LeaveRequestController;
+use Modules\Leave\Http\Controllers\HolidayController;
 
 Route::middleware([
     InitializeTenancy::class,
@@ -25,4 +26,7 @@ Route::middleware([
     Route::get('leave-requests/{leave_request}', [LeaveRequestController::class, 'show']);
     Route::post('leave-requests/{leave_request}/approve', [LeaveRequestController::class, 'approve']);
     Route::post('leave-requests/{leave_request}/reject', [LeaveRequestController::class, 'reject']);
+
+    // Holidays
+    Route::apiResource('holidays', HolidayController::class);
 });

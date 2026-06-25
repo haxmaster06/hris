@@ -23,6 +23,7 @@ class Document extends BaseModel
         'storage_provider',
         'storage_path',
         'expiry_date',
+        'document_type',
     ];
 
     protected $casts = [
@@ -43,5 +44,10 @@ class Document extends BaseModel
     public function category(): BelongsTo
     {
         return $this->belongsTo(DocumentCategory::class, 'document_category_id');
+    }
+
+    public function versions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DocumentVersion::class, 'document_id');
     }
 }

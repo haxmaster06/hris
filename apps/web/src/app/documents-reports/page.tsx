@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import { useTranslations } from "next-intl";
 
 interface Employee {
   id: string;
@@ -39,12 +40,23 @@ interface DocumentItem {
   file_size: number;
   mime_type: string;
   expiry_date: string | null;
+  document_type: string | null;
+  versions?: Array<{
+    id: string;
+    version_number: number;
+    file_path: string;
+    file_size: number;
+    notes?: string;
+    created_at: string;
+  }>;
   category?: { name: string };
   signed_url?: string;
   storage_path: string;
 }
 
 export default function DocumentsReportsPage() {
+  const t = useTranslations("documents");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -53,9 +65,11 @@ export default function DocumentsReportsPage() {
 
   // Document Form Upload State
   const [docCategoryId, setDocCategoryId] = useState("");
+  const [docType, setDocType] = useState("other");
   const [expiryDate, setExpiryDate] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
 
   // Reports Form State
   const [empReportStatus, setEmpReportStatus] = useState("");
@@ -123,9 +137,9 @@ export default function DocumentsReportsPage() {
     mutationFn: (id: string) => api.delete(`/documents/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employee-documents", selectedEmpId] });
-      toast.success("Document removed from vault.");
+      toast.success(t("toast.deleteSuccess"));
     },
-    onError: (err: any) => toast.error(err.response?.data?.message || "Failed to delete document"),
+    onError: (err: any) => toast.error(err.response?.data?.message || t("toast.deleteFailed")),
   });
 
   if (!mounted || !isAuthenticated) return null;
@@ -138,8 +152,8 @@ export default function DocumentsReportsPage() {
 
   const handleUploadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) return toast.error("Please choose a file to upload");
-    if (!selectedEmpId) return toast.error("Please select an employee context");
+    if (!selectedFile) return toast.error(t("toast.chooseFileError"));
+    if (!selectedEmpId) return toast.error(t("toast.selectEmployeeError"));
 
     setIsUploading(true);
     const formData = new FormData();
@@ -148,6 +162,9 @@ export default function DocumentsReportsPage() {
     if (expiryDate) {
       formData.append("expiry_date", expiryDate);
     }
+    if (docType) {
+      formData.append("document_type", docType);
+    }
 
     try {
       await api.post(`/employees/${selectedEmpId}/documents`, formData, {
@@ -155,12 +172,13 @@ export default function DocumentsReportsPage() {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Document uploaded successfully to MinIO/S3!");
+      toast.success(t("toast.uploadSuccess"));
       setSelectedFile(null);
       setExpiryDate("");
+      setDocType("other");
       queryClient.invalidateQueries({ queryKey: ["employee-documents", selectedEmpId] });
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Upload failed");
+      toast.error(err.response?.data?.message || t("toast.uploadFailed"));
     } finally {
       setIsUploading(false);
     }
@@ -169,7 +187,7 @@ export default function DocumentsReportsPage() {
   // Reusable CSV conversion and download handler
   const triggerCSVDownload = (data: any[], filename: string) => {
     if (data.length === 0) {
-      toast.warning("No data found to export.");
+      toast.warning(t("toast.noDataExport"));
       return;
     }
     const headers = Object.keys(data[0]);
@@ -195,7 +213,7 @@ export default function DocumentsReportsPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success(`${filename} exported successfully.`);
+    toast.success(t("toast.exportSuccess", { filename }));
   };
 
   // Export Employee Report
@@ -212,7 +230,7 @@ export default function DocumentsReportsPage() {
       const data = res.data.data?.data || res.data.data || [];
       triggerCSVDownload(data, `employee_report_${Date.now()}.csv`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Export failed");
+      toast.error(err.response?.data?.message || t("toast.exportFailed"));
     } finally {
       setIsEmpReportLoading(false);
     }
@@ -221,7 +239,7 @@ export default function DocumentsReportsPage() {
   // Export Attendance Report
   const handleExportAttendance = async () => {
     if (!attReportStart || !attReportEnd) {
-      return toast.error("Start and end date are required");
+      return toast.error(t("toast.dateRequiredError"));
     }
     setIsAttReportLoading(true);
     try {
@@ -248,7 +266,7 @@ export default function DocumentsReportsPage() {
       }));
       triggerCSVDownload(flattened, `attendance_report_${attReportStart}_to_${attReportEnd}.csv`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Export failed");
+      toast.error(err.response?.data?.message || t("toast.exportFailed"));
     } finally {
       setIsAttReportLoading(false);
     }
@@ -257,7 +275,7 @@ export default function DocumentsReportsPage() {
   // Export Leave Report
   const handleExportLeave = async () => {
     if (!leaveReportYear) {
-      return toast.error("Year is required");
+      return toast.error(t("toast.yearRequiredError"));
     }
     setIsLeaveReportLoading(true);
     try {
@@ -286,7 +304,7 @@ export default function DocumentsReportsPage() {
       });
       triggerCSVDownload(flattened, `leave_report_${leaveReportYear}.csv`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Export failed");
+      toast.error(err.response?.data?.message || t("toast.exportFailed"));
     } finally {
       setIsLeaveReportLoading(false);
     }
@@ -295,15 +313,15 @@ export default function DocumentsReportsPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header 
-        title="Documents & Reports" 
-        subtitle="Vault files securely to S3/MinIO and generate CSV export reports."
+        title={t("pageTitle")} 
+        subtitle={t("subtitle")}
         backUrl="/dashboard"
       />
 
       <main className="max-w-6xl mx-auto px-6 mt-8 space-y-6">
         {/* Context Selector Card */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-4 shadow-sm text-zinc-900 dark:text-zinc-100">
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Active Employee Context Filter</span>
+          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t("activeEmployeeFilter")}</span>
           <select
             value={selectedEmpId}
             onChange={(e) => setSelectedEmpId(e.target.value)}
@@ -323,19 +341,19 @@ export default function DocumentsReportsPage() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm space-y-6">
             <h3 className="text-md font-bold text-zinc-950 dark:text-zinc-50 flex items-center gap-2">
               <FolderLock className="h-5 w-5 text-zinc-500" />
-              Document Vault
+              {t("vaultTitle")}
             </h3>
 
             {/* Document Upload Form */}
             <form onSubmit={handleUploadSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Category</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("category")}</label>
                   <select
                     value={docCategoryId}
                     onChange={(e) => setDocCategoryId(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2"
+                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
                   >
                     {categories?.map((cat) => (
                       <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
@@ -343,7 +361,22 @@ export default function DocumentsReportsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Expiry Date (Optional)</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Doc Type</label>
+                  <select
+                    value={docType}
+                    onChange={(e) => setDocType(e.target.value)}
+                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-sm focus:outline-none"
+                  >
+                    <option value="ktp">KTP / ID Card</option>
+                    <option value="npwp">NPWP / Tax Card</option>
+                    <option value="contract">Employment Contract</option>
+                    <option value="certificate">Certification</option>
+                    <option value="transcript">Academic Transcript</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">{t("expiryDate")}</label>
                   <input
                     type="date"
                     value={expiryDate}
@@ -365,9 +398,9 @@ export default function DocumentsReportsPage() {
                 <div className="space-y-2">
                   <UploadCloud className="h-10 w-10 text-zinc-400 mx-auto" />
                   <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                    {selectedFile ? selectedFile.name : "Drag & drop files or click to upload"}
+                    {selectedFile ? selectedFile.name : t("dragDropHint")}
                   </p>
-                  <p className="text-[10px] text-zinc-400">PDF, JPG, PNG up to 10MB</p>
+                  <p className="text-[10px] text-zinc-400">{t("fileLimitHint")}</p>
                 </div>
               </div>
 
@@ -378,7 +411,7 @@ export default function DocumentsReportsPage() {
                   className="inline-flex items-center gap-2 py-2 px-5 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
                 >
                   {isUploading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  Upload File
+                  {t("uploadButton")}
                 </button>
               </div>
             </form>
@@ -386,56 +419,104 @@ export default function DocumentsReportsPage() {
 
           {/* Uploaded Documents List */}
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm space-y-4">
-            <h4 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">Vaulted Files</h4>
+            <h4 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">{t("vaultedFiles")}</h4>
             {isLoadingDocs ? (
               <div className="flex justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
               </div>
             ) : !documents || documents.length === 0 ? (
-              <p className="text-xs text-zinc-500 italic">No files vaulted for this employee.</p>
+              <p className="text-xs text-zinc-500 italic">{t("noFiles")}</p>
             ) : (
               <div className="space-y-3">
-                {documents.map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="flex justify-between items-center p-3 border border-zinc-150 dark:border-zinc-900 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/10 hover:bg-zinc-50 dark:hover:bg-zinc-900/30 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                        <FileText className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 max-w-[200px] truncate" title={doc.original_name}>
-                          {doc.original_name}
-                        </p>
-                        <p className="text-[10px] text-zinc-400 uppercase font-medium">
-                          {doc.category?.name || "General"} &bull; {(doc.file_size / 1024).toFixed(1)} KB
-                        </p>
-                      </div>
-                    </div>
+                {documents.map((doc) => {
+                  const isExpiringSoon = doc.expiry_date && (new Date(doc.expiry_date).getTime() - new Date().getTime()) < 30 * 24 * 60 * 60 * 1000;
+                  const isExpired = doc.expiry_date && new Date(doc.expiry_date).getTime() < new Date().getTime();
 
-                    <div className="flex items-center gap-1.5">
-                      {doc.signed_url && (
-                        <a
-                          href={doc.signed_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-                          title="Download Document"
-                        >
-                          <Download className="h-4 w-4" />
-                        </a>
+                  return (
+                    <div 
+                      key={doc.id}
+                      className="border border-zinc-150 dark:border-zinc-900 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/10 hover:bg-zinc-50 dark:hover:bg-zinc-900/30 transition-colors p-3 space-y-2.5"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                            <FileText className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 max-w-[200px] truncate" title={doc.original_name}>
+                              {doc.original_name}
+                            </p>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-[9px] uppercase bg-zinc-100 dark:bg-zinc-900 text-zinc-500 px-1.5 py-0.5 rounded font-medium">
+                                {doc.document_type || "Other"}
+                              </span>
+                              <span className="text-[9px] text-zinc-400 uppercase font-medium">
+                                {doc.category?.name || "General"} &bull; {(doc.file_size / 1024).toFixed(1)} KB
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          {doc.expiry_date && (
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                              isExpired 
+                                ? "bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-400"
+                                : isExpiringSoon
+                                ? "bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400"
+                                : "bg-zinc-100 text-zinc-500"
+                            }`}>
+                              <Clock className="h-3 w-3" />
+                              {isExpired ? "Expired" : isExpiringSoon ? "Expiring Soon" : `Expires: ${new Date(doc.expiry_date).toLocaleDateString()}`}
+                            </span>
+                          )}
+                          {doc.signed_url && (
+                            <a
+                              href={doc.signed_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                              title={t("downloadTooltip")}
+                            >
+                              <Download className="h-4 w-4" />
+                            </a>
+                          )}
+                          <button
+                            onClick={() => deleteDocMutation.mutate(doc.id)}
+                            className="p-1.5 rounded-md text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20"
+                            title={t("deleteTooltip")}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Versions History expander */}
+                      {doc.versions && doc.versions.length > 0 && (
+                        <div className="border-t border-zinc-200/50 dark:border-zinc-900/50 pt-2 text-[10px]">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedDocId(expandedDocId === doc.id ? null : doc.id)}
+                            className="text-blue-500 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                          >
+                            {expandedDocId === doc.id ? "Hide version history" : `Show versions (${doc.versions.length})`}
+                          </button>
+
+                          {expandedDocId === doc.id && (
+                            <div className="mt-2 space-y-1.5 pl-3 border-l-2 border-zinc-200 dark:border-zinc-800">
+                              {doc.versions.map((ver) => (
+                                <div key={ver.id} className="flex justify-between text-zinc-500">
+                                  <span>v{ver.version_number} &bull; {(ver.file_size / 1024).toFixed(1)} KB</span>
+                                  <span>{new Date(ver.created_at).toLocaleDateString()}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       )}
-                      <button
-                        onClick={() => deleteDocMutation.mutate(doc.id)}
-                        className="p-1.5 rounded-md text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20"
-                        title="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -446,14 +527,14 @@ export default function DocumentsReportsPage() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm space-y-6">
             <h3 className="text-md font-bold text-zinc-950 dark:text-zinc-50 flex items-center gap-2">
               <FileSpreadsheet className="h-5 w-5 text-zinc-500" />
-              Report Export Center
+              {t("reportCenterTitle")}
             </h3>
 
             {/* 1. Employee Report Card */}
             <div className="p-4 border border-zinc-150 dark:border-zinc-900 rounded-xl space-y-4 bg-zinc-50/50 dark:bg-zinc-900/10">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-blue-500" />
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">Employee List Report</h4>
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">{t("empReportTitle")}</h4>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <select
@@ -461,17 +542,17 @@ export default function DocumentsReportsPage() {
                   onChange={(e) => setEmpReportStatus(e.target.value)}
                   className="px-3 py-1.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 text-xs focus:outline-none"
                 >
-                  <option value="">All Statuses</option>
-                  <option value="probation">Probation</option>
-                  <option value="contract">Contract</option>
-                  <option value="permanent">Permanent</option>
+                  <option value="">{tCommon("allStatuses")}</option>
+                  <option value="probation">{tCommon("probation") || "probation"}</option>
+                  <option value="contract">{tCommon("contract") || "contract"}</option>
+                  <option value="permanent">{tCommon("permanent") || "permanent"}</option>
                 </select>
                 <select
                   value={empReportDept}
                   onChange={(e) => setEmpReportDept(e.target.value)}
                   className="px-3 py-1.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 text-xs focus:outline-none"
                 >
-                  <option value="">All Departments</option>
+                  <option value="">{tCommon("allDepartments")}</option>
                   {departments?.map((d: any) => (
                     <option key={d.id} value={d.id}>{d.name}</option>
                   ))}
@@ -483,7 +564,7 @@ export default function DocumentsReportsPage() {
                 className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
               >
                 {isEmpReportLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-                Export Employee Report (CSV)
+                {t("exportEmpButton")}
               </button>
             </div>
 
@@ -491,11 +572,11 @@ export default function DocumentsReportsPage() {
             <div className="p-4 border border-zinc-150 dark:border-zinc-900 rounded-xl space-y-4 bg-zinc-50/50 dark:bg-zinc-900/10">
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-amber-500" />
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">Attendance Logs Summary</h4>
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">{t("attendanceReportTitle")}</h4>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-zinc-500 mb-1">Start Date</label>
+                  <label className="block text-[10px] text-zinc-500 mb-1">{t("startDate")}</label>
                   <input
                     type="date"
                     required
@@ -505,7 +586,7 @@ export default function DocumentsReportsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-zinc-500 mb-1">End Date</label>
+                  <label className="block text-[10px] text-zinc-500 mb-1">{t("endDate")}</label>
                   <input
                     type="date"
                     required
@@ -521,7 +602,7 @@ export default function DocumentsReportsPage() {
                 className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
               >
                 {isAttReportLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-                Export Attendance Summary (CSV)
+                {t("exportAttButton")}
               </button>
             </div>
 
@@ -529,10 +610,10 @@ export default function DocumentsReportsPage() {
             <div className="p-4 border border-zinc-150 dark:border-zinc-900 rounded-xl space-y-4 bg-zinc-50/50 dark:bg-zinc-900/10">
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-purple-500" />
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">Leave Balance & Requests</h4>
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">{t("leaveReportTitle")}</h4>
               </div>
               <div className="space-y-2">
-                <label className="block text-[10px] text-zinc-500">Target Year</label>
+                <label className="block text-[10px] text-zinc-500">{t("targetYear")}</label>
                 <input
                   type="number"
                   required
@@ -548,7 +629,7 @@ export default function DocumentsReportsPage() {
                 className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
               >
                 {isLeaveReportLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-                Export Leave Report (CSV)
+                {t("exportLeaveButton")}
               </button>
             </div>
           </div>

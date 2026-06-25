@@ -15,6 +15,8 @@ use Modules\Employee\Repositories\EmployeeExperienceRepositoryInterface;
 use Modules\Employee\Repositories\EmployeeExperienceRepository;
 use Modules\Employee\Repositories\EmployeeHistoryRepositoryInterface;
 use Modules\Employee\Repositories\EmployeeHistoryRepository;
+use Modules\Employee\Repositories\EmergencyContactRepositoryInterface;
+use Modules\Employee\Repositories\EmergencyContactRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -28,5 +30,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(EmployeeEducationRepositoryInterface::class, EmployeeEducationRepository::class);
         $this->app->singleton(EmployeeExperienceRepositoryInterface::class, EmployeeExperienceRepository::class);
         $this->app->singleton(EmployeeHistoryRepositoryInterface::class, EmployeeHistoryRepository::class);
+        $this->app->singleton(EmergencyContactRepositoryInterface::class, EmergencyContactRepository::class);
     }
 }

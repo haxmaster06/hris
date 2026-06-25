@@ -23,6 +23,8 @@ class Candidate extends BaseModel
         'email',
         'phone',
         'resume_path',
+        'talent_pool_status',
+        'pool_notes',
     ];
 
     public function applications(): HasMany

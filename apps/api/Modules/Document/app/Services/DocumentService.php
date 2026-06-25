@@ -21,7 +21,8 @@ class DocumentService
         UploadedFile $file,
         ?string $employeeId = null,
         ?string $categoryId = null,
-        ?string $expiryDate = null
+        ?string $expiryDate = null,
+        ?string $documentType = null
     ): Document {
         // Tentukan tenant ID untuk pemisahan folder
         $tenantId = tenant('id') ?? 'central';
@@ -55,6 +56,7 @@ class DocumentService
             'storage_provider' => 's3',
             'storage_path' => $storagePath,
             'expiry_date' => $expiryDate,
+            'document_type' => $documentType,
         ]);
     }
 

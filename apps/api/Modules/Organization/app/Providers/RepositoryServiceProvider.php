@@ -17,6 +17,8 @@ use Modules\Organization\Repositories\PositionRepositoryInterface;
 use Modules\Organization\Repositories\PositionRepository;
 use Modules\Organization\Repositories\GradeRepositoryInterface;
 use Modules\Organization\Repositories\GradeRepository;
+use Modules\Organization\Repositories\CostCenterRepositoryInterface;
+use Modules\Organization\Repositories\CostCenterRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(DivisionRepositoryInterface::class, DivisionRepository::class);
         $this->app->singleton(PositionRepositoryInterface::class, PositionRepository::class);
         $this->app->singleton(GradeRepositoryInterface::class, GradeRepository::class);
+        $this->app->singleton(CostCenterRepositoryInterface::class, CostCenterRepository::class);
     }
 }

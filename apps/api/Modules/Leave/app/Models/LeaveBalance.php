@@ -44,4 +44,36 @@ class LeaveBalance extends BaseModel
     {
         return $this->belongsTo(LeaveType::class);
     }
+
+    /**
+     * Carry forward remaining leave balances from previous year to target year.
+     * Roll over maximum 5 days.
+     */
+    public static function carryForward(int $year): void
+    {
+        $previousBalances = self::where('year', $year - 1)->get();
+
+        foreach ($previousBalances as $prev) {
+            $carried = min($prev->remaining, 5);
+            if ($carried <= 0) {
+                continue;
+            }
+
+            $newBalance = self::firstOrNew([
+                'employee_id' => $prev->employee_id,
+                'leave_type_id' => $prev->leave_type_id,
+                'year' => $year,
+            ]);
+
+            if (!$newBalance->exists) {
+                $newBalance->entitled = $prev->leaveType ? ($prev->leaveType->default_days ?? 12) : 12;
+                $newBalance->used = 0;
+                $newBalance->pending = 0;
+            }
+
+            $newBalance->entitled += $carried;
+            $newBalance->remaining = $newBalance->entitled - $newBalance->used - $newBalance->pending;
+            $newBalance->save();
+        }
+    }
 }

@@ -7,6 +7,8 @@ use App\Http\Middleware\InitializeTenancy;
 use Modules\Attendance\Http\Controllers\AttendanceController;
 use Modules\Attendance\Http\Controllers\ShiftController;
 use Modules\Attendance\Http\Controllers\EmployeeShiftController;
+use Modules\Attendance\Http\Controllers\AttendanceCorrectionController;
+use Modules\Attendance\Http\Controllers\OvertimeRequestController;
 
 Route::middleware([
     InitializeTenancy::class,
@@ -22,4 +24,12 @@ Route::middleware([
 
     // Employee shifts mapping routes
     Route::apiResource('employee-shifts', EmployeeShiftController::class);
+
+    // Attendance corrections
+    Route::post('attendance-corrections/{id}/approve', [AttendanceCorrectionController::class, 'approve']);
+    Route::apiResource('attendance-corrections', AttendanceCorrectionController::class);
+
+    // Overtime requests
+    Route::post('overtime-requests/{id}/approve', [OvertimeRequestController::class, 'approve']);
+    Route::apiResource('overtime-requests', OvertimeRequestController::class);
 });

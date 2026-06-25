@@ -17,8 +17,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import { useTranslations } from "next-intl";
 
 export default function TrainingDashboard() {
+  const t = useTranslations("training.dashboard");
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const [mounted, setMounted] = useState(false);
@@ -59,16 +61,16 @@ export default function TrainingDashboard() {
 
   const navigationCards = [
     {
-      title: "Master Trainings",
-      description: "Manage core training curriculum, category tracks, and internal/external configurations.",
+      title: t("cards.master.title"),
+      description: t("cards.master.desc"),
       icon: BookOpen,
       href: "/training/master",
       color: "from-blue-500/10 to-indigo-500/10 border-blue-200 dark:border-blue-900/30 text-blue-600 dark:text-blue-400",
       iconBg: "bg-blue-500 text-white"
     },
     {
-      title: "Training Sessions",
-      description: "Schedule training calendars, assign trainers, venues, and track execution status.",
+      title: t("cards.sessions.title"),
+      description: t("cards.sessions.desc"),
       icon: Calendar,
       href: "/training/sessions",
       color: "from-amber-500/10 to-orange-500/10 border-amber-200 dark:border-amber-900/30 text-amber-600 dark:text-amber-400",
@@ -76,11 +78,21 @@ export default function TrainingDashboard() {
     }
   ];
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "Completed": return t("status.completed" as any);
+      case "Scheduled": return t("status.scheduled" as any);
+      case "Ongoing": return t("status.ongoing" as any);
+      case "Cancelled": return t("status.cancelled" as any);
+      default: return status;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header 
-        title="Training Hub" 
-        subtitle="Establish corporate learning programs, plan training sessions, coordinate attendees, and log passing performance scores."
+        title={t("pageTitle")} 
+        subtitle={t("subtitle")}
         backUrl="/dashboard"
       />
 
@@ -89,7 +101,7 @@ export default function TrainingDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Master Courses</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.masterCourses")}</span>
               <BookOpen className="h-4 w-4 text-blue-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{totalTrainings}</p>
@@ -97,7 +109,7 @@ export default function TrainingDashboard() {
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Total Scheduled Sesi</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.totalScheduled")}</span>
               <Calendar className="h-4 w-4 text-amber-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{totalSessions}</p>
@@ -105,7 +117,7 @@ export default function TrainingDashboard() {
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Active / Ongoing</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.activeOngoing")}</span>
               <Clock className="h-4 w-4 text-emerald-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{activeSessions}</p>
@@ -113,7 +125,7 @@ export default function TrainingDashboard() {
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Sessions Completed</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.completed")}</span>
               <Award className="h-4 w-4 text-purple-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{completedSessions}</p>
@@ -150,7 +162,7 @@ export default function TrainingDashboard() {
         <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50 mb-4 flex items-center gap-2">
             <GraduationCap className="h-5 w-5 text-zinc-500" />
-            Recent & Active Sessions
+            {t("recentActiveTitle")}
           </h2>
 
           {Array.isArray(sessions) && sessions.length > 0 ? (
@@ -161,14 +173,14 @@ export default function TrainingDashboard() {
                     <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
                       {session.training?.name || "Learning Session"}
                     </h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500 dark:text-zinc-400">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500 dark:text-zinc-400 pt-1">
                       <span className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" />
                         {new Date(session.start_date).toLocaleDateString()}
                       </span>
                       <span className="flex items-center gap-1">
                         <Users className="h-3.5 w-3.5" />
-                        Trainer: {session.trainer}
+                        {t("trainer", { name: session.trainer })}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" />
@@ -184,12 +196,12 @@ export default function TrainingDashboard() {
                       ${session.status === "Ongoing" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300" : ""}
                       ${session.status === "Cancelled" ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300" : ""}
                     `}>
-                      {session.status}
+                      {getStatusLabel(session.status)}
                     </span>
                     <Link
                       href={`/training/sessions/${session.id}/participants`}
                       className="p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
-                      title="Manage Participants"
+                      title={t("manageParticipantsTooltip")}
                     >
                       <ChevronRight className="h-5 w-5" />
                     </Link>
@@ -199,7 +211,7 @@ export default function TrainingDashboard() {
             </div>
           ) : (
             <div className="text-center py-8 text-zinc-400 dark:text-zinc-600">
-              No training sessions scheduled yet.
+              {t("noSessions")}
             </div>
           )}
         </div>

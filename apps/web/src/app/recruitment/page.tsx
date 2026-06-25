@@ -16,8 +16,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import { useTranslations } from "next-intl";
 
 export default function RecruitmentDashboard() {
+  const t = useTranslations("recruitment.dashboard");
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const [mounted, setMounted] = useState(false);
@@ -64,32 +66,32 @@ export default function RecruitmentDashboard() {
 
   const navigationCards = [
     {
-      title: "Job Vacancies",
-      description: "Create, publish, and close master job vacancies for hiring positions.",
+      title: t("cards.vacanciesTitle"),
+      description: t("cards.vacanciesDesc"),
       icon: Briefcase,
       href: "/recruitment/vacancies",
       color: "from-blue-500/10 to-indigo-500/10 border-blue-200 dark:border-blue-900/30 text-blue-600 dark:text-blue-400",
       iconBg: "bg-blue-500 text-white"
     },
     {
-      title: "Candidate Directory",
-      description: "Manage candidate talent pool, upload resumes, and review applicant dossiers.",
+      title: t("cards.candidatesTitle"),
+      description: t("cards.candidatesDesc"),
       icon: UserPlus,
       href: "/recruitment/candidates",
       color: "from-emerald-500/10 to-teal-500/10 border-emerald-200 dark:border-emerald-900/30 text-emerald-600 dark:text-emerald-400",
       iconBg: "bg-emerald-500 text-white"
     },
     {
-      title: "Kanban Pipeline",
-      description: "Visualize applicant progress across hiring stages (Applied -> Hired) via Kanban.",
+      title: t("cards.pipelineTitle"),
+      description: t("cards.pipelineDesc"),
       icon: Kanban,
       href: "/recruitment/pipeline",
       color: "from-fuchsia-500/10 to-pink-500/10 border-fuchsia-200 dark:border-fuchsia-900/30 text-fuchsia-600 dark:text-fuchsia-400",
       iconBg: "bg-fuchsia-500 text-white"
     },
     {
-      title: "Hiring Approvals",
-      description: "Review and sign off on hiring requests (HR -> Manager -> Director workflow).",
+      title: t("cards.approvalsTitle"),
+      description: t("cards.approvalsDesc"),
       icon: CheckSquare,
       href: "/recruitment/approvals",
       color: "from-amber-500/10 to-orange-500/10 border-amber-200 dark:border-amber-900/30 text-amber-600 dark:text-amber-400",
@@ -100,8 +102,8 @@ export default function RecruitmentDashboard() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header 
-        title="Recruitment Hub" 
-        subtitle="Manage vacancies, coordinate candidate pipelines, schedule interviews, and process hiring workflows."
+        title={t("pageTitle")} 
+        subtitle={t("subtitle")}
         backUrl="/dashboard"
       />
 
@@ -110,15 +112,15 @@ export default function RecruitmentDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Published Vacancies</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.publishedVacancies")}</span>
               <Briefcase className="h-4 w-4 text-blue-500" />
             </div>
-            <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{activeVacancies} <span className="text-xs font-normal text-zinc-400">/ {totalVacancies} total</span></p>
+            <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{activeVacancies} <span className="text-xs font-normal text-zinc-400">{t("stats.totalVacancies", { total: totalVacancies })}</span></p>
           </div>
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Total Talent Pool</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.totalTalentPool")}</span>
               <Users className="h-4 w-4 text-emerald-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{totalCandidates}</p>
@@ -126,7 +128,7 @@ export default function RecruitmentDashboard() {
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Active Candidates</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.activeCandidates")}</span>
               <TrendingUp className="h-4 w-4 text-fuchsia-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{activeApplications}</p>
@@ -134,7 +136,7 @@ export default function RecruitmentDashboard() {
 
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl p-5 shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Pending Approvals</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{t("stats.pendingApprovals")}</span>
               <Clock className="h-4 w-4 text-amber-500" />
             </div>
             <p className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">{pendingApprovals}</p>

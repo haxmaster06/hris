@@ -1,0 +1,11 @@
+{
+    "name": "Workflow",
+    "alias": "workflow",
+    "description": "Handles visual dynamic approvals flow, definitions, steps, instances, and actions",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Workflow\\Providers\\WorkflowServiceProvider"
+    ],
+    "files": []
+}

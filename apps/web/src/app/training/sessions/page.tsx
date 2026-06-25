@@ -7,7 +7,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { 
-  ArrowLeft, 
   Plus, 
   Search, 
   Loader2, 
@@ -22,6 +21,7 @@ import {
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface TrainingSession {
   id: string;
@@ -35,6 +35,9 @@ interface TrainingSession {
 }
 
 export default function TrainingSessionManagement() {
+  const t = useTranslations("training.sessions");
+  const tStatus = useTranslations("training.status");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -86,11 +89,11 @@ export default function TrainingSessionManagement() {
     mutationFn: (data: any) => api.post("/training-sessions", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
-      toast.success("Training session scheduled successfully");
+      toast.success(t("toast.createSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to schedule session");
+      toast.error(err.response?.data?.message || t("toast.createFailed"));
     }
   });
 
@@ -98,11 +101,11 @@ export default function TrainingSessionManagement() {
     mutationFn: ({ id, data }: { id: string; data: any }) => api.put(`/training-sessions/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
-      toast.success("Training session updated successfully");
+      toast.success(t("toast.updateSuccess"));
       setIsFormOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update session");
+      toast.error(err.response?.data?.message || t("toast.updateFailed"));
     }
   });
 
@@ -110,10 +113,10 @@ export default function TrainingSessionManagement() {
     mutationFn: (id: string) => api.delete(`/training-sessions/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
-      toast.success("Session deleted successfully");
+      toast.success(t("toast.deleteSuccess"));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete session");
+      toast.error(err.response?.data?.message || t("toast.deleteFailed"));
     }
   });
 
@@ -149,7 +152,7 @@ export default function TrainingSessionManagement() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this training session?")) {
+    if (confirm(t("toast.confirmDelete"))) {
       deleteMutation.mutate(id);
     }
   };
@@ -172,6 +175,10 @@ export default function TrainingSessionManagement() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    return tStatus(status.toLowerCase() as any);
+  };
+
   if (!mounted || !isAuthenticated || !isAdmin) return null;
 
   // Filter implementation
@@ -187,8 +194,8 @@ export default function TrainingSessionManagement() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Training Sessions & Calendars"
-        subtitle="Schedule sessions, coordinate trainers, venues, and manage participant rosters."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/training"
       />
 
@@ -200,7 +207,7 @@ export default function TrainingSessionManagement() {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Search by course or trainer..."
+                placeholder={t("searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -212,11 +219,11 @@ export default function TrainingSessionManagement() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             >
-              <option value="">All Statuses</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Ongoing">Ongoing</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
+              <option value="">{t("allStatuses")}</option>
+              <option value="Scheduled">{getStatusLabel("Scheduled")}</option>
+              <option value="Ongoing">{getStatusLabel("Ongoing")}</option>
+              <option value="Completed">{getStatusLabel("Completed")}</option>
+              <option value="Cancelled">{getStatusLabel("Cancelled")}</option>
             </select>
           </div>
 
@@ -224,7 +231,7 @@ export default function TrainingSessionManagement() {
             onClick={handleOpenCreate}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
           >
-            <Plus className="h-4 w-4" /> Schedule Session
+            <Plus className="h-4 w-4" /> {t("scheduleSession")}
           </button>
         </div>
 
@@ -236,8 +243,8 @@ export default function TrainingSessionManagement() {
         ) : filteredSessions.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl">
             <Calendar className="h-12 w-12 mx-auto text-zinc-300 mb-3" />
-            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">No scheduled sessions</h3>
-            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">Try expanding your filters or schedule a new training session.</p>
+            <h3 className="text-md font-bold text-zinc-700 dark:text-zinc-300">{t("noSessions")}</h3>
+            <p className="text-sm text-zinc-400 dark:text-zinc-600 mt-1">{t("noSessionsDesc")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,7 +264,7 @@ export default function TrainingSessionManagement() {
                       ${session.status === "Ongoing" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300" : ""}
                       ${session.status === "Cancelled" ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300" : ""}
                     `}>
-                      {session.status}
+                      {getStatusLabel(session.status)}
                     </span>
                   </div>
 
@@ -268,11 +275,11 @@ export default function TrainingSessionManagement() {
                   <div className="space-y-2.5 mb-6 text-sm text-zinc-600 dark:text-zinc-400">
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-zinc-400" />
-                      <span>Trainer: <strong>{session.trainer}</strong></span>
+                      <span>{t("trainer", { trainer: session.trainer })}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-zinc-400" />
-                      <span>Venue: <strong>{session.venue}</strong></span>
+                      <span>{t("venue", { venue: session.venue })}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-zinc-400" />
@@ -288,14 +295,14 @@ export default function TrainingSessionManagement() {
                     <button
                       onClick={() => handleOpenEdit(session)}
                       className="p-2 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
-                      title="Edit Session Details"
+                      title={tCommon("edit")}
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(session.id)}
                       className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors"
-                      title="Delete Session"
+                      title={tCommon("delete")}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -305,7 +312,7 @@ export default function TrainingSessionManagement() {
                     href={`/training/sessions/${session.id}/participants`}
                     className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-850 dark:text-zinc-200 rounded-lg transition-colors"
                   >
-                    <ExternalLink className="h-3.5 w-3.5" /> Manage Roster
+                    <ExternalLink className="h-3.5 w-3.5" /> {t("manageRoster")}
                   </Link>
                 </div>
               </div>
@@ -320,23 +327,23 @@ export default function TrainingSessionManagement() {
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">
-                {selectedSession ? "Edit Session" : "Schedule Session"}
+                {selectedSession ? t("modal.editTitle") : t("modal.addTitle")}
               </h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-semibold">
-                Cancel
+              <button onClick={() => setIsFormOpen(false)} className="text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 text-sm font-semibold">
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Master Course</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formCourse")}</label>
                 <select
                   required
                   value={formTrainingId}
                   onChange={(e) => setFormTrainingId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                 >
-                  <option value="">Select Master Course</option>
+                  <option value="">{t("modal.selectCourse")}</option>
                   {Array.isArray(trainings) && trainings.map((t: any) => (
                     <option key={t.id} value={t.id}>{t.name} ({t.code})</option>
                   ))}
@@ -344,11 +351,11 @@ export default function TrainingSessionManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Trainer Name</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formTrainer")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Dr. Jane Doe"
+                  placeholder={t("modal.trainerPlaceholder")}
                   value={formTrainer}
                   onChange={(e) => setFormTrainer(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -356,11 +363,11 @@ export default function TrainingSessionManagement() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Venue / Location</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formVenue")}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Auditorium Room 4B / Zoom Meeting"
+                  placeholder={t("modal.venuePlaceholder")}
                   value={formVenue}
                   onChange={(e) => setFormVenue(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-200"
@@ -369,7 +376,7 @@ export default function TrainingSessionManagement() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Start Date & Time</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formStart")}</label>
                   <input
                     type="datetime-local"
                     required
@@ -380,7 +387,7 @@ export default function TrainingSessionManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">End Date & Time</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formEnd")}</label>
                   <input
                     type="datetime-local"
                     required
@@ -393,16 +400,16 @@ export default function TrainingSessionManagement() {
 
               {selectedSession && (
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Session Status</label>
+                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">{t("modal.formStatus")}</label>
                   <select
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value as any)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                   >
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Ongoing">Ongoing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
+                    <option value="Scheduled">{getStatusLabel("Scheduled")}</option>
+                    <option value="Ongoing">{getStatusLabel("Ongoing")}</option>
+                    <option value="Completed">{getStatusLabel("Completed")}</option>
+                    <option value="Cancelled">{getStatusLabel("Cancelled")}</option>
                   </select>
                 </div>
               )}
@@ -414,7 +421,7 @@ export default function TrainingSessionManagement() {
                   className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-primary text-white rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-primary/95 transition-colors"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {selectedSession ? "Save Changes" : "Schedule Session"}
+                  {selectedSession ? t("modal.saveChanges") : t("modal.saveSession")}
                 </button>
               </div>
             </form>

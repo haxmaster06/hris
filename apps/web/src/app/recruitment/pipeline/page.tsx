@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useTranslations } from "next-intl";
 
 interface JobApplication {
   id: string;
@@ -43,6 +44,8 @@ interface JobApplication {
 }
 
 export default function RecruitmentPipeline() {
+  const t = useTranslations("recruitment.pipeline");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -70,7 +73,14 @@ export default function RecruitmentPipeline() {
   const [interviewNotes, setInterviewNotes] = useState("");
 
   // Form State - Submit Scoring
-  const [scoreVal, setScoreVal] = useState(80);
+  const [evaluatorId, setEvaluatorId] = useState("");
+  const [criteriaRatings, setCriteriaRatings] = useState({
+    technical: 3,
+    communication: 3,
+    attitude: 3,
+  });
+  const [overallScore, setOverallScore] = useState(3);
+  const [recommendation, setRecommendation] = useState("hire");
   const [scoreNotes, setScoreNotes] = useState("");
 
   useEffect(() => {
@@ -111,6 +121,12 @@ export default function RecruitmentPipeline() {
     enabled: isAuthenticated && isAdmin,
   });
 
+  const { data: employees } = useQuery({
+    queryKey: ["employees"],
+    queryFn: () => api.get("/employees").then((res) => res.data.data?.data || res.data.data || []),
+    enabled: isAuthenticated && isAdmin,
+  });
+
   // Mutations
   const moveMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) => 
@@ -118,10 +134,10 @@ export default function RecruitmentPipeline() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["approvals-stats"] });
-      toast.success(`Applicant moved to stage: ${variables.status}`);
+      toast.success(t("toast.moveSuccess", { stage: t(`stage${variables.status.charAt(0).toUpperCase() + variables.status.slice(1)}`) || variables.status }));
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to move applicant stage");
+      toast.error(err.response?.data?.message || t("toast.moveFailed"));
     }
   });
 
@@ -129,11 +145,11 @@ export default function RecruitmentPipeline() {
     mutationFn: (data: any) => api.post("/applications", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
-      toast.success("Candidate applied to vacancy successfully");
+      toast.success(t("toast.applySuccess"));
       setIsApplyOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to apply candidate");
+      toast.error(err.response?.data?.message || t("toast.applyFailed"));
     }
   });
 
@@ -141,38 +157,38 @@ export default function RecruitmentPipeline() {
     mutationFn: (data: any) => api.post("/interviews", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
-      toast.success("Interview scheduled successfully");
+      toast.success(t("toast.scheduleSuccess"));
       setIsScheduleOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to schedule interview");
+      toast.error(err.response?.data?.message || t("toast.scheduleFailed"));
     }
   });
 
   const scoreMutation = useMutation({
     mutationFn: ({ interviewId, data }: { interviewId: string; data: any }) => 
-      api.post(`/interviews/${interviewId}/submit-result`, data),
+      api.post(`/interviews/${interviewId}/evaluation`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
-      toast.success("Interview score and feedback submitted successfully");
+      toast.success(t("toast.scoreSuccess") || "Evaluation submitted successfully");
       setIsScoreOpen(false);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to submit score");
+      toast.error(err.response?.data?.message || t("toast.scoreFailed") || "Failed to submit evaluation");
     }
   });
 
   if (!mounted || !isAuthenticated || !isAdmin) return null;
 
   const pipelineStages = [
-    { key: "applied", label: "Applied", color: "bg-blue-500" },
-    { key: "screening", label: "Screening", color: "bg-indigo-500" },
-    { key: "interview", label: "Interview", color: "bg-purple-500" },
-    { key: "assessment", label: "Assessment", color: "bg-fuchsia-500" },
-    { key: "offering", label: "Offering", color: "bg-pink-500" },
-    { key: "hiring", label: "Hiring Approval", color: "bg-amber-500" },
-    { key: "hired", label: "Hired", color: "bg-emerald-500" },
-    { key: "rejected", label: "Rejected", color: "bg-red-500" }
+    { key: "applied", label: t("stageApplied") || "Applied", color: "bg-blue-500" },
+    { key: "screening", label: t("stageScreening") || "Screening", color: "bg-indigo-500" },
+    { key: "interview", label: t("stageInterview") || "Interview", color: "bg-purple-500" },
+    { key: "assessment", label: t("stageAssessment") || "Assessment", color: "bg-fuchsia-500" },
+    { key: "offering", label: t("stageOffering") || "Offering", color: "bg-pink-500" },
+    { key: "hiring", label: t("stageHiring") || "Hiring Approval", color: "bg-amber-500" },
+    { key: "hired", label: t("stageHired") || "Hired", color: "bg-emerald-500" },
+    { key: "rejected", label: t("stageRejected") || "Rejected", color: "bg-red-500" }
   ];
 
   const handleMoveStage = (id: string, currentStatus: string, direction: "left" | "right" | "reject") => {
@@ -206,11 +222,18 @@ export default function RecruitmentPipeline() {
     const scheduledInterview = (application as any).interviews?.find((i: any) => i.status === "scheduled");
     if (scheduledInterview) {
       setActiveAppId(scheduledInterview.id); // set active interview ID
-      setScoreVal(80);
+      setEvaluatorId("");
+      setCriteriaRatings({
+        technical: 3,
+        communication: 3,
+        attitude: 3,
+      });
+      setOverallScore(3);
+      setRecommendation("hire");
       setScoreNotes("");
       setIsScoreOpen(true);
     } else {
-      toast.error("No scheduled interview found to evaluate.");
+      toast.error(t("toast.noInterviewFound"));
     }
   };
 
@@ -242,8 +265,11 @@ export default function RecruitmentPipeline() {
       scoreMutation.mutate({
         interviewId: activeAppId,
         data: {
-          score: scoreVal,
-          notes: scoreNotes,
+          evaluator_id: evaluatorId,
+          criteria: criteriaRatings,
+          overall_score: overallScore,
+          recommendation: recommendation,
+          comments: scoreNotes,
         }
       });
     }
@@ -252,8 +278,8 @@ export default function RecruitmentPipeline() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans pb-16">
       <Header
-        title="Recruitment Kanban"
-        subtitle="Track candidates, progress applications, schedule interviews, and finalize hiring."
+        title={t("pageTitle")}
+        subtitle={t("subtitle")}
         backUrl="/recruitment"
       />
 
@@ -264,7 +290,7 @@ export default function RecruitmentPipeline() {
             onChange={(e) => setSelectedVacancyFilter(e.target.value)}
             className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           >
-            <option value="">Filter Vacancy</option>
+            <option value="">{t("filterVacancy")}</option>
             {Array.isArray(vacancies) && vacancies.map((v: any) => (
               <option key={v.id} value={v.id}>{v.title}</option>
             ))}
@@ -279,7 +305,7 @@ export default function RecruitmentPipeline() {
           }}
           className="flex items-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary/95 transition-all w-full sm:w-auto justify-center"
         >
-          <Plus className="h-4 w-4" /> Apply Candidate
+          <Plus className="h-4 w-4" /> {t("applyCandidate")}
         </button>
       </div>
 
@@ -288,7 +314,7 @@ export default function RecruitmentPipeline() {
         {isLoadingApps ? (
           <div className="h-64 flex flex-col justify-center items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-            <p className="text-sm text-zinc-500">Loading pipeline applications...</p>
+            <p className="text-sm text-zinc-500">{t("loading")}</p>
           </div>
         ) : (
           <div className="flex gap-4 min-w-[1200px] h-[70vh]">
@@ -326,7 +352,7 @@ export default function RecruitmentPipeline() {
                             <h4 className="font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
                               {app.candidate?.first_name} {app.candidate?.last_name}
                             </h4>
-                            <p className="text-[10px] text-zinc-400 mt-1">Applied: {app.applied_date}</p>
+                            <p className="text-[10px] text-zinc-400 mt-1">{tCommon("apply")} ({t("stageApplied")}): {app.applied_date}</p>
                           </div>
 
                           {/* Interview Scheduling/Score Subsystem */}
@@ -336,13 +362,13 @@ export default function RecruitmentPipeline() {
                                 <div className="space-y-1">
                                   <div className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-400 font-semibold">
                                     <Calendar className="h-3.5 w-3.5 text-zinc-400" />
-                                    Scheduled Interview
+                                    {t("scheduledInterview")}
                                   </div>
                                   <button
                                     onClick={() => handleOpenScore(app)}
                                     className="w-full flex items-center justify-center gap-1 py-1 rounded bg-primary text-white font-bold hover:bg-primary/95 transition-colors"
                                   >
-                                    <Clipboard className="h-3 w-3" /> Evaluate
+                                    <Clipboard className="h-3 w-3" /> {t("evaluateBtn")}
                                   </button>
                                 </div>
                               ) : (
@@ -350,7 +376,7 @@ export default function RecruitmentPipeline() {
                                   onClick={() => handleMoveStage(app.id, app.status, "right")} // triggers interview scheduler directly
                                   className="w-full py-1 text-center font-bold text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded hover:bg-zinc-100 dark:hover:bg-zinc-900"
                                 >
-                                  Schedule Interview
+                                  {t("scheduleInterviewBtn")}
                                 </button>
                               )}
                             </div>
@@ -359,7 +385,7 @@ export default function RecruitmentPipeline() {
                           {completedInterview && (
                             <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                               <Award className="h-3.5 w-3.5" />
-                              Score: {completedInterview.score} / 100
+                              {t("scoreLabel", { score: completedInterview.score })}
                             </div>
                           )}
 
@@ -368,9 +394,9 @@ export default function RecruitmentPipeline() {
                             {app.status !== "rejected" && app.status !== "hired" ? (
                               <button
                                 onClick={() => handleMoveStage(app.id, app.status, "reject")}
-                                className="text-[10px] font-bold text-red-600 dark:text-red-400 hover:underline"
+                                className="text-[10px] font-bold text-red-650 dark:text-red-400 hover:underline"
                               >
-                                Reject
+                                {t("rejectBtn")}
                               </button>
                             ) : <div />}
 
@@ -409,22 +435,22 @@ export default function RecruitmentPipeline() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">Apply Candidate to Vacancy</h2>
+              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">{t("modalApplyTitle")}</h2>
               <button onClick={() => setIsApplyOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleApplySubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Select Candidate</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t("selectCandidate")}</label>
                 <select
                   required
                   value={applyCandidateId}
                   onChange={(e) => setApplyCandidateId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                 >
-                  <option value="">Choose Candidate</option>
+                  <option value="">{t("selectCandidate")}</option>
                   {Array.isArray(candidates) && candidates.map((c: any) => (
                     <option key={c.id} value={c.id}>{c.first_name} {c.last_name}</option>
                   ))}
@@ -432,14 +458,14 @@ export default function RecruitmentPipeline() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Select Job Opening</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t("selectVacancy")}</label>
                 <select
                   required
                   value={applyVacancyId}
                   onChange={(e) => setApplyVacancyId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                 >
-                  <option value="">Choose Vacancy</option>
+                  <option value="">{t("selectVacancy")}</option>
                   {Array.isArray(vacancies) && vacancies.filter((v: any) => v.status === "published").map((v: any) => (
                     <option key={v.id} value={v.id}>{v.title}</option>
                   ))}
@@ -452,14 +478,14 @@ export default function RecruitmentPipeline() {
                   onClick={() => setIsApplyOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={applyMutation.isPending}
                   className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary/95 disabled:opacity-50 transition-colors"
                 >
-                  {applyMutation.isPending ? "Applying..." : "Submit Application"}
+                  {applyMutation.isPending ? tCommon("loading") : t("applyCandidate")}
                 </button>
               </div>
             </form>
@@ -472,15 +498,15 @@ export default function RecruitmentPipeline() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">Schedule Candidate Interview</h2>
+              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">{t("modalScheduleTitle")}</h2>
               <button onClick={() => setIsScheduleOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
             <form onSubmit={handleScheduleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Interview Date & Time</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t("interviewDateTime")}</label>
                 <input
                   type="datetime-local"
                   required
@@ -491,14 +517,14 @@ export default function RecruitmentPipeline() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Assign Interviewer</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t("assignInterviewer")}</label>
                 <select
                   required
                   value={interviewerId}
                   onChange={(e) => setInterviewerId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
                 >
-                  <option value="">Choose Interviewer</option>
+                  <option value="">{t("chooseInterviewer")}</option>
                   {Array.isArray(users) && users.map((u: any) => (
                     <option key={u.id} value={u.id}>{u.name}</option>
                   ))}
@@ -506,10 +532,10 @@ export default function RecruitmentPipeline() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Pre-meeting Notes</label>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t("preMeetingNotes")}</label>
                 <textarea
                   rows={2}
-                  placeholder="e.g. Focus on technical skills..."
+                  placeholder={t("preMeetingPlaceholder")}
                   value={interviewNotes}
                   onChange={(e) => setInterviewNotes(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -522,14 +548,14 @@ export default function RecruitmentPipeline() {
                   onClick={() => setIsScheduleOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={scheduleMutation.isPending}
                   className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary/95 disabled:opacity-50 transition-colors"
                 >
-                  {scheduleMutation.isPending ? "Scheduling..." : "Schedule"}
+                  {scheduleMutation.isPending ? tCommon("loading") : t("scheduleInterviewBtn")}
                 </button>
               </div>
             </form>
@@ -540,34 +566,115 @@ export default function RecruitmentPipeline() {
       {/* Submit Evaluation Score Modal */}
       {isScoreOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">Submit Interview Score</h2>
+              <h2 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">{t("modalScoreTitle")}</h2>
               <button onClick={() => setIsScoreOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
-                Cancel
+                {tCommon("cancel")}
               </button>
             </div>
 
-            <form onSubmit={handleScoreSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleScoreSubmit} className="p-6 space-y-4 max-h-[85vh] overflow-y-auto">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Interview Score (1 - 100)</label>
-                <input
-                  type="number"
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
+                  Evaluator
+                </label>
+                <select
                   required
-                  min={1}
-                  max={100}
-                  value={scoreVal}
-                  onChange={(e) => setScoreVal(parseInt(e.target.value) || 80)}
+                  value={evaluatorId}
+                  onChange={(e) => setEvaluatorId(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
-                />
+                >
+                  <option value="">Select Evaluator</option>
+                  {Array.isArray(employees) && employees.map((emp: any) => (
+                    <option key={emp.id} value={emp.id}>
+                      {emp.first_name} {emp.last_name || ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Criteria Ratings */}
+              <div className="space-y-3">
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                  Criteria Ratings (1-5)
+                </label>
+                
+                <div className="space-y-2 bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-lg border border-zinc-100 dark:border-zinc-900">
+                  {Object.keys(criteriaRatings).map((key) => {
+                    const criteriaKey = key as keyof typeof criteriaRatings;
+                    return (
+                      <div key={key} className="flex items-center justify-between gap-4">
+                        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 capitalize">
+                          {key}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setCriteriaRatings(prev => ({ ...prev, [criteriaKey]: star }))}
+                              className={`p-1 text-sm transition-all ${
+                                criteriaRatings[criteriaKey] >= star
+                                  ? "text-amber-500 hover:text-amber-600"
+                                  : "text-zinc-300 dark:text-zinc-700 hover:text-zinc-400"
+                              }`}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Feedback / Notes</label>
-                <textarea
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
+                  Overall Score (1-5)
+                </label>
+                <div className="flex justify-between items-center gap-2 bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-lg border border-zinc-100 dark:border-zinc-900">
+                  {[1, 2, 3, 4, 5].map((score) => (
+                    <button
+                      key={score}
+                      type="button"
+                      onClick={() => setOverallScore(score)}
+                      className={`flex-1 py-1.5 rounded-md text-xs font-bold transition-all border ${
+                        overallScore === score
+                          ? "bg-primary text-white border-primary shadow-sm"
+                          : "bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                      }`}
+                    >
+                      {score}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
+                  Recommendation
+                </label>
+                <select
                   required
+                  value={recommendation}
+                  onChange={(e) => setRecommendation(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
+                >
+                  <option value="hire">Hire</option>
+                  <option value="reject">Reject</option>
+                  <option value="next_round">Next Round</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
+                  Comments / Feedback
+                </label>
+                <textarea
                   rows={3}
-                  placeholder="Summarize candidate answers and strengths..."
+                  placeholder="Enter detailed evaluation feedback..."
                   value={scoreNotes}
                   onChange={(e) => setScoreNotes(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-zinc-900 dark:text-zinc-50 focus:outline-none"
@@ -580,14 +687,14 @@ export default function RecruitmentPipeline() {
                   onClick={() => setIsScoreOpen(false)}
                   className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={scoreMutation.isPending}
                   className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary/95 disabled:opacity-50 transition-colors"
                 >
-                  {scoreMutation.isPending ? "Submitting..." : "Submit Score"}
+                  {scoreMutation.isPending ? tCommon("loading") : t("evaluateBtn") || "Submit Evaluation"}
                 </button>
               </div>
             </form>

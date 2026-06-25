@@ -1,0 +1,11 @@
+{
+    "name": "Engagement",
+    "alias": "engagement",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Engagement\\Providers\\EngagementServiceProvider"
+    ],
+    "files": []
+}
